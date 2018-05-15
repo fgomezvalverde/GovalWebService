@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "BitOne.FE.BLL", "BitOne.FE.BLL\BitOne.FE.BLL.vbproj", "{9BBB7A37-47C1-4404-8083-8B69D03BF097}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "BitOne.FE.UI", "BitOne.FE.UI\BitOne.FE.UI.vbproj", "{83236206-0A64-455A-A3C6-B1B70A42D637}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "BitOne.FE.EN", "BitOne.FE.EN\BitOne.FE.EN.vbproj", "{49B9DC66-4426-4D0F-BCA5-314A88EFE5DB}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "BitOne.FE.Resources", "BitOne.FE.Resources\BitOne.FE.Resources.vbproj", "{63BAF6F1-B40C-47BD-8931-0424DF37075E}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 5
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://bitonesoft.visualstudio.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = BitOne.FE.BLL\\BitOne.FE.BLL.vbproj
+		SccProjectName1 = BitOne.FE.BLL
+		SccLocalPath1 = BitOne.FE.BLL
+		SccProjectUniqueName2 = BitOne.FE.EN\\BitOne.FE.EN.vbproj
+		SccProjectName2 = BitOne.FE.EN
+		SccLocalPath2 = BitOne.FE.EN
+		SccProjectUniqueName3 = BitOne.FE.Resources\\BitOne.FE.Resources.vbproj
+		SccProjectName3 = BitOne.FE.Resources
+		SccLocalPath3 = BitOne.FE.Resources
+		SccProjectUniqueName4 = BitOne.FE.UI\\BitOne.FE.UI.vbproj
+		SccProjectName4 = BitOne.FE.UI
+		SccLocalPath4 = BitOne.FE.UI
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9BBB7A37-47C1-4404-8083-8B69D03BF097}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BBB7A37-47C1-4404-8083-8B69D03BF097}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BBB7A37-47C1-4404-8083-8B69D03BF097}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BBB7A37-47C1-4404-8083-8B69D03BF097}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83236206-0A64-455A-A3C6-B1B70A42D637}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83236206-0A64-455A-A3C6-B1B70A42D637}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83236206-0A64-455A-A3C6-B1B70A42D637}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83236206-0A64-455A-A3C6-B1B70A42D637}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49B9DC66-4426-4D0F-BCA5-314A88EFE5DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49B9DC66-4426-4D0F-BCA5-314A88EFE5DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49B9DC66-4426-4D0F-BCA5-314A88EFE5DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49B9DC66-4426-4D0F-BCA5-314A88EFE5DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63BAF6F1-B40C-47BD-8931-0424DF37075E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63BAF6F1-B40C-47BD-8931-0424DF37075E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63BAF6F1-B40C-47BD-8931-0424DF37075E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63BAF6F1-B40C-47BD-8931-0424DF37075E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

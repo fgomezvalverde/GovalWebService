@@ -1,0 +1,1554 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Goval.FacturaGoval.Business.DevelopmentModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AppConfiguration">
+          <Key>
+            <PropertyRef Name="AppConfigurationId" />
+          </Key>
+          <Property Name="AppConfigurationId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StartBillNumber" Type="bigint" Nullable="false" />
+          <Property Name="UserId_FK" Type="bigint" Nullable="false" />
+          <Property Name="Base64Logotype" Type="nvarchar(max)" />
+          <Property Name="EmailScheme" Type="nvarchar(max)" />
+          <Property Name="Credits" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="IsPremiumAccount" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BarrioType">
+          <Key>
+            <PropertyRef Name="BarrioTypeId" />
+          </Key>
+          <Property Name="BarrioTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BarrioName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="BarrioTypeCode" Type="varchar" MaxLength="2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Bill">
+          <Key>
+            <PropertyRef Name="BillId" />
+          </Key>
+          <Property Name="BillId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmissionDate" Type="datetime" Nullable="false" />
+          <Property Name="Status" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserId_FK" Type="bigint" Nullable="false" />
+          <Property Name="PurchaseOrderCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastSendDate" Type="datetime" Nullable="false" />
+          <Property Name="TotalAfterDiscount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="TaxesToPay" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="SubTotalProducts" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="DiscountAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="TotalToPay" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="ClientId_FK" Type="bigint" Nullable="false" />
+          <Property Name="XMLSendedToHacienda" Type="xml" Nullable="false" />
+          <Property Name="XMLReceivedFromHacienda" Type="xml" />
+          <Property Name="SoldProductsJSON" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="HaciendaFailCounter" Type="int" Nullable="false" />
+          <Property Name="DocumentKey" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ConsecutiveNumber" Type="bigint" Nullable="false" />
+          <Property Name="SellCondition" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="CreditTerm" Type="varchar" MaxLength="10" />
+          <Property Name="PaymentMethod" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="DiscountNature" Type="varchar" MaxLength="80" />
+          <Property Name="TaxCode" Type="varchar" MaxLength="2" />
+          <Property Name="HaveExoneration" Type="bit" Nullable="false" />
+          <Property Name="ExonerationId_FK" Type="bigint" />
+          <Property Name="ExonerationAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Observation" Type="nvarchar" MaxLength="300" />
+        </EntityType>
+        <EntityType Name="BillingHistory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="varchar" MaxLength="12" />
+          <Property Name="Message" Type="nvarchar" MaxLength="250" />
+          <Property Name="Status" Type="nvarchar" MaxLength="50" />
+          <Property Name="Date" Type="datetime" />
+          <Property Name="DocumentKey" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CantonType">
+          <Key>
+            <PropertyRef Name="CantonTypeId" />
+          </Key>
+          <Property Name="CantonTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CantonName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CantonTypeCode" Type="varchar" MaxLength="2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="ClientId" />
+          </Key>
+          <Property Name="ClientId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DefaultDiscountPercentage" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="DefaultTaxesPercentage" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="PhoneNumber" Type="varchar" MaxLength="20" />
+          <Property Name="ClientLegalNumber" Type="varchar" MaxLength="12" />
+          <Property Name="LocationDescription" Type="varchar" MaxLength="160" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="DefaultPaymentTerm" Type="int" Nullable="false" />
+          <Property Name="ComercialName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsIndependentPerson" Type="bit" Nullable="false" />
+          <Property Name="UserId_FK" Type="bigint" Nullable="false" />
+          <Property Name="LastName" Type="varchar" MaxLength="50" />
+          <Property Name="SecondName" Type="varchar" MaxLength="50" />
+          <Property Name="IdentificationType" Type="varchar" MaxLength="2" />
+          <Property Name="ForeignIdentification" Type="varchar" MaxLength="20" />
+          <Property Name="ProvinciaCode" Type="varchar" MaxLength="1" />
+          <Property Name="CantonCode" Type="varchar" MaxLength="2" />
+          <Property Name="DistritoCode" Type="varchar" MaxLength="2" />
+          <Property Name="BarrioCode" Type="varchar" MaxLength="2" />
+          <Property Name="PhoneNumberCountryCode" Type="varchar" MaxLength="3" />
+          <Property Name="FaxCountryCode" Type="varchar" MaxLength="3" />
+          <Property Name="Fax" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="CreditOrDebitNote">
+          <Key>
+            <PropertyRef Name="CreditOrDebitNoteId" />
+          </Key>
+          <Property Name="CreditOrDebitNoteId" Type="bigint" Nullable="false" />
+          <Property Name="IsCreditNote" Type="bit" Nullable="false" />
+          <Property Name="BillId_FK" Type="bigint" />
+          <Property Name="DocuementKey" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ReferenceDocumentType" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="EmissionDate" Type="datetime" Nullable="false" />
+          <Property Name="ReferenceCode" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="ReasonDescription" Type="varchar" MaxLength="180" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CurrencyType">
+          <Key>
+            <PropertyRef Name="CurrencyTypeCode" />
+          </Key>
+          <Property Name="CurrencyTypeCode" Type="varchar" MaxLength="3" Nullable="false" />
+          <Property Name="CountryName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CoinName" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DistritoType">
+          <Key>
+            <PropertyRef Name="DistritoTypeId" />
+          </Key>
+          <Property Name="DistritoTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DistritoName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DistritoTypeCode" Type="varchar" MaxLength="2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ExceptionsType">
+          <Key>
+            <PropertyRef Name="ExpectionsTypeCode" />
+          </Key>
+          <Property Name="ExpectionsTypeCode" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="90" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Exoneration">
+          <Key>
+            <PropertyRef Name="ExonerationId" />
+          </Key>
+          <Property Name="ExonerationId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DocumentType" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="DocumentNumber" Type="varchar" MaxLength="17" Nullable="false" />
+          <Property Name="InstitutionName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="EmissionDate" Type="datetime" Nullable="false" />
+          <Property Name="TaxAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="PurchasePercentaje" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ExonerationAuthorizationDocumentType">
+          <Key>
+            <PropertyRef Name="ExonerationAuthorizationDocumentTypeCode" />
+          </Key>
+          <Property Name="ExonerationAuthorizationDocumentTypeCode" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="90" Nullable="false" />
+        </EntityType>
+        <EntityType Name="IdentificationType">
+          <Key>
+            <PropertyRef Name="IdentificationTypeCode" />
+          </Key>
+          <Property Name="IdentificationTypeCode" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PaymentMethodType">
+          <Key>
+            <PropertyRef Name="PaymentMethodTypeCode" />
+          </Key>
+          <Property Name="PaymentMethodTypeCode" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="ProductId" />
+          </Key>
+          <Property Name="ProductId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId_FK" Type="bigint" Nullable="false" />
+          <Property Name="Price" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="MeasurementUnit" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="160" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CurrencyType" Type="varchar" MaxLength="3" Nullable="false" />
+          <Property Name="BarCode" Type="varchar" MaxLength="50" />
+          <Property Name="ProductType" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="ProductCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="MeasurementUnitType" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="ProductsByClient">
+          <Key>
+            <PropertyRef Name="ProductsByClientId" />
+          </Key>
+          <Property Name="ProductsByClientId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductId_FK" Type="bigint" Nullable="false" />
+          <Property Name="ClientId_FK" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ProductServiceType">
+          <Key>
+            <PropertyRef Name="ProductServiceTypeCode" />
+          </Key>
+          <Property Name="ProductServiceTypeCode" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ProvinciaType">
+          <Key>
+            <PropertyRef Name="ProvinciaTypeId" />
+          </Key>
+          <Property Name="ProvinciaTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProvinciaName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ProvinciaTypeCode" Type="varchar" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ReferenceDocumentType">
+          <Key>
+            <PropertyRef Name="ReferenceDocumentTypeCode" />
+          </Key>
+          <Property Name="ReferenceDocumentTypeCode" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ReferencesCodeType">
+          <Key>
+            <PropertyRef Name="ReferencesTypeCode" />
+          </Key>
+          <Property Name="ReferencesTypeCode" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SellConditionsType">
+          <Key>
+            <PropertyRef Name="SellConditionsTypeCode" />
+          </Key>
+          <Property Name="SellConditionsTypeCode" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="TaxesType">
+          <Key>
+            <PropertyRef Name="TaxesTypeCode" />
+          </Key>
+          <Property Name="TaxesTypeCode" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="varchar" MaxLength="50" />
+          <Property Name="SecondName" Type="varchar" MaxLength="50" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserLegalNumber" Type="varchar" MaxLength="12" Nullable="false" />
+          <Property Name="HaciendaUsername" Type="nvarchar" MaxLength="100" />
+          <Property Name="HaciendaPassword" Type="nvarchar" MaxLength="100" />
+          <Property Name="HaciendaCryptographicPIN" Type="varchar" MaxLength="50" />
+          <Property Name="HaciendaCryptographicFile" Type="varbinary(max)" />
+          <Property Name="HaciendaCryptographicFileName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Password" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="PhoneNumber" Type="varchar" MaxLength="20" />
+          <Property Name="HaciendaUserValidation" Type="bit" Nullable="false" />
+          <Property Name="IdentificationType" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="ComercialName" Type="nvarchar" MaxLength="50" />
+          <Property Name="ProvinciaCode" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="CantonCode" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="DistritoCode" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="BarrioCode" Type="varchar" MaxLength="2" />
+          <Property Name="LocationDescription" Type="varchar" MaxLength="160" Nullable="false" />
+          <Property Name="PhoneNumberCountryCode" Type="varchar" MaxLength="3" />
+          <Property Name="FaxCountryCode" Type="varchar" MaxLength="3" />
+          <Property Name="Fax" Type="varchar" MaxLength="20" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_AppConfiguration_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="AppConfiguration" Type="Self.AppConfiguration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="AppConfiguration">
+              <PropertyRef Name="UserId_FK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bill_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="Bill" Type="Self.Bill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="Bill">
+              <PropertyRef Name="ClientId_FK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bill_Exoneration">
+          <End Role="Exoneration" Type="Self.Exoneration" Multiplicity="0..1" />
+          <End Role="Bill" Type="Self.Bill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exoneration">
+              <PropertyRef Name="ExonerationId" />
+            </Principal>
+            <Dependent Role="Bill">
+              <PropertyRef Name="ExonerationId_FK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bill_PaymentMethod">
+          <End Role="PaymentMethodType" Type="Self.PaymentMethodType" Multiplicity="1" />
+          <End Role="Bill" Type="Self.Bill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentMethodType">
+              <PropertyRef Name="PaymentMethodTypeCode" />
+            </Principal>
+            <Dependent Role="Bill">
+              <PropertyRef Name="PaymentMethod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bill_SellCondition">
+          <End Role="SellConditionsType" Type="Self.SellConditionsType" Multiplicity="1" />
+          <End Role="Bill" Type="Self.Bill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SellConditionsType">
+              <PropertyRef Name="SellConditionsTypeCode" />
+            </Principal>
+            <Dependent Role="Bill">
+              <PropertyRef Name="SellCondition" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bill_TaxType">
+          <End Role="TaxesType" Type="Self.TaxesType" Multiplicity="0..1" />
+          <End Role="Bill" Type="Self.Bill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TaxesType">
+              <PropertyRef Name="TaxesTypeCode" />
+            </Principal>
+            <Dependent Role="Bill">
+              <PropertyRef Name="TaxCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bill_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Bill" Type="Self.Bill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Bill">
+              <PropertyRef Name="UserId_FK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Client_IdentificationType">
+          <End Role="IdentificationType" Type="Self.IdentificationType" Multiplicity="0..1" />
+          <End Role="Client" Type="Self.Client" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IdentificationType">
+              <PropertyRef Name="IdentificationTypeCode" />
+            </Principal>
+            <Dependent Role="Client">
+              <PropertyRef Name="IdentificationType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CreditOrDebitNote_Bill">
+          <End Role="Bill" Type="Self.Bill" Multiplicity="0..1" />
+          <End Role="CreditOrDebitNote" Type="Self.CreditOrDebitNote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bill">
+              <PropertyRef Name="BillId" />
+            </Principal>
+            <Dependent Role="CreditOrDebitNote">
+              <PropertyRef Name="BillId_FK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CreditOrDebitNote_DocumentType">
+          <End Role="ReferenceDocumentType" Type="Self.ReferenceDocumentType" Multiplicity="1" />
+          <End Role="CreditOrDebitNote" Type="Self.CreditOrDebitNote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ReferenceDocumentType">
+              <PropertyRef Name="ReferenceDocumentTypeCode" />
+            </Principal>
+            <Dependent Role="CreditOrDebitNote">
+              <PropertyRef Name="ReferenceDocumentType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CreditOrDebitNote_ReferenceCode">
+          <End Role="ReferencesCodeType" Type="Self.ReferencesCodeType" Multiplicity="1" />
+          <End Role="CreditOrDebitNote" Type="Self.CreditOrDebitNote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ReferencesCodeType">
+              <PropertyRef Name="ReferencesTypeCode" />
+            </Principal>
+            <Dependent Role="CreditOrDebitNote">
+              <PropertyRef Name="ReferenceCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Exoneration_ExonerationType">
+          <End Role="ExonerationAuthorizationDocumentType" Type="Self.ExonerationAuthorizationDocumentType" Multiplicity="1" />
+          <End Role="Exoneration" Type="Self.Exoneration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ExonerationAuthorizationDocumentType">
+              <PropertyRef Name="ExonerationAuthorizationDocumentTypeCode" />
+            </Principal>
+            <Dependent Role="Exoneration">
+              <PropertyRef Name="DocumentType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_CurrencyType">
+          <End Role="CurrencyType" Type="Self.CurrencyType" Multiplicity="1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CurrencyType">
+              <PropertyRef Name="CurrencyTypeCode" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="CurrencyType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="UserId_FK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductsByClient_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="ProductsByClient" Type="Self.ProductsByClient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="ProductsByClient">
+              <PropertyRef Name="ClientId_FK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductsByClient_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="ProductsByClient" Type="Self.ProductsByClient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="ProductsByClient">
+              <PropertyRef Name="ProductId_FK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Client">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Client" Type="Self.Client" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Client">
+              <PropertyRef Name="UserId_FK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_IdentityType">
+          <End Role="IdentificationType" Type="Self.IdentificationType" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IdentificationType">
+              <PropertyRef Name="IdentificationTypeCode" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="IdentificationType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GovalFacturaGovalBusinessDevelopmentModelStoreContainer">
+          <EntitySet Name="AppConfiguration" EntityType="Self.AppConfiguration" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BarrioType" EntityType="Self.BarrioType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Bill" EntityType="Self.Bill" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BillingHistory" EntityType="Self.BillingHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CantonType" EntityType="Self.CantonType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CreditOrDebitNote" EntityType="Self.CreditOrDebitNote" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CurrencyType" EntityType="Self.CurrencyType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DistritoType" EntityType="Self.DistritoType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ExceptionsType" EntityType="Self.ExceptionsType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Exoneration" EntityType="Self.Exoneration" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ExonerationAuthorizationDocumentType" EntityType="Self.ExonerationAuthorizationDocumentType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="IdentificationType" EntityType="Self.IdentificationType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PaymentMethodType" EntityType="Self.PaymentMethodType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductsByClient" EntityType="Self.ProductsByClient" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductServiceType" EntityType="Self.ProductServiceType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProvinciaType" EntityType="Self.ProvinciaType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ReferenceDocumentType" EntityType="Self.ReferenceDocumentType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ReferencesCodeType" EntityType="Self.ReferencesCodeType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SellConditionsType" EntityType="Self.SellConditionsType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TaxesType" EntityType="Self.TaxesType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_AppConfiguration_User" Association="Self.FK_AppConfiguration_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="AppConfiguration" EntitySet="AppConfiguration" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bill_Client" Association="Self.FK_Bill_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="Bill" EntitySet="Bill" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bill_Exoneration" Association="Self.FK_Bill_Exoneration">
+            <End Role="Exoneration" EntitySet="Exoneration" />
+            <End Role="Bill" EntitySet="Bill" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bill_PaymentMethod" Association="Self.FK_Bill_PaymentMethod">
+            <End Role="PaymentMethodType" EntitySet="PaymentMethodType" />
+            <End Role="Bill" EntitySet="Bill" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bill_SellCondition" Association="Self.FK_Bill_SellCondition">
+            <End Role="SellConditionsType" EntitySet="SellConditionsType" />
+            <End Role="Bill" EntitySet="Bill" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bill_TaxType" Association="Self.FK_Bill_TaxType">
+            <End Role="TaxesType" EntitySet="TaxesType" />
+            <End Role="Bill" EntitySet="Bill" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bill_User" Association="Self.FK_Bill_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Bill" EntitySet="Bill" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Client_IdentificationType" Association="Self.FK_Client_IdentificationType">
+            <End Role="IdentificationType" EntitySet="IdentificationType" />
+            <End Role="Client" EntitySet="Client" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CreditOrDebitNote_Bill" Association="Self.FK_CreditOrDebitNote_Bill">
+            <End Role="Bill" EntitySet="Bill" />
+            <End Role="CreditOrDebitNote" EntitySet="CreditOrDebitNote" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CreditOrDebitNote_DocumentType" Association="Self.FK_CreditOrDebitNote_DocumentType">
+            <End Role="ReferenceDocumentType" EntitySet="ReferenceDocumentType" />
+            <End Role="CreditOrDebitNote" EntitySet="CreditOrDebitNote" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CreditOrDebitNote_ReferenceCode" Association="Self.FK_CreditOrDebitNote_ReferenceCode">
+            <End Role="ReferencesCodeType" EntitySet="ReferencesCodeType" />
+            <End Role="CreditOrDebitNote" EntitySet="CreditOrDebitNote" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Exoneration_ExonerationType" Association="Self.FK_Exoneration_ExonerationType">
+            <End Role="ExonerationAuthorizationDocumentType" EntitySet="ExonerationAuthorizationDocumentType" />
+            <End Role="Exoneration" EntitySet="Exoneration" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_CurrencyType" Association="Self.FK_Product_CurrencyType">
+            <End Role="CurrencyType" EntitySet="CurrencyType" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_User" Association="Self.FK_Product_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductsByClient_Client" Association="Self.FK_ProductsByClient_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="ProductsByClient" EntitySet="ProductsByClient" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductsByClient_Product" Association="Self.FK_ProductsByClient_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="ProductsByClient" EntitySet="ProductsByClient" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Client" Association="Self.FK_User_Client">
+            <End Role="User" EntitySet="User" />
+            <End Role="Client" EntitySet="Client" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_IdentityType" Association="Self.FK_User_IdentityType">
+            <End Role="IdentificationType" EntitySet="IdentificationType" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Goval.FacturaGoval.Business.DevelopmentModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="AppConfigurationEntity">
+          <Key>
+            <PropertyRef Name="AppConfigurationId" />
+          </Key>
+          <Property Name="AppConfigurationId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StartBillNumber" Type="Int64" Nullable="false" />
+          <Property Name="UserId_FK" Type="Int64" Nullable="false" />
+          <Property Name="Base64Logotype" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="EmailScheme" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Credits" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="IsPremiumAccount" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Self.FK_AppConfiguration_User" FromRole="AppConfiguration" ToRole="User" />
+        </EntityType>
+        <EntityType Name="BarrioTypeEntity">
+          <Key>
+            <PropertyRef Name="BarrioTypeId" />
+          </Key>
+          <Property Name="BarrioTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BarrioName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="BarrioTypeCode" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BillEntity">
+          <Key>
+            <PropertyRef Name="BillId" />
+          </Key>
+          <Property Name="BillId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmissionDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserId_FK" Type="Int64" Nullable="false" />
+          <Property Name="PurchaseOrderCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastSendDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TotalAfterDiscount" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="TaxesToPay" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="SubTotalProducts" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="DiscountAmount" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="TotalToPay" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="ClientId_FK" Type="Int64" Nullable="false" />
+          <Property Name="XMLSendedToHacienda" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="XMLReceivedFromHacienda" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SoldProductsJSON" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="HaciendaFailCounter" Type="Int32" Nullable="false" />
+          <Property Name="DocumentKey" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ConsecutiveNumber" Type="Int64" Nullable="false" />
+          <Property Name="SellCondition" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CreditTerm" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="PaymentMethod" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DiscountNature" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="TaxCode" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="HaveExoneration" Type="Boolean" Nullable="false" />
+          <Property Name="ExonerationId_FK" Type="Int64" />
+          <Property Name="ExonerationAmount" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_Bill_Client" FromRole="Bill" ToRole="Client" />
+          <NavigationProperty Name="Exoneration" Relationship="Self.FK_Bill_Exoneration" FromRole="Bill" ToRole="Exoneration" />
+          <NavigationProperty Name="PaymentMethodType" Relationship="Self.FK_Bill_PaymentMethod" FromRole="Bill" ToRole="PaymentMethodType" />
+          <NavigationProperty Name="SellConditionsType" Relationship="Self.FK_Bill_SellCondition" FromRole="Bill" ToRole="SellConditionsType" />
+          <NavigationProperty Name="TaxesType" Relationship="Self.FK_Bill_TaxType" FromRole="Bill" ToRole="TaxesType" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Bill_User" FromRole="Bill" ToRole="User" />
+          <NavigationProperty Name="CreditOrDebitNote" Relationship="Self.FK_CreditOrDebitNote_Bill" FromRole="Bill" ToRole="CreditOrDebitNote" />
+          <Property Name="Observation" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="BillingHistoryEntity">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="Message" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="DocumentKey" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CantonTypeEntity">
+          <Key>
+            <PropertyRef Name="CantonTypeId" />
+          </Key>
+          <Property Name="CantonTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CantonName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CantonTypeCode" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ClientEntity">
+          <Key>
+            <PropertyRef Name="ClientId" />
+          </Key>
+          <Property Name="ClientId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DefaultDiscountPercentage" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="DefaultTaxesPercentage" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ClientLegalNumber" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="LocationDescription" Type="String" MaxLength="160" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DefaultPaymentTerm" Type="Int32" Nullable="false" />
+          <Property Name="ComercialName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsIndependentPerson" Type="Boolean" Nullable="false" />
+          <Property Name="UserId_FK" Type="Int64" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SecondName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IdentificationType" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="ForeignIdentification" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ProvinciaCode" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="CantonCode" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="DistritoCode" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="BarrioCode" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="PhoneNumberCountryCode" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="FaxCountryCode" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="Fax" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Bill" Relationship="Self.FK_Bill_Client" FromRole="Client" ToRole="Bill" />
+          <NavigationProperty Name="IdentificationType1" Relationship="Self.FK_Client_IdentificationType" FromRole="Client" ToRole="IdentificationType" />
+          <NavigationProperty Name="ProductsByClient" Relationship="Self.FK_ProductsByClient_Client" FromRole="Client" ToRole="ProductsByClient" />
+          <NavigationProperty Name="User" Relationship="Self.FK_User_Client" FromRole="Client" ToRole="User" />
+        </EntityType>
+        <EntityType Name="CreditOrDebitNoteEntity">
+          <Key>
+            <PropertyRef Name="CreditOrDebitNoteId" />
+          </Key>
+          <Property Name="CreditOrDebitNoteId" Type="Int64" Nullable="false" />
+          <Property Name="IsCreditNote" Type="Boolean" Nullable="false" />
+          <Property Name="BillId_FK" Type="Int64" />
+          <Property Name="DocuementKey" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ReferenceDocumentType" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="EmissionDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ReferenceCode" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ReasonDescription" Type="String" MaxLength="180" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Bill" Relationship="Self.FK_CreditOrDebitNote_Bill" FromRole="CreditOrDebitNote" ToRole="Bill" />
+          <NavigationProperty Name="ReferenceDocumentType1" Relationship="Self.FK_CreditOrDebitNote_DocumentType" FromRole="CreditOrDebitNote" ToRole="ReferenceDocumentType" />
+          <NavigationProperty Name="ReferencesCodeType" Relationship="Self.FK_CreditOrDebitNote_ReferenceCode" FromRole="CreditOrDebitNote" ToRole="ReferencesCodeType" />
+        </EntityType>
+        <EntityType Name="CurrencyTypeEntity">
+          <Key>
+            <PropertyRef Name="CurrencyTypeCode" />
+          </Key>
+          <Property Name="CurrencyTypeCode" Type="String" MaxLength="3" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CountryName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CoinName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_Product_CurrencyType" FromRole="CurrencyType" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="DistritoTypeEntity">
+          <Key>
+            <PropertyRef Name="DistritoTypeId" />
+          </Key>
+          <Property Name="DistritoTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DistritoName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DistritoTypeCode" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ExceptionsTypeEntity">
+          <Key>
+            <PropertyRef Name="ExpectionsTypeCode" />
+          </Key>
+          <Property Name="ExpectionsTypeCode" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="90" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ExonerationEntity">
+          <Key>
+            <PropertyRef Name="ExonerationId" />
+          </Key>
+          <Property Name="ExonerationId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DocumentType" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DocumentNumber" Type="String" MaxLength="17" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="InstitutionName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="EmissionDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TaxAmount" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="PurchasePercentaje" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Bill" Relationship="Self.FK_Bill_Exoneration" FromRole="Exoneration" ToRole="Bill" />
+          <NavigationProperty Name="ExonerationAuthorizationDocumentType" Relationship="Self.FK_Exoneration_ExonerationType" FromRole="Exoneration" ToRole="ExonerationAuthorizationDocumentType" />
+        </EntityType>
+        <EntityType Name="ExonerationAuthorizationDocumentTypeEntity">
+          <Key>
+            <PropertyRef Name="ExonerationAuthorizationDocumentTypeCode" />
+          </Key>
+          <Property Name="ExonerationAuthorizationDocumentTypeCode" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="90" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Exoneration" Relationship="Self.FK_Exoneration_ExonerationType" FromRole="ExonerationAuthorizationDocumentType" ToRole="Exoneration" />
+        </EntityType>
+        <EntityType Name="IdentificationTypeEntity">
+          <Key>
+            <PropertyRef Name="IdentificationTypeCode" />
+          </Key>
+          <Property Name="IdentificationTypeCode" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_Client_IdentificationType" FromRole="IdentificationType" ToRole="Client" />
+          <NavigationProperty Name="User" Relationship="Self.FK_User_IdentityType" FromRole="IdentificationType" ToRole="User" />
+        </EntityType>
+        <EntityType Name="PaymentMethodTypeEntity">
+          <Key>
+            <PropertyRef Name="PaymentMethodTypeCode" />
+          </Key>
+          <Property Name="PaymentMethodTypeCode" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Bill" Relationship="Self.FK_Bill_PaymentMethod" FromRole="PaymentMethodType" ToRole="Bill" />
+        </EntityType>
+        <EntityType Name="ProductEntity">
+          <Key>
+            <PropertyRef Name="ProductId" />
+          </Key>
+          <Property Name="ProductId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId_FK" Type="Int64" Nullable="false" />
+          <Property Name="Price" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="MeasurementUnit" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="160" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CurrencyType" Type="String" MaxLength="3" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="BarCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ProductType" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ProductCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="MeasurementUnitType" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="CurrencyType1" Relationship="Self.FK_Product_CurrencyType" FromRole="Product" ToRole="CurrencyType" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Product_User" FromRole="Product" ToRole="User" />
+          <NavigationProperty Name="ProductsByClient" Relationship="Self.FK_ProductsByClient_Product" FromRole="Product" ToRole="ProductsByClient" />
+        </EntityType>
+        <EntityType Name="ProductsByClientEntity">
+          <Key>
+            <PropertyRef Name="ProductsByClientId" />
+          </Key>
+          <Property Name="ProductsByClientId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductId_FK" Type="Int64" Nullable="false" />
+          <Property Name="ClientId_FK" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_ProductsByClient_Client" FromRole="ProductsByClient" ToRole="Client" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_ProductsByClient_Product" FromRole="ProductsByClient" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="ProductServiceTypeEntity">
+          <Key>
+            <PropertyRef Name="ProductServiceTypeCode" />
+          </Key>
+          <Property Name="ProductServiceTypeCode" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ProvinciaTypeEntity">
+          <Key>
+            <PropertyRef Name="ProvinciaTypeId" />
+          </Key>
+          <Property Name="ProvinciaTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProvinciaName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ProvinciaTypeCode" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ReferenceDocumentTypeEntity">
+          <Key>
+            <PropertyRef Name="ReferenceDocumentTypeCode" />
+          </Key>
+          <Property Name="ReferenceDocumentTypeCode" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="CreditOrDebitNote" Relationship="Self.FK_CreditOrDebitNote_DocumentType" FromRole="ReferenceDocumentType" ToRole="CreditOrDebitNote" />
+        </EntityType>
+        <EntityType Name="ReferencesCodeTypeEntity">
+          <Key>
+            <PropertyRef Name="ReferencesTypeCode" />
+          </Key>
+          <Property Name="ReferencesTypeCode" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="CreditOrDebitNote" Relationship="Self.FK_CreditOrDebitNote_ReferenceCode" FromRole="ReferencesCodeType" ToRole="CreditOrDebitNote" />
+        </EntityType>
+        <EntityType Name="SellConditionsTypeEntity">
+          <Key>
+            <PropertyRef Name="SellConditionsTypeCode" />
+          </Key>
+          <Property Name="SellConditionsTypeCode" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Bill" Relationship="Self.FK_Bill_SellCondition" FromRole="SellConditionsType" ToRole="Bill" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="TaxesTypeEntity">
+          <Key>
+            <PropertyRef Name="TaxesTypeCode" />
+          </Key>
+          <Property Name="TaxesTypeCode" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Bill" Relationship="Self.FK_Bill_TaxType" FromRole="TaxesType" ToRole="Bill" />
+        </EntityType>
+        <EntityType Name="UserEntity">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SecondName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserLegalNumber" Type="String" MaxLength="12" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="HaciendaUsername" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="HaciendaPassword" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="HaciendaCryptographicPIN" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="HaciendaCryptographicFile" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="HaciendaCryptographicFileName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="HaciendaUserValidation" Type="Boolean" Nullable="false" />
+          <Property Name="IdentificationType" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ComercialName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ProvinciaCode" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CantonCode" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DistritoCode" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="BarrioCode" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="LocationDescription" Type="String" MaxLength="160" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PhoneNumberCountryCode" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="FaxCountryCode" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="Fax" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AppConfiguration" Relationship="Self.FK_AppConfiguration_User" FromRole="User" ToRole="AppConfiguration" />
+          <NavigationProperty Name="Bill" Relationship="Self.FK_Bill_User" FromRole="User" ToRole="Bill" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_User_Client" FromRole="User" ToRole="Client" />
+          <NavigationProperty Name="IdentificationType1" Relationship="Self.FK_User_IdentityType" FromRole="User" ToRole="IdentificationType" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_Product_User" FromRole="User" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK_AppConfiguration_User">
+          <End Role="User" Type="Goval.FacturaGoval.Business.DevelopmentModel.UserEntity" Multiplicity="1" />
+          <End Role="AppConfiguration" Type="Goval.FacturaGoval.Business.DevelopmentModel.AppConfigurationEntity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="AppConfiguration">
+              <PropertyRef Name="UserId_FK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bill_Client">
+          <End Role="Client" Type="Goval.FacturaGoval.Business.DevelopmentModel.ClientEntity" Multiplicity="1" />
+          <End Role="Bill" Type="Goval.FacturaGoval.Business.DevelopmentModel.BillEntity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="Bill">
+              <PropertyRef Name="ClientId_FK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bill_Exoneration">
+          <End Role="Exoneration" Type="Goval.FacturaGoval.Business.DevelopmentModel.ExonerationEntity" Multiplicity="0..1" />
+          <End Role="Bill" Type="Goval.FacturaGoval.Business.DevelopmentModel.BillEntity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exoneration">
+              <PropertyRef Name="ExonerationId" />
+            </Principal>
+            <Dependent Role="Bill">
+              <PropertyRef Name="ExonerationId_FK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bill_PaymentMethod">
+          <End Role="PaymentMethodType" Type="Goval.FacturaGoval.Business.DevelopmentModel.PaymentMethodTypeEntity" Multiplicity="1" />
+          <End Role="Bill" Type="Goval.FacturaGoval.Business.DevelopmentModel.BillEntity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentMethodType">
+              <PropertyRef Name="PaymentMethodTypeCode" />
+            </Principal>
+            <Dependent Role="Bill">
+              <PropertyRef Name="PaymentMethod" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bill_SellCondition">
+          <End Role="SellConditionsType" Type="Goval.FacturaGoval.Business.DevelopmentModel.SellConditionsTypeEntity" Multiplicity="1" />
+          <End Role="Bill" Type="Goval.FacturaGoval.Business.DevelopmentModel.BillEntity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SellConditionsType">
+              <PropertyRef Name="SellConditionsTypeCode" />
+            </Principal>
+            <Dependent Role="Bill">
+              <PropertyRef Name="SellCondition" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bill_TaxType">
+          <End Role="TaxesType" Type="Goval.FacturaGoval.Business.DevelopmentModel.TaxesTypeEntity" Multiplicity="0..1" />
+          <End Role="Bill" Type="Goval.FacturaGoval.Business.DevelopmentModel.BillEntity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TaxesType">
+              <PropertyRef Name="TaxesTypeCode" />
+            </Principal>
+            <Dependent Role="Bill">
+              <PropertyRef Name="TaxCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bill_User">
+          <End Role="User" Type="Goval.FacturaGoval.Business.DevelopmentModel.UserEntity" Multiplicity="1" />
+          <End Role="Bill" Type="Goval.FacturaGoval.Business.DevelopmentModel.BillEntity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Bill">
+              <PropertyRef Name="UserId_FK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CreditOrDebitNote_Bill">
+          <End Role="Bill" Type="Goval.FacturaGoval.Business.DevelopmentModel.BillEntity" Multiplicity="0..1" />
+          <End Role="CreditOrDebitNote" Type="Goval.FacturaGoval.Business.DevelopmentModel.CreditOrDebitNoteEntity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bill">
+              <PropertyRef Name="BillId" />
+            </Principal>
+            <Dependent Role="CreditOrDebitNote">
+              <PropertyRef Name="BillId_FK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Client_IdentificationType">
+          <End Role="IdentificationType" Type="Goval.FacturaGoval.Business.DevelopmentModel.IdentificationTypeEntity" Multiplicity="0..1" />
+          <End Role="Client" Type="Goval.FacturaGoval.Business.DevelopmentModel.ClientEntity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IdentificationType">
+              <PropertyRef Name="IdentificationTypeCode" />
+            </Principal>
+            <Dependent Role="Client">
+              <PropertyRef Name="IdentificationType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductsByClient_Client">
+          <End Role="Client" Type="Goval.FacturaGoval.Business.DevelopmentModel.ClientEntity" Multiplicity="1" />
+          <End Role="ProductsByClient" Type="Goval.FacturaGoval.Business.DevelopmentModel.ProductsByClientEntity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="ProductsByClient">
+              <PropertyRef Name="ClientId_FK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Client">
+          <End Role="User" Type="Goval.FacturaGoval.Business.DevelopmentModel.UserEntity" Multiplicity="1" />
+          <End Role="Client" Type="Goval.FacturaGoval.Business.DevelopmentModel.ClientEntity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Client">
+              <PropertyRef Name="UserId_FK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CreditOrDebitNote_DocumentType">
+          <End Role="ReferenceDocumentType" Type="Goval.FacturaGoval.Business.DevelopmentModel.ReferenceDocumentTypeEntity" Multiplicity="1" />
+          <End Role="CreditOrDebitNote" Type="Goval.FacturaGoval.Business.DevelopmentModel.CreditOrDebitNoteEntity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ReferenceDocumentType">
+              <PropertyRef Name="ReferenceDocumentTypeCode" />
+            </Principal>
+            <Dependent Role="CreditOrDebitNote">
+              <PropertyRef Name="ReferenceDocumentType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CreditOrDebitNote_ReferenceCode">
+          <End Role="ReferencesCodeType" Type="Goval.FacturaGoval.Business.DevelopmentModel.ReferencesCodeTypeEntity" Multiplicity="1" />
+          <End Role="CreditOrDebitNote" Type="Goval.FacturaGoval.Business.DevelopmentModel.CreditOrDebitNoteEntity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ReferencesCodeType">
+              <PropertyRef Name="ReferencesTypeCode" />
+            </Principal>
+            <Dependent Role="CreditOrDebitNote">
+              <PropertyRef Name="ReferenceCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_CurrencyType">
+          <End Role="CurrencyType" Type="Goval.FacturaGoval.Business.DevelopmentModel.CurrencyTypeEntity" Multiplicity="1" />
+          <End Role="Product" Type="Goval.FacturaGoval.Business.DevelopmentModel.ProductEntity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CurrencyType">
+              <PropertyRef Name="CurrencyTypeCode" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="CurrencyType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Exoneration_ExonerationType">
+          <End Role="ExonerationAuthorizationDocumentType" Type="Goval.FacturaGoval.Business.DevelopmentModel.ExonerationAuthorizationDocumentTypeEntity" Multiplicity="1" />
+          <End Role="Exoneration" Type="Goval.FacturaGoval.Business.DevelopmentModel.ExonerationEntity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ExonerationAuthorizationDocumentType">
+              <PropertyRef Name="ExonerationAuthorizationDocumentTypeCode" />
+            </Principal>
+            <Dependent Role="Exoneration">
+              <PropertyRef Name="DocumentType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_IdentityType">
+          <End Role="IdentificationType" Type="Goval.FacturaGoval.Business.DevelopmentModel.IdentificationTypeEntity" Multiplicity="1" />
+          <End Role="User" Type="Goval.FacturaGoval.Business.DevelopmentModel.UserEntity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IdentificationType">
+              <PropertyRef Name="IdentificationTypeCode" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="IdentificationType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_User">
+          <End Role="User" Type="Goval.FacturaGoval.Business.DevelopmentModel.UserEntity" Multiplicity="1" />
+          <End Role="Product" Type="Goval.FacturaGoval.Business.DevelopmentModel.ProductEntity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="UserId_FK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductsByClient_Product">
+          <End Role="Product" Type="Goval.FacturaGoval.Business.DevelopmentModel.ProductEntity" Multiplicity="1" />
+          <End Role="ProductsByClient" Type="Goval.FacturaGoval.Business.DevelopmentModel.ProductsByClientEntity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="ProductsByClient">
+              <PropertyRef Name="ProductId_FK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BusinessDataModelEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AppConfiguration" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.AppConfigurationEntity" />
+          <EntitySet Name="BarrioType" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.BarrioTypeEntity" />
+          <EntitySet Name="Bill" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.BillEntity" />
+          <EntitySet Name="BillingHistory" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.BillingHistoryEntity" />
+          <EntitySet Name="CantonType" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.CantonTypeEntity" />
+          <EntitySet Name="Client" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.ClientEntity" />
+          <EntitySet Name="CreditOrDebitNote" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.CreditOrDebitNoteEntity" />
+          <EntitySet Name="CurrencyType" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.CurrencyTypeEntity" />
+          <EntitySet Name="DistritoType" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.DistritoTypeEntity" />
+          <EntitySet Name="ExceptionsType" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.ExceptionsTypeEntity" />
+          <EntitySet Name="Exoneration" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.ExonerationEntity" />
+          <EntitySet Name="ExonerationAuthorizationDocumentType" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.ExonerationAuthorizationDocumentTypeEntity" />
+          <EntitySet Name="IdentificationType" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.IdentificationTypeEntity" />
+          <EntitySet Name="PaymentMethodType" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.PaymentMethodTypeEntity" />
+          <EntitySet Name="Product" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.ProductEntity" />
+          <EntitySet Name="ProductsByClient" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.ProductsByClientEntity" />
+          <EntitySet Name="ProductServiceType" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.ProductServiceTypeEntity" />
+          <EntitySet Name="ProvinciaType" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.ProvinciaTypeEntity" />
+          <EntitySet Name="ReferenceDocumentType" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.ReferenceDocumentTypeEntity" />
+          <EntitySet Name="ReferencesCodeType" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.ReferencesCodeTypeEntity" />
+          <EntitySet Name="SellConditionsType" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.SellConditionsTypeEntity" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="TaxesType" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.TaxesTypeEntity" />
+          <EntitySet Name="User" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.UserEntity" />
+          <AssociationSet Name="FK_AppConfiguration_User" Association="Self.FK_AppConfiguration_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="AppConfiguration" EntitySet="AppConfiguration" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bill_Client" Association="Self.FK_Bill_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="Bill" EntitySet="Bill" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bill_Exoneration" Association="Self.FK_Bill_Exoneration">
+            <End Role="Exoneration" EntitySet="Exoneration" />
+            <End Role="Bill" EntitySet="Bill" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bill_PaymentMethod" Association="Self.FK_Bill_PaymentMethod">
+            <End Role="PaymentMethodType" EntitySet="PaymentMethodType" />
+            <End Role="Bill" EntitySet="Bill" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bill_SellCondition" Association="Self.FK_Bill_SellCondition">
+            <End Role="SellConditionsType" EntitySet="SellConditionsType" />
+            <End Role="Bill" EntitySet="Bill" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bill_TaxType" Association="Self.FK_Bill_TaxType">
+            <End Role="TaxesType" EntitySet="TaxesType" />
+            <End Role="Bill" EntitySet="Bill" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bill_User" Association="Self.FK_Bill_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Bill" EntitySet="Bill" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CreditOrDebitNote_Bill" Association="Self.FK_CreditOrDebitNote_Bill">
+            <End Role="Bill" EntitySet="Bill" />
+            <End Role="CreditOrDebitNote" EntitySet="CreditOrDebitNote" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Client_IdentificationType" Association="Self.FK_Client_IdentificationType">
+            <End Role="IdentificationType" EntitySet="IdentificationType" />
+            <End Role="Client" EntitySet="Client" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductsByClient_Client" Association="Self.FK_ProductsByClient_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="ProductsByClient" EntitySet="ProductsByClient" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Client" Association="Self.FK_User_Client">
+            <End Role="User" EntitySet="User" />
+            <End Role="Client" EntitySet="Client" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CreditOrDebitNote_DocumentType" Association="Self.FK_CreditOrDebitNote_DocumentType">
+            <End Role="ReferenceDocumentType" EntitySet="ReferenceDocumentType" />
+            <End Role="CreditOrDebitNote" EntitySet="CreditOrDebitNote" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CreditOrDebitNote_ReferenceCode" Association="Self.FK_CreditOrDebitNote_ReferenceCode">
+            <End Role="ReferencesCodeType" EntitySet="ReferencesCodeType" />
+            <End Role="CreditOrDebitNote" EntitySet="CreditOrDebitNote" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_CurrencyType" Association="Self.FK_Product_CurrencyType">
+            <End Role="CurrencyType" EntitySet="CurrencyType" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Exoneration_ExonerationType" Association="Self.FK_Exoneration_ExonerationType">
+            <End Role="ExonerationAuthorizationDocumentType" EntitySet="ExonerationAuthorizationDocumentType" />
+            <End Role="Exoneration" EntitySet="Exoneration" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_IdentityType" Association="Self.FK_User_IdentityType">
+            <End Role="IdentificationType" EntitySet="IdentificationType" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_User" Association="Self.FK_Product_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductsByClient_Product" Association="Self.FK_ProductsByClient_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="ProductsByClient" EntitySet="ProductsByClient" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="GovalFacturaGovalBusinessDevelopmentModelStoreContainer" CdmEntityContainer="BusinessDataModelEntities">
+          <EntitySetMapping Name="AppConfiguration">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.AppConfigurationEntity">
+              <MappingFragment StoreEntitySet="AppConfiguration">
+                <ScalarProperty Name="AppConfigurationId" ColumnName="AppConfigurationId" />
+                <ScalarProperty Name="StartBillNumber" ColumnName="StartBillNumber" />
+                <ScalarProperty Name="UserId_FK" ColumnName="UserId_FK" />
+                <ScalarProperty Name="Base64Logotype" ColumnName="Base64Logotype" />
+                <ScalarProperty Name="EmailScheme" ColumnName="EmailScheme" />
+                <ScalarProperty Name="Credits" ColumnName="Credits" />
+                <ScalarProperty Name="IsPremiumAccount" ColumnName="IsPremiumAccount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BarrioType">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.BarrioTypeEntity">
+              <MappingFragment StoreEntitySet="BarrioType">
+                <ScalarProperty Name="BarrioTypeId" ColumnName="BarrioTypeId" />
+                <ScalarProperty Name="BarrioName" ColumnName="BarrioName" />
+                <ScalarProperty Name="BarrioTypeCode" ColumnName="BarrioTypeCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Bill">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.BillEntity">
+              <MappingFragment StoreEntitySet="Bill">
+                <ScalarProperty Name="Observation" ColumnName="Observation" />
+                <ScalarProperty Name="BillId" ColumnName="BillId" />
+                <ScalarProperty Name="EmissionDate" ColumnName="EmissionDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="UserId_FK" ColumnName="UserId_FK" />
+                <ScalarProperty Name="PurchaseOrderCode" ColumnName="PurchaseOrderCode" />
+                <ScalarProperty Name="LastSendDate" ColumnName="LastSendDate" />
+                <ScalarProperty Name="TotalAfterDiscount" ColumnName="TotalAfterDiscount" />
+                <ScalarProperty Name="TaxesToPay" ColumnName="TaxesToPay" />
+                <ScalarProperty Name="SubTotalProducts" ColumnName="SubTotalProducts" />
+                <ScalarProperty Name="DiscountAmount" ColumnName="DiscountAmount" />
+                <ScalarProperty Name="TotalToPay" ColumnName="TotalToPay" />
+                <ScalarProperty Name="ClientId_FK" ColumnName="ClientId_FK" />
+                <ScalarProperty Name="XMLSendedToHacienda" ColumnName="XMLSendedToHacienda" />
+                <ScalarProperty Name="XMLReceivedFromHacienda" ColumnName="XMLReceivedFromHacienda" />
+                <ScalarProperty Name="SoldProductsJSON" ColumnName="SoldProductsJSON" />
+                <ScalarProperty Name="HaciendaFailCounter" ColumnName="HaciendaFailCounter" />
+                <ScalarProperty Name="DocumentKey" ColumnName="DocumentKey" />
+                <ScalarProperty Name="ConsecutiveNumber" ColumnName="ConsecutiveNumber" />
+                <ScalarProperty Name="SellCondition" ColumnName="SellCondition" />
+                <ScalarProperty Name="CreditTerm" ColumnName="CreditTerm" />
+                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
+                <ScalarProperty Name="DiscountNature" ColumnName="DiscountNature" />
+                <ScalarProperty Name="TaxCode" ColumnName="TaxCode" />
+                <ScalarProperty Name="HaveExoneration" ColumnName="HaveExoneration" />
+                <ScalarProperty Name="ExonerationId_FK" ColumnName="ExonerationId_FK" />
+                <ScalarProperty Name="ExonerationAmount" ColumnName="ExonerationAmount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BillingHistory">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.BillingHistoryEntity">
+              <MappingFragment StoreEntitySet="BillingHistory">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="DocumentKey" ColumnName="DocumentKey" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CantonType">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.CantonTypeEntity">
+              <MappingFragment StoreEntitySet="CantonType">
+                <ScalarProperty Name="CantonTypeId" ColumnName="CantonTypeId" />
+                <ScalarProperty Name="CantonName" ColumnName="CantonName" />
+                <ScalarProperty Name="CantonTypeCode" ColumnName="CantonTypeCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Client">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.ClientEntity">
+              <MappingFragment StoreEntitySet="Client">
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="DefaultDiscountPercentage" ColumnName="DefaultDiscountPercentage" />
+                <ScalarProperty Name="DefaultTaxesPercentage" ColumnName="DefaultTaxesPercentage" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="ClientLegalNumber" ColumnName="ClientLegalNumber" />
+                <ScalarProperty Name="LocationDescription" ColumnName="LocationDescription" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="DefaultPaymentTerm" ColumnName="DefaultPaymentTerm" />
+                <ScalarProperty Name="ComercialName" ColumnName="ComercialName" />
+                <ScalarProperty Name="IsIndependentPerson" ColumnName="IsIndependentPerson" />
+                <ScalarProperty Name="UserId_FK" ColumnName="UserId_FK" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="SecondName" ColumnName="SecondName" />
+                <ScalarProperty Name="IdentificationType" ColumnName="IdentificationType" />
+                <ScalarProperty Name="ForeignIdentification" ColumnName="ForeignIdentification" />
+                <ScalarProperty Name="ProvinciaCode" ColumnName="ProvinciaCode" />
+                <ScalarProperty Name="CantonCode" ColumnName="CantonCode" />
+                <ScalarProperty Name="DistritoCode" ColumnName="DistritoCode" />
+                <ScalarProperty Name="BarrioCode" ColumnName="BarrioCode" />
+                <ScalarProperty Name="PhoneNumberCountryCode" ColumnName="PhoneNumberCountryCode" />
+                <ScalarProperty Name="FaxCountryCode" ColumnName="FaxCountryCode" />
+                <ScalarProperty Name="Fax" ColumnName="Fax" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CreditOrDebitNote">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.CreditOrDebitNoteEntity">
+              <MappingFragment StoreEntitySet="CreditOrDebitNote">
+                <ScalarProperty Name="CreditOrDebitNoteId" ColumnName="CreditOrDebitNoteId" />
+                <ScalarProperty Name="IsCreditNote" ColumnName="IsCreditNote" />
+                <ScalarProperty Name="BillId_FK" ColumnName="BillId_FK" />
+                <ScalarProperty Name="DocuementKey" ColumnName="DocuementKey" />
+                <ScalarProperty Name="ReferenceDocumentType" ColumnName="ReferenceDocumentType" />
+                <ScalarProperty Name="EmissionDate" ColumnName="EmissionDate" />
+                <ScalarProperty Name="ReferenceCode" ColumnName="ReferenceCode" />
+                <ScalarProperty Name="ReasonDescription" ColumnName="ReasonDescription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CurrencyType">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.CurrencyTypeEntity">
+              <MappingFragment StoreEntitySet="CurrencyType">
+                <ScalarProperty Name="CurrencyTypeCode" ColumnName="CurrencyTypeCode" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+                <ScalarProperty Name="CoinName" ColumnName="CoinName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DistritoType">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.DistritoTypeEntity">
+              <MappingFragment StoreEntitySet="DistritoType">
+                <ScalarProperty Name="DistritoTypeId" ColumnName="DistritoTypeId" />
+                <ScalarProperty Name="DistritoName" ColumnName="DistritoName" />
+                <ScalarProperty Name="DistritoTypeCode" ColumnName="DistritoTypeCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExceptionsType">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.ExceptionsTypeEntity">
+              <MappingFragment StoreEntitySet="ExceptionsType">
+                <ScalarProperty Name="ExpectionsTypeCode" ColumnName="ExpectionsTypeCode" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Exoneration">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.ExonerationEntity">
+              <MappingFragment StoreEntitySet="Exoneration">
+                <ScalarProperty Name="ExonerationId" ColumnName="ExonerationId" />
+                <ScalarProperty Name="DocumentType" ColumnName="DocumentType" />
+                <ScalarProperty Name="DocumentNumber" ColumnName="DocumentNumber" />
+                <ScalarProperty Name="InstitutionName" ColumnName="InstitutionName" />
+                <ScalarProperty Name="EmissionDate" ColumnName="EmissionDate" />
+                <ScalarProperty Name="TaxAmount" ColumnName="TaxAmount" />
+                <ScalarProperty Name="PurchasePercentaje" ColumnName="PurchasePercentaje" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExonerationAuthorizationDocumentType">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.ExonerationAuthorizationDocumentTypeEntity">
+              <MappingFragment StoreEntitySet="ExonerationAuthorizationDocumentType">
+                <ScalarProperty Name="ExonerationAuthorizationDocumentTypeCode" ColumnName="ExonerationAuthorizationDocumentTypeCode" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IdentificationType">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.IdentificationTypeEntity">
+              <MappingFragment StoreEntitySet="IdentificationType">
+                <ScalarProperty Name="IdentificationTypeCode" ColumnName="IdentificationTypeCode" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PaymentMethodType">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.PaymentMethodTypeEntity">
+              <MappingFragment StoreEntitySet="PaymentMethodType">
+                <ScalarProperty Name="PaymentMethodTypeCode" ColumnName="PaymentMethodTypeCode" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Product">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.ProductEntity">
+              <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="UserId_FK" ColumnName="UserId_FK" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="MeasurementUnit" ColumnName="MeasurementUnit" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CurrencyType" ColumnName="CurrencyType" />
+                <ScalarProperty Name="BarCode" ColumnName="BarCode" />
+                <ScalarProperty Name="ProductType" ColumnName="ProductType" />
+                <ScalarProperty Name="ProductCode" ColumnName="ProductCode" />
+                <ScalarProperty Name="MeasurementUnitType" ColumnName="MeasurementUnitType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductsByClient">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.ProductsByClientEntity">
+              <MappingFragment StoreEntitySet="ProductsByClient">
+                <ScalarProperty Name="ProductsByClientId" ColumnName="ProductsByClientId" />
+                <ScalarProperty Name="ProductId_FK" ColumnName="ProductId_FK" />
+                <ScalarProperty Name="ClientId_FK" ColumnName="ClientId_FK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductServiceType">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.ProductServiceTypeEntity">
+              <MappingFragment StoreEntitySet="ProductServiceType">
+                <ScalarProperty Name="ProductServiceTypeCode" ColumnName="ProductServiceTypeCode" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProvinciaType">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.ProvinciaTypeEntity">
+              <MappingFragment StoreEntitySet="ProvinciaType">
+                <ScalarProperty Name="ProvinciaTypeId" ColumnName="ProvinciaTypeId" />
+                <ScalarProperty Name="ProvinciaName" ColumnName="ProvinciaName" />
+                <ScalarProperty Name="ProvinciaTypeCode" ColumnName="ProvinciaTypeCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReferenceDocumentType">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.ReferenceDocumentTypeEntity">
+              <MappingFragment StoreEntitySet="ReferenceDocumentType">
+                <ScalarProperty Name="ReferenceDocumentTypeCode" ColumnName="ReferenceDocumentTypeCode" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReferencesCodeType">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.ReferencesCodeTypeEntity">
+              <MappingFragment StoreEntitySet="ReferencesCodeType">
+                <ScalarProperty Name="ReferencesTypeCode" ColumnName="ReferencesTypeCode" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SellConditionsType">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.SellConditionsTypeEntity">
+              <MappingFragment StoreEntitySet="SellConditionsType">
+                <ScalarProperty Name="SellConditionsTypeCode" ColumnName="SellConditionsTypeCode" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TaxesType">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.TaxesTypeEntity">
+              <MappingFragment StoreEntitySet="TaxesType">
+                <ScalarProperty Name="TaxesTypeCode" ColumnName="TaxesTypeCode" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.UserEntity">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="SecondName" ColumnName="SecondName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="UserLegalNumber" ColumnName="UserLegalNumber" />
+                <ScalarProperty Name="HaciendaUsername" ColumnName="HaciendaUsername" />
+                <ScalarProperty Name="HaciendaPassword" ColumnName="HaciendaPassword" />
+                <ScalarProperty Name="HaciendaCryptographicPIN" ColumnName="HaciendaCryptographicPIN" />
+                <ScalarProperty Name="HaciendaCryptographicFile" ColumnName="HaciendaCryptographicFile" />
+                <ScalarProperty Name="HaciendaCryptographicFileName" ColumnName="HaciendaCryptographicFileName" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="HaciendaUserValidation" ColumnName="HaciendaUserValidation" />
+                <ScalarProperty Name="IdentificationType" ColumnName="IdentificationType" />
+                <ScalarProperty Name="ComercialName" ColumnName="ComercialName" />
+                <ScalarProperty Name="ProvinciaCode" ColumnName="ProvinciaCode" />
+                <ScalarProperty Name="CantonCode" ColumnName="CantonCode" />
+                <ScalarProperty Name="DistritoCode" ColumnName="DistritoCode" />
+                <ScalarProperty Name="BarrioCode" ColumnName="BarrioCode" />
+                <ScalarProperty Name="LocationDescription" ColumnName="LocationDescription" />
+                <ScalarProperty Name="PhoneNumberCountryCode" ColumnName="PhoneNumberCountryCode" />
+                <ScalarProperty Name="FaxCountryCode" ColumnName="FaxCountryCode" />
+                <ScalarProperty Name="Fax" ColumnName="Fax" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

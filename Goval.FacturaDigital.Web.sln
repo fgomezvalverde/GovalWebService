@@ -1,0 +1,87 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goval.FacturaDigital.BusinessService", "Goval.FacturaDigital.BusinessService\Goval.FacturaDigital.BusinessService.csproj", "{29A0C027-7F9D-44E4-9D52-52DFF689C9E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goval.FacturaDigital.DataModel", "Goval.FacturaDigital.DataModel\Goval.FacturaDigital.DataModel.csproj", "{283AD42D-D707-4889-97F7-F4FC5A8B16F2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FacturaHacienda", "FacturaHacienda", "{9416FBD2-46DC-4881-86C9-5ED563377374}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "BitOne.FE.BLL", "FacturaHacienda\BitOne.FE.BLL\BitOne.FE.BLL.vbproj", "{9BBB7A37-47C1-4404-8083-8B69D03BF097}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "BitOne.FE.EN", "FacturaHacienda\BitOne.FE.EN\BitOne.FE.EN.vbproj", "{49B9DC66-4426-4D0F-BCA5-314A88EFE5DB}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "BitOne.FE.Resources", "FacturaHacienda\BitOne.FE.Resources\BitOne.FE.Resources.vbproj", "{63BAF6F1-B40C-47BD-8931-0424DF37075E}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "BitOne.FE.UI", "FacturaHacienda\BitOne.FE.UI\BitOne.FE.UI.vbproj", "{83236206-0A64-455A-A3C6-B1B70A42D637}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goval.FacturaDigital.DataContracts", "Goval.FacturaDigital.DataContracts\Goval.FacturaDigital.DataContracts.csproj", "{8E529B7A-3B7D-4D8D-884A-687122BFD9A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goval.FacturaDigital.AuthenticationService", "Goval.FacturaDigital.AuthenticationService\Goval.FacturaDigital.AuthenticationService.csproj", "{B8C4AB5F-DA95-433B-849D-AF66CF921C79}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goval.FacturaDigital.BillingWorkerRole", "BillingWorkerRole\Goval.FacturaDigital.BillingWorkerRole.csproj", "{7AC3D594-D010-4B1A-8F2B-F7D2330227C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goval.FacturaDigital.Core", "Goval.FacturaDigital.Core\Goval.FacturaDigital.Core.csproj", "{60A93FD8-DC96-4F66-87F0-D55D5FDC6ECB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{29A0C027-7F9D-44E4-9D52-52DFF689C9E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29A0C027-7F9D-44E4-9D52-52DFF689C9E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29A0C027-7F9D-44E4-9D52-52DFF689C9E3}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{29A0C027-7F9D-44E4-9D52-52DFF689C9E3}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{283AD42D-D707-4889-97F7-F4FC5A8B16F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{283AD42D-D707-4889-97F7-F4FC5A8B16F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{283AD42D-D707-4889-97F7-F4FC5A8B16F2}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{283AD42D-D707-4889-97F7-F4FC5A8B16F2}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{9BBB7A37-47C1-4404-8083-8B69D03BF097}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BBB7A37-47C1-4404-8083-8B69D03BF097}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BBB7A37-47C1-4404-8083-8B69D03BF097}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BBB7A37-47C1-4404-8083-8B69D03BF097}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{49B9DC66-4426-4D0F-BCA5-314A88EFE5DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49B9DC66-4426-4D0F-BCA5-314A88EFE5DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49B9DC66-4426-4D0F-BCA5-314A88EFE5DB}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{49B9DC66-4426-4D0F-BCA5-314A88EFE5DB}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{63BAF6F1-B40C-47BD-8931-0424DF37075E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63BAF6F1-B40C-47BD-8931-0424DF37075E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63BAF6F1-B40C-47BD-8931-0424DF37075E}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{63BAF6F1-B40C-47BD-8931-0424DF37075E}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{83236206-0A64-455A-A3C6-B1B70A42D637}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83236206-0A64-455A-A3C6-B1B70A42D637}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83236206-0A64-455A-A3C6-B1B70A42D637}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{83236206-0A64-455A-A3C6-B1B70A42D637}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{8E529B7A-3B7D-4D8D-884A-687122BFD9A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E529B7A-3B7D-4D8D-884A-687122BFD9A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E529B7A-3B7D-4D8D-884A-687122BFD9A7}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E529B7A-3B7D-4D8D-884A-687122BFD9A7}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{B8C4AB5F-DA95-433B-849D-AF66CF921C79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8C4AB5F-DA95-433B-849D-AF66CF921C79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8C4AB5F-DA95-433B-849D-AF66CF921C79}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8C4AB5F-DA95-433B-849D-AF66CF921C79}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{7AC3D594-D010-4B1A-8F2B-F7D2330227C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AC3D594-D010-4B1A-8F2B-F7D2330227C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AC3D594-D010-4B1A-8F2B-F7D2330227C0}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AC3D594-D010-4B1A-8F2B-F7D2330227C0}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{60A93FD8-DC96-4F66-87F0-D55D5FDC6ECB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60A93FD8-DC96-4F66-87F0-D55D5FDC6ECB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60A93FD8-DC96-4F66-87F0-D55D5FDC6ECB}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{60A93FD8-DC96-4F66-87F0-D55D5FDC6ECB}.Release|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9BBB7A37-47C1-4404-8083-8B69D03BF097} = {9416FBD2-46DC-4881-86C9-5ED563377374}
+		{49B9DC66-4426-4D0F-BCA5-314A88EFE5DB} = {9416FBD2-46DC-4881-86C9-5ED563377374}
+		{63BAF6F1-B40C-47BD-8931-0424DF37075E} = {9416FBD2-46DC-4881-86C9-5ED563377374}
+		{83236206-0A64-455A-A3C6-B1B70A42D637} = {9416FBD2-46DC-4881-86C9-5ED563377374}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2A0C73E5-CB6F-4482-AB12-8923739BDF95}
+	EndGlobalSection
+EndGlobal

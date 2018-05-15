@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="6b587ba910d3440bac84066e0f3c4432" Name="Diagram1" ZoomLevel="88">
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.AppConfigurationEntity" Width="1.5" PointX="5.25" PointY="16.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.BarrioTypeEntity" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.BillEntity" Width="1.5" PointX="10.5" PointY="11.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.BillingHistoryEntity" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.CantonTypeEntity" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.ClientEntity" Width="1.5" PointX="5.25" PointY="9.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.CreditOrDebitNoteEntity" Width="1.5" PointX="12.75" PointY="16.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.CurrencyTypeEntity" Width="1.5" PointX="6" PointY="19.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.DistritoTypeEntity" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.ExceptionsTypeEntity" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.ExonerationEntity" Width="1.5" PointX="8.25" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.ExonerationAuthorizationDocumentTypeEntity" Width="1.5" PointX="6" PointY="5.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.IdentificationTypeEntity" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.PaymentMethodTypeEntity" Width="1.5" PointX="8.25" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.ProductEntity" Width="1.5" PointX="8.25" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.ProductsByClientEntity" Width="1.5" PointX="13.5" PointY="13.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.ProductServiceTypeEntity" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.ProvinciaTypeEntity" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.ReferenceDocumentTypeEntity" Width="1.5" PointX="10.5" PointY="20.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.ReferencesCodeTypeEntity" Width="1.5" PointX="10.5" PointY="22.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.SellConditionsTypeEntity" Width="1.5" PointX="8.25" PointY="21.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.sysdiagrams" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.TaxesTypeEntity" Width="1.5" PointX="8.25" PointY="23.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.UserEntity" Width="1.5" PointX="3" PointY="14.25" IsExpanded="true" />
+        <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_AppConfiguration_User" ManuallyRouted="false" />
+        <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_Bill_Client" ManuallyRouted="false" />
+        <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_Bill_Exoneration" ManuallyRouted="false" />
+        <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_Bill_PaymentMethod" ManuallyRouted="false" />
+        <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_Bill_SellCondition" ManuallyRouted="false" />
+        <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_Bill_TaxType" ManuallyRouted="false" />
+        <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_Bill_User" ManuallyRouted="false" />
+        <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_CreditOrDebitNote_Bill" ManuallyRouted="false" />
+        <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_Client_IdentificationType" ManuallyRouted="false" />
+        <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_ProductsByClient_Client" ManuallyRouted="false" />
+        <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_User_Client" ManuallyRouted="false" />
+        <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_CreditOrDebitNote_DocumentType" ManuallyRouted="false" />
+        <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_CreditOrDebitNote_ReferenceCode" ManuallyRouted="false" />
+        <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_Product_CurrencyType" ManuallyRouted="false" />
+        <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_Exoneration_ExonerationType" ManuallyRouted="false" />
+        <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_User_IdentityType" ManuallyRouted="false" />
+        <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_Product_User" ManuallyRouted="false" />
+        <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_ProductsByClient_Product" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8E529B7A-3B7D-4D8D-884A-687122BFD9A7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Goval.FacturaDigital.DataContracts</RootNamespace>
+    <AssemblyName>Goval.FacturaDigital.DataContracts</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BaseModel\BaseRequest.cs" />
+    <Compile Include="BaseModel\BaseResponse.cs" />
+    <Compile Include="BusinessServiceModel\BillRequest.cs" />
+    <Compile Include="BusinessServiceModel\BillResponse.cs" />
+    <Compile Include="BusinessServiceModel\ClientRequest.cs" />
+    <Compile Include="BusinessServiceModel\ClientResponse.cs" />
+    <Compile Include="BusinessServiceModel\LoginRequest.cs" />
+    <Compile Include="BusinessServiceModel\LoginResponse.cs" />
+    <Compile Include="BusinessServiceModel\ProductRequest.cs" />
+    <Compile Include="BusinessServiceModel\ProductResponse.cs" />
+    <Compile Include="BusinessServiceModel\SignupRequest.cs" />
+    <Compile Include="BusinessServiceModel\UserValidationRequest.cs" />
+    <Compile Include="MobileModel\AppConfiguration.cs" />
+    <Compile Include="MobileModel\Bill.cs" />
+    <Compile Include="MobileModel\BillStatus.cs" />
+    <Compile Include="MobileModel\Client.cs" />
+    <Compile Include="MobileModel\Exoneration.cs" />
+    <Compile Include="MobileModel\Product.cs" />
+    <Compile Include="MobileModel\User.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Goval.FacturaDigital.DataModel\Goval.FacturaDigital.DataModel.csproj">
+      <Project>{283ad42d-d707-4889-97f7-f4fc5a8b16f2}</Project>
+      <Name>Goval.FacturaDigital.DataModel</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
