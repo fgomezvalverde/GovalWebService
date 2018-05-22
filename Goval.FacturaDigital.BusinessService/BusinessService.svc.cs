@@ -21,7 +21,8 @@ namespace Goval.FacturaDigital.BusinessService
         private string TEMPORAL_VALIDATION_TOKEN = "0ed4b262-9fe5-4ad2-ad07-49cad10c7262";
         private Boolean ValidateToken(string pToken)
         {
-            if (pToken.Contains(TEMPORAL_VALIDATION_TOKEN))
+            if (!string.IsNullOrEmpty(pToken) && 
+                pToken.Contains(TEMPORAL_VALIDATION_TOKEN))
             {
                 return true;
             }
@@ -662,7 +663,8 @@ namespace Goval.FacturaDigital.BusinessService
                                         TaxCode = vUserBill.TaxCode,
                                         HaveExoneration = vUserBill.HaveExoneration,
                                         ExonerationAmount = vUserBill.ExonerationAmount,
-                                        Observation = vUserBill.Observation
+                                        Observation = vUserBill.Observation,
+                                        SystemMesagges = vUserBill.SystemMesagges
                                     }
                                     );
                             }

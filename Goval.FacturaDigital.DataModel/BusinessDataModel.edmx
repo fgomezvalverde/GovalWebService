@@ -56,6 +56,7 @@
           <Property Name="ExonerationId_FK" Type="bigint" />
           <Property Name="ExonerationAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="Observation" Type="nvarchar" MaxLength="300" />
+          <Property Name="SystemMesagges" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="BillingHistory">
           <Key>
@@ -657,6 +658,7 @@
           <NavigationProperty Name="User" Relationship="Self.FK_Bill_User" FromRole="Bill" ToRole="User" />
           <NavigationProperty Name="CreditOrDebitNote" Relationship="Self.FK_CreditOrDebitNote_Bill" FromRole="Bill" ToRole="CreditOrDebitNote" />
           <Property Name="Observation" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="SystemMesagges" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="BillingHistoryEntity">
           <Key>
@@ -1254,6 +1256,7 @@
           <EntitySetMapping Name="Bill">
             <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.BillEntity">
               <MappingFragment StoreEntitySet="Bill">
+                <ScalarProperty Name="SystemMesagges" ColumnName="SystemMesagges" />
                 <ScalarProperty Name="Observation" ColumnName="Observation" />
                 <ScalarProperty Name="BillId" ColumnName="BillId" />
                 <ScalarProperty Name="EmissionDate" ColumnName="EmissionDate" />

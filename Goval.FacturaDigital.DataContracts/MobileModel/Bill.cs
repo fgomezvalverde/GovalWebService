@@ -59,6 +59,9 @@ namespace Goval.FacturaDigital.DataContracts.MobileModel
         public string Observation { get; set; }
 
         [DataMember]
+        public string SystemMesagges { get; set; }
+
+        [DataMember]
         public bool HaveExoneration { get; set; }
         [DataMember]
         public decimal ExonerationAmount { get; set; }

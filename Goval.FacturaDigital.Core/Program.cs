@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using Goval.FacturaDigital.Core.BIlling;
+using Goval.FacturaDigital.DataContracts.MobileModel;
+using Goval.FacturaDigital.DataModel;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -97,24 +100,64 @@ namespace Goval.FacturaDigital.Core
         static void Main(string[] args)
         {
             //BIlling.BillingManager.CreateBill();
-            var vUserValiation = new BIlling.UserValidation();
-            /*vUserValiation.ValidateUserCredentials(new DataContracts.MobileModel.User
+            /*var vUserValiation = new BIlling.UserValidation();
+            vUserValiation.ValidateUserCredentials(new DataContracts.MobileModel.User
             {
                 HaciendaUsername = """"cpf-03-0453-0463@stag.comprobanteselectronicos.go.cr"""",
                 HaciendaPassword = """"}&eV*t;oJ({0$a|2No?!"""",
                 HaciendaCryptographicPIN = """"1234"""",
                 HaciendaCryptographicFile = base64File
-            }, false);*/
+            }, false);
             var obj = JsonConvert.DeserializeObject<DataContracts.MobileModel.Bill>(testBill);
             obj.ConsecutiveNumber = 1231243435;
             obj.EmissionDate = DateTime.Now;
             /*var bytesResult = BIlling.BillingManager.GenerateBillPDF(
                 obj,null
-                );*/
+                );
             //File.WriteAllBytes("C:\\DV\\Goval.FacturaDigital.BusinessService\\Goval.FacturaDigital.Core\\Foo.pdf", bytesResult);
 
             string test = DateTime.Now.ToString("ddMMyy");
-            Console.WriteLine(test);
+            Console.WriteLine(test);*/
+
+
+            try
+            {
+                using (BusinessDataModelEntities vContext = new BusinessDataModelEntities())
+                {
+                    vContext.Database.Connection.Open();
+                    var vBillList = vContext.Bill.AsQueryable();
+                    if (vBillList != null)
+                    {
+                        var vBillsToProcess = vBillList.Where<BillEntity>(x => x.Status.Equals(BillStatus.Processing.ToString()));
+                        if (vBillsToProcess != null && vBillsToProcess.Any())
+                        {
+                            foreach (var vBill in vBillsToProcess)
+                            {
+                                BillEntity vActualBill = vBill;
+                                var result = BillingManager.ProcessBill(ref vActualBill);
+                            }
+                            
+                        }
+                        else
+                        {
+                        }
+
+                    }
+                    else
+                    {
+                    }
+
+                    vContext.Database.Connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+
+
+
             Console.ReadLine();
         }
     }

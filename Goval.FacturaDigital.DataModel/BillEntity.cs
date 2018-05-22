@@ -47,6 +47,7 @@ namespace Goval.FacturaDigital.DataModel
         public Nullable<long> ExonerationId_FK { get; set; }
         public decimal ExonerationAmount { get; set; }
         public string Observation { get; set; }
+        public string SystemMesagges { get; set; }
     
         public virtual ClientEntity Client { get; set; }
         public virtual ExonerationEntity Exoneration { get; set; }

@@ -48,9 +48,21 @@ namespace Goval.FacturaDigital.Core.BIlling
                 var vListaMedioPago = new List<DocumentoMedioPago>();
                 var vDetalleDocumento = new List<DocumentoDetalle>();
 
+                //Encabezado
+                vDocumentoEncabezado.Clave = pBill.DocumentKey;
+                vDocumentoEncabezado.TipoCambio = 571;
+                vDocumentoEncabezado.Fecha = DateTime.Now;
+                vDocumentoEncabezado.Moneda = "CRC";
+                vDocumentoEncabezado.CondicionVenta = pBill.SellCondition ;
+                vDocumentoEncabezado.PlazoCredito = pBill.CreditTerm;
+                vDocumentoEncabezado.NormativaFechaResolucion = "20-02-2017 13:22:22";
+                vDocumentoEncabezado.NormativaNumeroResolucion = "DGT-R-48-2016";
+                vDocumentoEncabezado.Observacion = pBill.Observation;
+                vDocumentoEncabezado.SubTotal = Convert.ToDouble(pBill.TotalToPay);
+                vDocumentoEncabezado.DocumentoConsecutivo = pBill.ConsecutiveNumber+"";
 
                 //Emisor
-                vDocumentoEncabezado.Emisor.Identificacion = pBill.User.UserLegalNumber.PadLeft(12,'0');
+                vDocumentoEncabezado.Emisor.Identificacion = pBill.User.UserLegalNumber;
                 vDocumentoEncabezado.Emisor.IdentificacionTipo = pBill.User.IdentificationType;
                 vDocumentoEncabezado.Emisor.Direccion = pBill.User.LocationDescription;
                 vDocumentoEncabezado.Emisor.CodigoPais = "506";
@@ -84,6 +96,7 @@ namespace Goval.FacturaDigital.Core.BIlling
                 var vMedioDePago = new DocumentoMedioPago();
                 vMedioDePago.Codigo = pBill.PaymentMethod;
                 vListaMedioPago.Add(vMedioDePago);
+                vDocumentoEncabezado.MedioPago = vListaMedioPago;
 
                 var vListaProductos = JsonConvert.DeserializeObject<Client>(pBill.SoldProductsJSON);
                 foreach (var vProducto in vListaProductos.ClientProducts)
@@ -132,16 +145,26 @@ namespace Goval.FacturaDigital.Core.BIlling
 
                 var vReply = vServicioBLL.fGenerarDocumento(vDocumentoEncabezado, vUsuarioHacienda, MaxRetryCount);
 
-                if (vReply != null && vReply.ok)
+                if (vReply != null)
                 {
-                    if (!string.IsNullOrEmpty(vReply.xmlDocumento))
+                    pBill.SystemMesagges = vReply.estado + "-" + vReply.msg;
+                    if (vReply.ok)
                     {
-                        pBill.XMLSendedToHacienda = vReply.xmlDocumento;
+                        if (!string.IsNullOrEmpty(vReply.xmlDocumento))
+                        {
+                            pBill.XMLSendedToHacienda = vReply.xmlDocumento;
+                        }
+                        if (!string.IsNullOrEmpty(vReply.xmlRespuesta))
+                        {
+                            pBill.XMLReceivedFromHacienda = vReply.xmlRespuesta;
+                        }
                     }
-                    if (!string.IsNullOrEmpty(vReply.xmlRespuesta))
-                    {
-                        pBill.XMLReceivedFromHacienda = vReply.xmlRespuesta;
-                    }
+
+                }
+                else
+                {
+                    pBill.SystemMesagges = "No se recibio respuesta de hacienda";
+                    vResponse.UserMessage = "No se recibio respuesta de hacienda";
                 }
 
                 pBill.HaciendaFailCounter++;
