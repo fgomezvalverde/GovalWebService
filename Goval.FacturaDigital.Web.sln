@@ -25,6 +25,25 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goval.FacturaDigital.Billin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goval.FacturaDigital.Core", "Goval.FacturaDigital.Core\Goval.FacturaDigital.Core.csproj", "{60A93FD8-DC96-4F66-87F0-D55D5FDC6ECB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dlls", "Dlls", "{578DE265-D1EC-4321-83F3-3604C471D78D}"
+	ProjectSection(SolutionItems) = preProject
+		dlls\FirmaXadesNet.dll = dlls\FirmaXadesNet.dll
+		dlls\Microsoft.Xades.dll = dlls\Microsoft.Xades.dll
+		dlls\Newtonsoft.Json.dll = dlls\Newtonsoft.Json.dll
+		dlls\Syncfusion.Compression.Base.dll = dlls\Syncfusion.Compression.Base.dll
+		dlls\Syncfusion.Compression.Base.xml = dlls\Syncfusion.Compression.Base.xml
+		dlls\Syncfusion.ExcelChartToImageConverter.WPF.dll = dlls\Syncfusion.ExcelChartToImageConverter.WPF.dll
+		dlls\Syncfusion.ExcelChartToImageConverter.WPF.xml = dlls\Syncfusion.ExcelChartToImageConverter.WPF.xml
+		dlls\Syncfusion.ExcelToPDFConverter.Base.dll = dlls\Syncfusion.ExcelToPDFConverter.Base.dll
+		dlls\Syncfusion.ExcelToPDFConverter.Base.xml = dlls\Syncfusion.ExcelToPDFConverter.Base.xml
+		dlls\Syncfusion.Pdf.Base.dll = dlls\Syncfusion.Pdf.Base.dll
+		dlls\Syncfusion.Pdf.Base.xml = dlls\Syncfusion.Pdf.Base.xml
+		dlls\Syncfusion.SfChart.WPF.dll = dlls\Syncfusion.SfChart.WPF.dll
+		dlls\Syncfusion.SfChart.WPF.xml = dlls\Syncfusion.SfChart.WPF.xml
+		dlls\Syncfusion.XlsIO.Base.dll = dlls\Syncfusion.XlsIO.Base.dll
+		dlls\Syncfusion.XlsIO.Base.xml = dlls\Syncfusion.XlsIO.Base.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

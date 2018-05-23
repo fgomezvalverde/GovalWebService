@@ -59,6 +59,8 @@ namespace Goval.FacturaDigital.Core.BIlling
                 vDocumentoEncabezado.NormativaNumeroResolucion = "DGT-R-48-2016";
                 vDocumentoEncabezado.Observacion = pBill.Observation;
                 vDocumentoEncabezado.SubTotal = Convert.ToDouble(pBill.TotalToPay);
+                vDocumentoEncabezado.Descuento = Convert.ToDouble(pBill.DiscountAmount);
+                vDocumentoEncabezado.Impuesto = Convert.ToDouble(pBill.TaxesToPay);
                 vDocumentoEncabezado.DocumentoConsecutivo = pBill.ConsecutiveNumber+"";
 
                 //Emisor
@@ -101,33 +103,43 @@ namespace Goval.FacturaDigital.Core.BIlling
                 var vListaProductos = JsonConvert.DeserializeObject<Client>(pBill.SoldProductsJSON);
                 foreach (var vProducto in vListaProductos.ClientProducts)
                 {
-                    //Detalle del Producto
-                    var vLinea = new DocumentoDetalle();
-                    vLinea.Cantidad = vProducto.ProductQuantity;
-                    vLinea.Nombre = vProducto.Name;
-                    vLinea.Descripcion = vProducto.Description;
-                    vLinea.Codigo = vProducto.ProductCode;
-                    vLinea.Tipo = vProducto.ProductType;
-                    vLinea.Unidad = vProducto.MeasurementUnit;
-                    vLinea.UnidadMedidaComercial = vProducto.MeasurementUnitType;
-                    vLinea.EsProducto = true;
-                    vLinea.Precio = Convert.ToDouble(vProducto.Price);
-                    vLinea.Descuento = Convert.ToDouble((vProducto.Price/100)* pBill.Client.DefaultDiscountPercentage);
-                    vLinea.DescuentoDescripcion = pBill.DiscountNature;
+                    if (vProducto.ProductQuantity > 0)
+                    {
+                        //Detalle del Producto
+                        var vLinea = new DocumentoDetalle();
+                        vLinea.Cantidad = vProducto.ProductQuantity;
+                        vLinea.Nombre = vProducto.Name;
+                        vLinea.Descripcion = vProducto.Description;
+                        vLinea.Codigo = vProducto.ProductCode;
+                        vLinea.Tipo = vProducto.ProductType;
+                        vLinea.Unidad = vProducto.MeasurementUnit;
+                        vLinea.UnidadMedidaComercial = vProducto.MeasurementUnitType;
+                        vLinea.EsProducto = true;
+                        vLinea.Precio = Convert.ToDouble(vProducto.Price);
+                        vLinea.Descuento = Convert.ToDouble(pBill.Client.DefaultDiscountPercentage);
+                        vLinea.DescuentoDescripcion = pBill.DiscountNature;
 
-                    // Impuestos
-                    var vLineaListaImpuesto = new List<DocumentoDetalleImpuesto>();
-                    var vLineaImpuesto = new DocumentoDetalleImpuesto();
-                    vLineaImpuesto.Tipo = pBill.TaxCode;
-                    vLineaImpuesto.Tarifa = Convert.ToDouble(pBill.Client.DefaultTaxesPercentage);
-                    vLineaImpuesto.Monto = Convert.ToDouble((vProducto.Price / 100)* pBill.Client.DefaultTaxesPercentage); 
-                    vLineaListaImpuesto.Add(vLineaImpuesto);
+                        if (pBill.Client.DefaultTaxesPercentage > 0)
+                        {
+                            // Impuestos
+                            var vLineaListaImpuesto = new List<DocumentoDetalleImpuesto>();
+                            var vLineaImpuesto = new DocumentoDetalleImpuesto();
+                            vLineaImpuesto.Tipo = pBill.TaxCode;
+                            vLineaImpuesto.Tarifa = Convert.ToDouble(pBill.Client.DefaultTaxesPercentage);
+                            vLineaImpuesto.Monto = Convert.ToDouble(((vProducto.Price * vProducto.ProductQuantity) / 100) * pBill.Client.DefaultTaxesPercentage);
+                            vLineaListaImpuesto.Add(vLineaImpuesto);
 
-                    // Se agrega el impuesto a Lista
-                    vLinea.DocumentoDetalleImpuesto = vLineaListaImpuesto;
+                            // Se agrega el impuesto a Lista
+                            vLinea.DocumentoDetalleImpuesto = vLineaListaImpuesto;
+                        }
 
-                    // Se agrega el Producto completo a todos los demas
-                    vDetalleDocumento.Add(vLinea);
+                        // Se agrega el Producto completo a todos los demas
+                        vDetalleDocumento.Add(vLinea);
+                    }
+                    else
+                    {
+                        // El producto no tiene ninguna cantidad a facturar
+                    }
                 }
                 // Se agrega el Segmento de todos los productos
                 vDocumentoEncabezado.DocumentoDetalle = vDetalleDocumento;
@@ -144,7 +156,7 @@ namespace Goval.FacturaDigital.Core.BIlling
                 vUsuarioHacienda.urlhaciendaApiProduccion = UrlhaciendaApiProduccion;
 
                 var vReply = vServicioBLL.fGenerarDocumento(vDocumentoEncabezado, vUsuarioHacienda, MaxRetryCount);
-
+                string json = JsonConvert.SerializeObject(vDocumentoEncabezado);
                 if (vReply != null)
                 {
                     pBill.SystemMesagges = vReply.estado + "-" + vReply.msg;
@@ -158,6 +170,12 @@ namespace Goval.FacturaDigital.Core.BIlling
                         {
                             pBill.XMLReceivedFromHacienda = vReply.xmlRespuesta;
                         }
+                        vResponse.IsSuccessful = true;
+                        vResponse.UserMessage = vReply.msg;
+                    }
+                    else {
+                        vResponse.IsSuccessful = false;
+                        vResponse.UserMessage = vReply.msg;
                     }
 
                 }

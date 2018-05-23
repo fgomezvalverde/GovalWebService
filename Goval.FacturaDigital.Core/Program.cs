@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Goval.FacturaDigital.Core
@@ -134,7 +135,19 @@ namespace Goval.FacturaDigital.Core
                             foreach (var vBill in vBillsToProcess)
                             {
                                 BillEntity vActualBill = vBill;
-                                var result = BillingManager.ProcessBill(ref vActualBill);
+                                for (int cont = 0; cont < 2000; cont++)
+                                {
+                                    var result = BillingManager.ProcessBill(ref vActualBill);
+                                    if (result.IsSuccessful)
+                                    {
+                                        Console.WriteLine(vActualBill.XMLReceivedFromHacienda);
+                                    }
+                                    else {
+                                        Console.WriteLine("Falso " + cont);
+                                    }
+                                    Thread.Sleep(1000);
+                                }
+                                
                             }
                             
                         }
