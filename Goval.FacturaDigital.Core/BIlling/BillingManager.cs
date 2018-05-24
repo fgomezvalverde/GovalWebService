@@ -50,7 +50,7 @@ namespace Goval.FacturaDigital.Core.BIlling
 
                 //Encabezado
                 vDocumentoEncabezado.Clave = pBill.DocumentKey;
-                vDocumentoEncabezado.TipoCambio = 571;
+                vDocumentoEncabezado.TipoCambio = 1.00;
                 vDocumentoEncabezado.Fecha = DateTime.Now;
                 vDocumentoEncabezado.Moneda = "CRC";
                 vDocumentoEncabezado.CondicionVenta = pBill.SellCondition ;
@@ -73,7 +73,7 @@ namespace Goval.FacturaDigital.Core.BIlling
                 vDocumentoEncabezado.Emisor.Distrito = pBill.User.DistritoCode;
                 vDocumentoEncabezado.Emisor.Barrio = pBill.User.BarrioCode;
                 vDocumentoEncabezado.Emisor.Nombre = pBill.User.Name;
-                vDocumentoEncabezado.Emisor.NombreComercial = pBill.User.ComercialName;
+                vDocumentoEncabezado.Emisor.NombreComercial = string.IsNullOrEmpty(pBill.User.ComercialName)? string.Empty: pBill.User.ComercialName;
                 vDocumentoEncabezado.Emisor.Telefono = pBill.User.PhoneNumber;
                 vDocumentoEncabezado.Emisor.Fax = pBill.User.Fax;
                 vDocumentoEncabezado.Emisor.Email = pBill.User.Email;
