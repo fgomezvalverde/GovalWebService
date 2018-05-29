@@ -54,7 +54,7 @@ namespace Goval.FacturaDigital.Core.BIlling
                 vDocumentoEncabezado.Fecha = DateTime.Now;
                 vDocumentoEncabezado.Moneda = "CRC";
                 vDocumentoEncabezado.CondicionVenta = pBill.SellCondition ;
-                vDocumentoEncabezado.PlazoCredito = pBill.CreditTerm;
+                vDocumentoEncabezado.PlazoCredito = string.IsNullOrEmpty(pBill.CreditTerm)?string.Empty: pBill.CreditTerm;
                 vDocumentoEncabezado.NormativaFechaResolucion = "20-02-2017 13:22:22";
                 vDocumentoEncabezado.NormativaNumeroResolucion = "DGT-R-48-2016";
                 vDocumentoEncabezado.Observacion = pBill.Observation;
@@ -73,7 +73,7 @@ namespace Goval.FacturaDigital.Core.BIlling
                 vDocumentoEncabezado.Emisor.Distrito = pBill.User.DistritoCode;
                 vDocumentoEncabezado.Emisor.Barrio = pBill.User.BarrioCode;
                 vDocumentoEncabezado.Emisor.Nombre = pBill.User.Name;
-                vDocumentoEncabezado.Emisor.NombreComercial = string.IsNullOrEmpty(pBill.User.ComercialName)? string.Empty: pBill.User.ComercialName;
+                vDocumentoEncabezado.Emisor.NombreComercial =  string.IsNullOrEmpty(pBill.User.ComercialName)? string.Empty: pBill.User.ComercialName;
                 vDocumentoEncabezado.Emisor.Telefono = pBill.User.PhoneNumber;
                 vDocumentoEncabezado.Emisor.Fax = pBill.User.Fax;
                 vDocumentoEncabezado.Emisor.Email = pBill.User.Email;
@@ -113,10 +113,10 @@ namespace Goval.FacturaDigital.Core.BIlling
                         vLinea.Codigo = vProducto.ProductCode;
                         vLinea.Tipo = vProducto.ProductType;
                         vLinea.Unidad = vProducto.MeasurementUnit;
-                        vLinea.UnidadMedidaComercial = vProducto.MeasurementUnitType;
+                        vLinea.UnidadMedidaComercial = string.IsNullOrEmpty(vProducto.MeasurementUnitType)?string.Empty: vProducto.MeasurementUnitType;
                         vLinea.EsProducto = true;
                         vLinea.Precio = Convert.ToDouble(vProducto.Price);
-                        vLinea.Descuento = Convert.ToDouble(pBill.Client.DefaultDiscountPercentage);
+                        vLinea.Descuento = Convert.ToDouble(((vProducto.Price* vProducto.ProductQuantity)/100) *pBill.Client.DefaultDiscountPercentage);
                         vLinea.DescuentoDescripcion = pBill.DiscountNature;
 
                         if (pBill.Client.DefaultTaxesPercentage > 0)

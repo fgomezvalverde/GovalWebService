@@ -79,6 +79,21 @@
     <Compile Include="CantonTypeEntity.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="cfg_barrio.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cfg_canton.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cfg_distrito.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cfg_pais.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cfg_provincia.cs">
+      <DependentUpon>BusinessDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="ClientEntity.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>

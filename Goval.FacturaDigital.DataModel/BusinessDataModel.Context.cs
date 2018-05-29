@@ -49,5 +49,10 @@ namespace Goval.FacturaDigital.DataModel
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<TaxesTypeEntity> TaxesType { get; set; }
         public virtual DbSet<UserEntity> User { get; set; }
+        public virtual DbSet<cfg_barrio> cfg_barrio { get; set; }
+        public virtual DbSet<cfg_canton> cfg_canton { get; set; }
+        public virtual DbSet<cfg_distrito> cfg_distrito { get; set; }
+        public virtual DbSet<cfg_pais> cfg_pais { get; set; }
+        public virtual DbSet<cfg_provincia> cfg_provincia { get; set; }
     }
 }

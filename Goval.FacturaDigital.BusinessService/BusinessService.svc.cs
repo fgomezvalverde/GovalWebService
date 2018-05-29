@@ -966,5 +966,152 @@ namespace Goval.FacturaDigital.BusinessService
             }
             return vResponse;
         }
+
+
+
+        #region DirectionCodes
+        public CodesDirectionListResponse GetCantones(CodesDirectionListRequest pRequest)
+        {
+            var vResponse = new CodesDirectionListResponse();
+            try
+            {
+                using (BusinessDataModelEntities vContext = new BusinessDataModelEntities())
+                {
+                    vContext.Database.Connection.Open();
+                    var vCantonesList = vContext.cfg_canton.AsQueryable();
+                    if (vCantonesList != null)
+                    {
+                        var vFiltredCantones = vCantonesList.Where(x => x.pai_id.Equals(1) && x.prov_id.Equals(pRequest.ProvinciaCode));
+                        if (vFiltredCantones != null && vFiltredCantones.Any())
+                        {
+                            Dictionary<string, string> vCantonesDictionary = new Dictionary<string, string>();
+                            foreach (var vCanton in vFiltredCantones)
+                            {
+                                vCantonesDictionary.Add(Convert.ToString(vCanton.cant_id), vCanton.cant_titulo);
+                            }
+                            vResponse.DirectionCodesDictionary = vCantonesDictionary;
+                            vResponse.IsSuccessful = true;
+                        }
+                        else
+                        {
+                            vResponse.IsSuccessful = false;
+                            vResponse.UserMessage = "Existe un problema al conectar con la base de dato";
+                            vResponse.TechnicalMessage = "No hay Cantones con Province Code"+ pRequest.ProvinciaCode;
+                        }
+                    }
+                    else
+                    {
+                        vResponse.IsSuccessful = false;
+                        vResponse.UserMessage = "Existe un problema al conectar con la base de datos";
+                        vResponse.TechnicalMessage = "vCantonesList Queryable null";
+                    }
+
+
+                    vContext.Database.Connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                vResponse.IsSuccessful = false;
+                vResponse.UserMessage = ex.Message;
+                vResponse.TechnicalMessage = ex.ToString();
+            }
+            return vResponse;
+        }
+
+        public CodesDirectionListResponse GetDistritos(CodesDirectionListRequest pRequest)
+        {
+            var vResponse = new CodesDirectionListResponse();
+            try
+            {
+                using (BusinessDataModelEntities vContext = new BusinessDataModelEntities())
+                {
+                    vContext.Database.Connection.Open();
+                    var vDistritosList = vContext.cfg_distrito.AsQueryable();
+                    if (vDistritosList != null)
+                    {
+                        var vFiltredDistrito = vDistritosList.Where(x => x.pai_id.Equals(1) && x.prov_id.Equals(pRequest.ProvinciaCode) 
+                        && x.cant_id.Equals(pRequest.CantonCode));
+                        if (vFiltredDistrito != null && vFiltredDistrito.Any())
+                        {
+                            Dictionary<string, string> vDistritosDictionary = new Dictionary<string, string>();
+                            foreach (var vDistrito in vFiltredDistrito)
+                            {
+                                vDistritosDictionary.Add(Convert.ToString(vDistrito.dist_id), vDistrito.dist_titulo);
+                            }
+                            vResponse.DirectionCodesDictionary = vDistritosDictionary;
+                            vResponse.IsSuccessful = true;
+                        }
+                        else
+                        {
+                            vResponse.IsSuccessful = false;
+                            vResponse.UserMessage = "Existe un problema al conectar con la base de dato";
+                            vResponse.TechnicalMessage = "No hay Distritos con Canton Code" + pRequest.CantonCode;
+                        }
+                    }
+                    else
+                    {
+                        vResponse.IsSuccessful = false;
+                        vResponse.UserMessage = "Existe un problema al conectar con la base de datos";
+                        vResponse.TechnicalMessage = "vCantonesList Queryable null";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                vResponse.IsSuccessful = false;
+                vResponse.UserMessage = ex.Message;
+                vResponse.TechnicalMessage = ex.ToString();
+            }
+            return vResponse;
+        }
+        public CodesDirectionListResponse GetBarrios(CodesDirectionListRequest pRequest)
+        {
+            var vResponse = new CodesDirectionListResponse();
+            try
+            {
+                using (BusinessDataModelEntities vContext = new BusinessDataModelEntities())
+                {
+                    vContext.Database.Connection.Open();
+                    var vBarriosList = vContext.cfg_barrio.AsQueryable();
+                    if (vBarriosList != null)
+                    {
+                        var vFiltredBarrios = vBarriosList.Where(x => x.pai_id.Equals(1) && x.prov_id.Equals(pRequest.ProvinciaCode)
+                        && x.cant_id.Equals(pRequest.CantonCode) 
+                        && x.dist_id.Equals(pRequest.DistritoCode));
+                        if (vFiltredBarrios != null && vFiltredBarrios.Any())
+                        {
+                            Dictionary<string, string> vBarriosDictionary = new Dictionary<string, string>();
+                            foreach (var vDistrito in vFiltredBarrios)
+                            {
+                                vBarriosDictionary.Add(Convert.ToString(vDistrito.barr_id), vDistrito.barr_titulo);
+                            }
+                            vResponse.DirectionCodesDictionary = vBarriosDictionary;
+                            vResponse.IsSuccessful = true;
+                        }
+                        else
+                        {
+                            vResponse.IsSuccessful = false;
+                            vResponse.UserMessage = "Existe un problema al conectar con la base de dato";
+                            vResponse.TechnicalMessage = "No hay Cantones con Distrito Code" + pRequest.DistritoCode;
+                        }
+                    }
+                    else
+                    {
+                        vResponse.IsSuccessful = false;
+                        vResponse.UserMessage = "Existe un problema al conectar con la base de datos";
+                        vResponse.TechnicalMessage = "vCantonesList Queryable null";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                vResponse.IsSuccessful = false;
+                vResponse.UserMessage = ex.Message;
+                vResponse.TechnicalMessage = ex.ToString();
+            }
+            return vResponse;
+        }
+        #endregion
     }
 }

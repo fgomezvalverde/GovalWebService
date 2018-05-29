@@ -77,6 +77,64 @@
           <Property Name="CantonName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="CantonTypeCode" Type="varchar" MaxLength="2" Nullable="false" />
         </EntityType>
+        <EntityType Name="cfg_barrio">
+          <Key>
+            <PropertyRef Name="pai_id" />
+            <PropertyRef Name="prov_id" />
+            <PropertyRef Name="cant_id" />
+            <PropertyRef Name="dist_id" />
+            <PropertyRef Name="barr_id" />
+          </Key>
+          <Property Name="pai_id" Type="int" Nullable="false" />
+          <Property Name="prov_id" Type="int" Nullable="false" />
+          <Property Name="cant_id" Type="int" Nullable="false" />
+          <Property Name="dist_id" Type="int" Nullable="false" />
+          <Property Name="barr_id" Type="int" Nullable="false" />
+          <Property Name="barr_titulo" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cfg_canton">
+          <Key>
+            <PropertyRef Name="pai_id" />
+            <PropertyRef Name="prov_id" />
+            <PropertyRef Name="cant_id" />
+          </Key>
+          <Property Name="pai_id" Type="int" Nullable="false" />
+          <Property Name="prov_id" Type="int" Nullable="false" />
+          <Property Name="cant_id" Type="int" Nullable="false" />
+          <Property Name="cant_titulo" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cfg_distrito">
+          <Key>
+            <PropertyRef Name="pai_id" />
+            <PropertyRef Name="prov_id" />
+            <PropertyRef Name="cant_id" />
+            <PropertyRef Name="dist_id" />
+          </Key>
+          <Property Name="pai_id" Type="int" Nullable="false" />
+          <Property Name="prov_id" Type="int" Nullable="false" />
+          <Property Name="cant_id" Type="int" Nullable="false" />
+          <Property Name="dist_id" Type="int" Nullable="false" />
+          <Property Name="dist_titulo" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cfg_pais">
+          <Key>
+            <PropertyRef Name="pai_id" />
+          </Key>
+          <Property Name="pai_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="pai_titulo" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="pai_iso" Type="varchar" MaxLength="5" />
+          <Property Name="pai_codigo" Type="int" Nullable="false" />
+          <Property Name="pai_simbolo" Type="varchar" MaxLength="5" />
+        </EntityType>
+        <EntityType Name="cfg_provincia">
+          <Key>
+            <PropertyRef Name="pai_id" />
+            <PropertyRef Name="prov_id" />
+          </Key>
+          <Property Name="pai_id" Type="int" Nullable="false" />
+          <Property Name="prov_id" Type="int" Nullable="false" />
+          <Property Name="prov_titulo" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
         <EntityType Name="Client">
           <Key>
             <PropertyRef Name="ClientId" />
@@ -365,6 +423,66 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_cfg_barrio_cfg_distrito">
+          <End Role="cfg_distrito" Type="Self.cfg_distrito" Multiplicity="1" />
+          <End Role="cfg_barrio" Type="Self.cfg_barrio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cfg_distrito">
+              <PropertyRef Name="pai_id" />
+              <PropertyRef Name="prov_id" />
+              <PropertyRef Name="cant_id" />
+              <PropertyRef Name="dist_id" />
+            </Principal>
+            <Dependent Role="cfg_barrio">
+              <PropertyRef Name="pai_id" />
+              <PropertyRef Name="prov_id" />
+              <PropertyRef Name="cant_id" />
+              <PropertyRef Name="dist_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_cfg_canton_cfg_provincia">
+          <End Role="cfg_provincia" Type="Self.cfg_provincia" Multiplicity="1" />
+          <End Role="cfg_canton" Type="Self.cfg_canton" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cfg_provincia">
+              <PropertyRef Name="pai_id" />
+              <PropertyRef Name="prov_id" />
+            </Principal>
+            <Dependent Role="cfg_canton">
+              <PropertyRef Name="pai_id" />
+              <PropertyRef Name="prov_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_cfg_distrito_cfg_canton">
+          <End Role="cfg_canton" Type="Self.cfg_canton" Multiplicity="1" />
+          <End Role="cfg_distrito" Type="Self.cfg_distrito" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cfg_canton">
+              <PropertyRef Name="pai_id" />
+              <PropertyRef Name="prov_id" />
+              <PropertyRef Name="cant_id" />
+            </Principal>
+            <Dependent Role="cfg_distrito">
+              <PropertyRef Name="pai_id" />
+              <PropertyRef Name="prov_id" />
+              <PropertyRef Name="cant_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_cfg_provincia_cfg_pais">
+          <End Role="cfg_pais" Type="Self.cfg_pais" Multiplicity="1" />
+          <End Role="cfg_provincia" Type="Self.cfg_provincia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cfg_pais">
+              <PropertyRef Name="pai_id" />
+            </Principal>
+            <Dependent Role="cfg_provincia">
+              <PropertyRef Name="pai_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Client_IdentificationType">
           <End Role="IdentificationType" Type="Self.IdentificationType" Multiplicity="0..1" />
           <End Role="Client" Type="Self.Client" Multiplicity="*" />
@@ -503,6 +621,11 @@
           <EntitySet Name="Bill" EntityType="Self.Bill" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BillingHistory" EntityType="Self.BillingHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CantonType" EntityType="Self.CantonType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="cfg_barrio" EntityType="Self.cfg_barrio" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="cfg_canton" EntityType="Self.cfg_canton" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="cfg_distrito" EntityType="Self.cfg_distrito" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="cfg_pais" EntityType="Self.cfg_pais" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="cfg_provincia" EntityType="Self.cfg_provincia" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CreditOrDebitNote" EntityType="Self.CreditOrDebitNote" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CurrencyType" EntityType="Self.CurrencyType" Schema="dbo" store:Type="Tables" />
@@ -549,6 +672,22 @@
           <AssociationSet Name="FK_Bill_User" Association="Self.FK_Bill_User">
             <End Role="User" EntitySet="User" />
             <End Role="Bill" EntitySet="Bill" />
+          </AssociationSet>
+          <AssociationSet Name="FK_cfg_barrio_cfg_distrito" Association="Self.FK_cfg_barrio_cfg_distrito">
+            <End Role="cfg_distrito" EntitySet="cfg_distrito" />
+            <End Role="cfg_barrio" EntitySet="cfg_barrio" />
+          </AssociationSet>
+          <AssociationSet Name="FK_cfg_canton_cfg_provincia" Association="Self.FK_cfg_canton_cfg_provincia">
+            <End Role="cfg_provincia" EntitySet="cfg_provincia" />
+            <End Role="cfg_canton" EntitySet="cfg_canton" />
+          </AssociationSet>
+          <AssociationSet Name="FK_cfg_distrito_cfg_canton" Association="Self.FK_cfg_distrito_cfg_canton">
+            <End Role="cfg_canton" EntitySet="cfg_canton" />
+            <End Role="cfg_distrito" EntitySet="cfg_distrito" />
+          </AssociationSet>
+          <AssociationSet Name="FK_cfg_provincia_cfg_pais" Association="Self.FK_cfg_provincia_cfg_pais">
+            <End Role="cfg_pais" EntitySet="cfg_pais" />
+            <End Role="cfg_provincia" EntitySet="cfg_provincia" />
           </AssociationSet>
           <AssociationSet Name="FK_Client_IdentificationType" Association="Self.FK_Client_IdentificationType">
             <End Role="IdentificationType" EntitySet="IdentificationType" />
@@ -1224,7 +1363,154 @@
             <End Role="Product" EntitySet="Product" />
             <End Role="ProductsByClient" EntitySet="ProductsByClient" />
           </AssociationSet>
+          <EntitySet Name="cfg_barrio" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.cfg_barrio" />
+          <EntitySet Name="cfg_canton" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.cfg_canton" />
+          <EntitySet Name="cfg_distrito" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.cfg_distrito" />
+          <EntitySet Name="cfg_pais" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.cfg_pais" />
+          <EntitySet Name="cfg_provincia" EntityType="Goval.FacturaGoval.Business.DevelopmentModel.cfg_provincia" />
+          <AssociationSet Name="FK_cfg_barrio_cfg_distrito" Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_cfg_barrio_cfg_distrito">
+            <End Role="cfg_distrito" EntitySet="cfg_distrito" />
+            <End Role="cfg_barrio" EntitySet="cfg_barrio" />
+          </AssociationSet>
+          <AssociationSet Name="FK_cfg_canton_cfg_provincia" Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_cfg_canton_cfg_provincia">
+            <End Role="cfg_provincia" EntitySet="cfg_provincia" />
+            <End Role="cfg_canton" EntitySet="cfg_canton" />
+          </AssociationSet>
+          <AssociationSet Name="FK_cfg_distrito_cfg_canton" Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_cfg_distrito_cfg_canton">
+            <End Role="cfg_canton" EntitySet="cfg_canton" />
+            <End Role="cfg_distrito" EntitySet="cfg_distrito" />
+          </AssociationSet>
+          <AssociationSet Name="FK_cfg_provincia_cfg_pais" Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_cfg_provincia_cfg_pais">
+            <End Role="cfg_pais" EntitySet="cfg_pais" />
+            <End Role="cfg_provincia" EntitySet="cfg_provincia" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="cfg_barrio">
+          <Key>
+            <PropertyRef Name="pai_id" />
+            <PropertyRef Name="prov_id" />
+            <PropertyRef Name="cant_id" />
+            <PropertyRef Name="dist_id" />
+            <PropertyRef Name="barr_id" />
+          </Key>
+          <Property Name="pai_id" Type="Int32" Nullable="false" />
+          <Property Name="prov_id" Type="Int32" Nullable="false" />
+          <Property Name="cant_id" Type="Int32" Nullable="false" />
+          <Property Name="dist_id" Type="Int32" Nullable="false" />
+          <Property Name="barr_id" Type="Int32" Nullable="false" />
+          <Property Name="barr_titulo" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="cfg_distrito" Relationship="Goval.FacturaGoval.Business.DevelopmentModel.FK_cfg_barrio_cfg_distrito" FromRole="cfg_barrio" ToRole="cfg_distrito" />
+        </EntityType>
+        <EntityType Name="cfg_canton">
+          <Key>
+            <PropertyRef Name="pai_id" />
+            <PropertyRef Name="prov_id" />
+            <PropertyRef Name="cant_id" />
+          </Key>
+          <Property Name="pai_id" Type="Int32" Nullable="false" />
+          <Property Name="prov_id" Type="Int32" Nullable="false" />
+          <Property Name="cant_id" Type="Int32" Nullable="false" />
+          <Property Name="cant_titulo" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="cfg_provincia" Relationship="Goval.FacturaGoval.Business.DevelopmentModel.FK_cfg_canton_cfg_provincia" FromRole="cfg_canton" ToRole="cfg_provincia" />
+          <NavigationProperty Name="cfg_distrito" Relationship="Goval.FacturaGoval.Business.DevelopmentModel.FK_cfg_distrito_cfg_canton" FromRole="cfg_canton" ToRole="cfg_distrito" />
+        </EntityType>
+        <EntityType Name="cfg_distrito">
+          <Key>
+            <PropertyRef Name="pai_id" />
+            <PropertyRef Name="prov_id" />
+            <PropertyRef Name="cant_id" />
+            <PropertyRef Name="dist_id" />
+          </Key>
+          <Property Name="pai_id" Type="Int32" Nullable="false" />
+          <Property Name="prov_id" Type="Int32" Nullable="false" />
+          <Property Name="cant_id" Type="Int32" Nullable="false" />
+          <Property Name="dist_id" Type="Int32" Nullable="false" />
+          <Property Name="dist_titulo" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="cfg_barrio" Relationship="Goval.FacturaGoval.Business.DevelopmentModel.FK_cfg_barrio_cfg_distrito" FromRole="cfg_distrito" ToRole="cfg_barrio" />
+          <NavigationProperty Name="cfg_canton" Relationship="Goval.FacturaGoval.Business.DevelopmentModel.FK_cfg_distrito_cfg_canton" FromRole="cfg_distrito" ToRole="cfg_canton" />
+        </EntityType>
+        <EntityType Name="cfg_pais">
+          <Key>
+            <PropertyRef Name="pai_id" />
+          </Key>
+          <Property Name="pai_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="pai_titulo" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="pai_iso" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="pai_codigo" Type="Int32" Nullable="false" />
+          <Property Name="pai_simbolo" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="cfg_provincia" Relationship="Goval.FacturaGoval.Business.DevelopmentModel.FK_cfg_provincia_cfg_pais" FromRole="cfg_pais" ToRole="cfg_provincia" />
+        </EntityType>
+        <EntityType Name="cfg_provincia">
+          <Key>
+            <PropertyRef Name="pai_id" />
+            <PropertyRef Name="prov_id" />
+          </Key>
+          <Property Name="pai_id" Type="Int32" Nullable="false" />
+          <Property Name="prov_id" Type="Int32" Nullable="false" />
+          <Property Name="prov_titulo" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="cfg_canton" Relationship="Goval.FacturaGoval.Business.DevelopmentModel.FK_cfg_canton_cfg_provincia" FromRole="cfg_provincia" ToRole="cfg_canton" />
+          <NavigationProperty Name="cfg_pais" Relationship="Goval.FacturaGoval.Business.DevelopmentModel.FK_cfg_provincia_cfg_pais" FromRole="cfg_provincia" ToRole="cfg_pais" />
+        </EntityType>
+        <Association Name="FK_cfg_barrio_cfg_distrito">
+          <End Type="Goval.FacturaGoval.Business.DevelopmentModel.cfg_distrito" Role="cfg_distrito" Multiplicity="1" />
+          <End Type="Goval.FacturaGoval.Business.DevelopmentModel.cfg_barrio" Role="cfg_barrio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cfg_distrito">
+              <PropertyRef Name="pai_id" />
+              <PropertyRef Name="prov_id" />
+              <PropertyRef Name="cant_id" />
+              <PropertyRef Name="dist_id" />
+            </Principal>
+            <Dependent Role="cfg_barrio">
+              <PropertyRef Name="pai_id" />
+              <PropertyRef Name="prov_id" />
+              <PropertyRef Name="cant_id" />
+              <PropertyRef Name="dist_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_cfg_canton_cfg_provincia">
+          <End Type="Goval.FacturaGoval.Business.DevelopmentModel.cfg_provincia" Role="cfg_provincia" Multiplicity="1" />
+          <End Type="Goval.FacturaGoval.Business.DevelopmentModel.cfg_canton" Role="cfg_canton" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cfg_provincia">
+              <PropertyRef Name="pai_id" />
+              <PropertyRef Name="prov_id" />
+            </Principal>
+            <Dependent Role="cfg_canton">
+              <PropertyRef Name="pai_id" />
+              <PropertyRef Name="prov_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_cfg_distrito_cfg_canton">
+          <End Type="Goval.FacturaGoval.Business.DevelopmentModel.cfg_canton" Role="cfg_canton" Multiplicity="1" />
+          <End Type="Goval.FacturaGoval.Business.DevelopmentModel.cfg_distrito" Role="cfg_distrito" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cfg_canton">
+              <PropertyRef Name="pai_id" />
+              <PropertyRef Name="prov_id" />
+              <PropertyRef Name="cant_id" />
+            </Principal>
+            <Dependent Role="cfg_distrito">
+              <PropertyRef Name="pai_id" />
+              <PropertyRef Name="prov_id" />
+              <PropertyRef Name="cant_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_cfg_provincia_cfg_pais">
+          <End Type="Goval.FacturaGoval.Business.DevelopmentModel.cfg_pais" Role="cfg_pais" Multiplicity="1" />
+          <End Type="Goval.FacturaGoval.Business.DevelopmentModel.cfg_provincia" Role="cfg_provincia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cfg_pais">
+              <PropertyRef Name="pai_id" />
+            </Principal>
+            <Dependent Role="cfg_provincia">
+              <PropertyRef Name="pai_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1528,6 +1814,59 @@
                 <ScalarProperty Name="FaxCountryCode" ColumnName="FaxCountryCode" />
                 <ScalarProperty Name="Fax" ColumnName="Fax" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cfg_barrio">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.cfg_barrio">
+              <MappingFragment StoreEntitySet="cfg_barrio">
+                <ScalarProperty Name="barr_titulo" ColumnName="barr_titulo" />
+                <ScalarProperty Name="barr_id" ColumnName="barr_id" />
+                <ScalarProperty Name="dist_id" ColumnName="dist_id" />
+                <ScalarProperty Name="cant_id" ColumnName="cant_id" />
+                <ScalarProperty Name="prov_id" ColumnName="prov_id" />
+                <ScalarProperty Name="pai_id" ColumnName="pai_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cfg_canton">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.cfg_canton">
+              <MappingFragment StoreEntitySet="cfg_canton">
+                <ScalarProperty Name="cant_titulo" ColumnName="cant_titulo" />
+                <ScalarProperty Name="cant_id" ColumnName="cant_id" />
+                <ScalarProperty Name="prov_id" ColumnName="prov_id" />
+                <ScalarProperty Name="pai_id" ColumnName="pai_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cfg_distrito">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.cfg_distrito">
+              <MappingFragment StoreEntitySet="cfg_distrito">
+                <ScalarProperty Name="dist_titulo" ColumnName="dist_titulo" />
+                <ScalarProperty Name="dist_id" ColumnName="dist_id" />
+                <ScalarProperty Name="cant_id" ColumnName="cant_id" />
+                <ScalarProperty Name="prov_id" ColumnName="prov_id" />
+                <ScalarProperty Name="pai_id" ColumnName="pai_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cfg_pais">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.cfg_pais">
+              <MappingFragment StoreEntitySet="cfg_pais">
+                <ScalarProperty Name="pai_simbolo" ColumnName="pai_simbolo" />
+                <ScalarProperty Name="pai_codigo" ColumnName="pai_codigo" />
+                <ScalarProperty Name="pai_iso" ColumnName="pai_iso" />
+                <ScalarProperty Name="pai_titulo" ColumnName="pai_titulo" />
+                <ScalarProperty Name="pai_id" ColumnName="pai_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cfg_provincia">
+            <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.cfg_provincia">
+              <MappingFragment StoreEntitySet="cfg_provincia">
+                <ScalarProperty Name="prov_titulo" ColumnName="prov_titulo" />
+                <ScalarProperty Name="prov_id" ColumnName="prov_id" />
+                <ScalarProperty Name="pai_id" ColumnName="pai_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

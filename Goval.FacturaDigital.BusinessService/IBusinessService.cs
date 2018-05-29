@@ -52,5 +52,14 @@ namespace Goval.FacturaDigital.BusinessService
 
         [OperationContract]
         BaseResponse ValidateUserWithHacienda(UserValidationRequest pRequestValidationUser);
+
+        [OperationContract]
+        CodesDirectionListResponse GetCantones(CodesDirectionListRequest pRequest);
+
+        [OperationContract]
+        CodesDirectionListResponse GetDistritos(CodesDirectionListRequest pRequest);
+
+        [OperationContract]
+        CodesDirectionListResponse GetBarrios(CodesDirectionListRequest pRequest);
     }
 }

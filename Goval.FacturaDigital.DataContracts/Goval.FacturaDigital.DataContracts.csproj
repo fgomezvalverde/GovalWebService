@@ -47,6 +47,8 @@
     <Compile Include="BusinessServiceModel\BillResponse.cs" />
     <Compile Include="BusinessServiceModel\ClientRequest.cs" />
     <Compile Include="BusinessServiceModel\ClientResponse.cs" />
+    <Compile Include="BusinessServiceModel\CodesDirectionListRequest.cs" />
+    <Compile Include="BusinessServiceModel\CodesDirectionListResponse.cs" />
     <Compile Include="BusinessServiceModel\LoginRequest.cs" />
     <Compile Include="BusinessServiceModel\LoginResponse.cs" />
     <Compile Include="BusinessServiceModel\ProductRequest.cs" />

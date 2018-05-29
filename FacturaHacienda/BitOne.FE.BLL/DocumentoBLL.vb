@@ -526,13 +526,15 @@ Public Class DocumentoBLL
                 vHaciendaDetalle.NaturalezaDescuento = vDetalle.DescuentoDescripcion
 
                 ' Si el monto del descuento y la descripción es vació
-                If vHaciendaDetalle.MontoDescuento > 0 And vHaciendaDetalle.NaturalezaDescuento = String.Empty Then
+                If vHaciendaDetalle.MontoDescuento > 0 Then
                     vHaciendaDetalle.MontoDescuentoSpecified = True
-                    vHaciendaDetalle.NaturalezaDescuento = "N/D"
+                    If vHaciendaDetalle.NaturalezaDescuento = String.Empty Then
+                        vHaciendaDetalle.NaturalezaDescuento = "N/D"
+                    End If
                 End If
 
-                ' Subtotal
-                vHaciendaDetalle.SubTotal = FormatNumber((vDetalle.Cantidad * vDetalle.Precio) - vDetalle.Descuento, 5)
+                    ' Subtotal
+                    vHaciendaDetalle.SubTotal = FormatNumber((vDetalle.Cantidad * vDetalle.Precio) - vDetalle.Descuento, 5)
                 'vHaciendaDetalle.SubTotal = FormatNumber((vDetalle.Cantidad * vDetalle.Precio), 5)
 
                 ' ------------------------- Detalle Impuesto -------------------------

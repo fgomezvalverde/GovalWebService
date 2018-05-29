@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="6b587ba910d3440bac84066e0f3c4432" Name="Diagram1" ZoomLevel="88">
+      <Diagram DiagramId="6b587ba910d3440bac84066e0f3c4432" Name="Diagram1" ZoomLevel="74">
         <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.AppConfigurationEntity" Width="1.5" PointX="5.25" PointY="16.375" IsExpanded="true" />
         <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.BarrioTypeEntity" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.BillEntity" Width="1.5" PointX="10.5" PointY="11.5" IsExpanded="true" />
@@ -47,6 +47,15 @@
         <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_User_IdentityType" ManuallyRouted="false" />
         <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_Product_User" ManuallyRouted="false" />
         <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_ProductsByClient_Product" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.cfg_barrio" Width="1.5" PointX="19.375" PointY="4" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.cfg_canton" Width="1.5" PointX="14.875" PointY="4" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.cfg_distrito" Width="1.5" PointX="17.125" PointY="4" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.cfg_pais" Width="1.5" PointX="10.375" PointY="4" />
+        <EntityTypeShape EntityType="Goval.FacturaGoval.Business.DevelopmentModel.cfg_provincia" Width="1.5" PointX="12.625" PointY="4.125" />
+        <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_cfg_barrio_cfg_distrito" />
+        <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_cfg_canton_cfg_provincia" />
+        <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_cfg_distrito_cfg_canton" />
+        <AssociationConnector Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_cfg_provincia_cfg_pais" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
