@@ -3,6 +3,7 @@ Imports BitOne.FE.EN
 Imports BitOne.FE.Resources
 Imports System.IO
 Imports System.Text
+Imports System.Text.RegularExpressions
 Imports System.Xml
 
 Public Class ServicioBLL
@@ -423,7 +424,7 @@ Public Class ServicioBLL
                 vHaciendaDocumento.clave = pDocumento.Clave
                 vHaciendaDocumento.fecha = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:sszzz")
                 vHaciendaDocumento.emisor = New EN.BitOne.FE.EN.Hacienda.emisor With {.numeroIdentificacion = pDocumento.Emisor.Identificacion.PadLeft(12, "0"),
-                                                                                      .tipoIdentificacion = pDocumento.Emisor.IdentificacionTipo}               
+                                                                                      .tipoIdentificacion = pDocumento.Emisor.IdentificacionTipo}
                 ' Si el receptor existe
                 If (Not pDocumento.Receptor Is Nothing) Then
                     vHaciendaDocumento.receptor = New EN.BitOne.FE.EN.Hacienda.receptor With {.numeroIdentificacion = pDocumento.Receptor.Identificacion.PadLeft(12, "0"),
@@ -484,8 +485,14 @@ Public Class ServicioBLL
                                 Return vReply
 
                             Case "RECHAZADO"
-
-                                vReply.msg = "Documento: " & pDocumento.Clave & " | POST Hacienda: True |  GET Hacienda: True | Descripción: RECHAZADO"
+                                Dim regex As Regex = New Regex("<DetalleMensaje>(.+)</DetalleMensaje>")
+                                Dim msgWithoutChangeLines = Regex.Replace(vReplyObtieneRespuesta.xmlRespuesta, "\r\n?|\n", "")
+                                Dim match As Match = regex.Match(msgWithoutChangeLines)
+                                If match.Success Then
+                                    vReply.msg = "Documento: " & pDocumento.Clave & " | POST Hacienda: True |  GET Hacienda: True | Descripción: " + match.Value
+                                Else
+                                    vReply.msg = "Documento: " & pDocumento.Clave & " | POST Hacienda: True |  GET Hacienda: True | Descripción: RECHAZADO"
+                                End If
                                 vReply.ok = True
                                 vReply.estado = "RECHAZADO"
                                 Return vReply

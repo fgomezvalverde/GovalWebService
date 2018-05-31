@@ -54,7 +54,7 @@ namespace Goval.FacturaDigital.Core.BIlling
                 vDocumentoEncabezado.Fecha = DateTime.Now;
                 vDocumentoEncabezado.Moneda = "CRC";
                 vDocumentoEncabezado.CondicionVenta = pBill.SellCondition ;
-                vDocumentoEncabezado.PlazoCredito = string.IsNullOrEmpty(pBill.CreditTerm)?string.Empty: pBill.CreditTerm;
+                vDocumentoEncabezado.PlazoCredito = string.IsNullOrEmpty(pBill.CreditTerm)?"0": pBill.CreditTerm;
                 vDocumentoEncabezado.NormativaFechaResolucion = "20-02-2017 13:22:22";
                 vDocumentoEncabezado.NormativaNumeroResolucion = "DGT-R-48-2016";
                 vDocumentoEncabezado.Observacion = pBill.Observation;
@@ -75,7 +75,7 @@ namespace Goval.FacturaDigital.Core.BIlling
                 vDocumentoEncabezado.Emisor.Nombre = pBill.User.Name;
                 vDocumentoEncabezado.Emisor.NombreComercial =  string.IsNullOrEmpty(pBill.User.ComercialName)? string.Empty: pBill.User.ComercialName;
                 vDocumentoEncabezado.Emisor.Telefono = pBill.User.PhoneNumber;
-                vDocumentoEncabezado.Emisor.Fax = pBill.User.Fax;
+                vDocumentoEncabezado.Emisor.Fax = "00000000";
                 vDocumentoEncabezado.Emisor.Email = pBill.User.Email;
 
                 //Receptor
@@ -91,7 +91,7 @@ namespace Goval.FacturaDigital.Core.BIlling
                 vDocumentoEncabezado.Receptor.Nombre = pBill.Client.Name;
                 vDocumentoEncabezado.Receptor.NombreComercial = pBill.Client.ComercialName;
                 vDocumentoEncabezado.Receptor.Telefono = pBill.Client.PhoneNumber;
-                vDocumentoEncabezado.Receptor.Fax = pBill.Client.Fax;
+                vDocumentoEncabezado.Receptor.Fax = "00000000";
                 vDocumentoEncabezado.Receptor.Email = pBill.Client.Email;
 
                 //Medio de Pago
@@ -107,7 +107,7 @@ namespace Goval.FacturaDigital.Core.BIlling
                     {
                         //Detalle del Producto
                         var vLinea = new DocumentoDetalle();
-                        vLinea.Cantidad = vProducto.ProductQuantity;
+                        vLinea.Cantidad = 1;// vProducto.ProductQuantity;
                         vLinea.Nombre = vProducto.Name;
                         vLinea.Descripcion = vProducto.Description;
                         vLinea.Codigo = vProducto.ProductCode;
@@ -169,6 +169,18 @@ namespace Goval.FacturaDigital.Core.BIlling
                         if (!string.IsNullOrEmpty(vReply.xmlRespuesta))
                         {
                             pBill.XMLReceivedFromHacienda = vReply.xmlRespuesta;
+                        }
+                        switch (vReply.estado)
+                        {
+                            case BillStatusHacienda.Aceptada:
+                                pBill.Status = BillStatus.Done;
+                                break;
+                            case BillStatusHacienda.Rechazada:
+                                break;
+                            case BillStatusHacienda.Procesando:
+                                break;
+                            default:
+                                break;
                         }
                         vResponse.IsSuccessful = true;
                         vResponse.UserMessage = vReply.msg;
