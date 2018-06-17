@@ -173,19 +173,29 @@ namespace Goval.FacturaDigital.Core.BIlling
                         switch (vReply.estado)
                         {
                             case BillStatusHacienda.Aceptada:
-                                pBill.Status = BillStatus.Done;
+                                pBill.Status = BillStatus.Done.ToString();
+                                vResponse.IsSuccessful = true;
                                 break;
                             case BillStatusHacienda.Rechazada:
+                                pBill.Status = BillStatus.Error.ToString();
+                                vResponse.IsSuccessful = false;
                                 break;
                             case BillStatusHacienda.Procesando:
+                                pBill.Status = BillStatus.Processing.ToString();
+                                vResponse.IsSuccessful = false;
                                 break;
                             default:
+                                pBill.Status = BillStatus.Error.ToString();
+                                vResponse.IsSuccessful = false;
                                 break;
                         }
-                        vResponse.IsSuccessful = true;
+                        
                         vResponse.UserMessage = vReply.msg;
+                        pBill.SystemMesagges = vReply.msg;
                     }
                     else {
+                        pBill.Status = BillStatus.Error.ToString();
+                        pBill.SystemMesagges = "La respuesta no fue positiva:"+ vReply.msg;
                         vResponse.IsSuccessful = false;
                         vResponse.UserMessage = vReply.msg;
                     }
@@ -195,6 +205,7 @@ namespace Goval.FacturaDigital.Core.BIlling
                 {
                     pBill.SystemMesagges = "No se recibio respuesta de hacienda";
                     vResponse.UserMessage = "No se recibio respuesta de hacienda";
+                    pBill.Status = BillStatus.Processing.ToString();
                 }
 
                 pBill.HaciendaFailCounter++;
