@@ -190,12 +190,12 @@ namespace Goval.FacturaDigital.Core.BIlling
                                 break;
                         }
                         
-                        vResponse.UserMessage = vReply.msg;
+                        vResponse.UserMessage = pBill.Status+ vReply.msg;
                         pBill.SystemMesagges = vReply.msg;
                     }
                     else {
                         pBill.Status = BillStatus.Error.ToString();
-                        pBill.SystemMesagges = "La respuesta no fue positiva:"+ vReply.msg;
+                        pBill.SystemMesagges = "Error."+"La respuesta no fue positiva:"+ vReply.msg;
                         vResponse.IsSuccessful = false;
                         vResponse.UserMessage = vReply.msg;
                     }
@@ -204,7 +204,7 @@ namespace Goval.FacturaDigital.Core.BIlling
                 else
                 {
                     pBill.SystemMesagges = "No se recibio respuesta de hacienda";
-                    vResponse.UserMessage = "No se recibio respuesta de hacienda";
+                    vResponse.UserMessage = "Error." + "No se recibio respuesta de hacienda";
                     pBill.Status = BillStatus.Processing.ToString();
                 }
 

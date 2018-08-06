@@ -45,6 +45,9 @@ namespace Goval.FacturaDigital.BusinessService
         BillResponse CreateBill(BillRequest pBillRequest);
 
         [OperationContract]
+        BillResponse TryToBillWithHacienda(BillRequest pBillRequest);
+
+        [OperationContract]
         BillResponse GetUserBills(BillRequest pBillRequest);
 
         [OperationContract]

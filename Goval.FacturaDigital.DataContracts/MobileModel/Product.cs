@@ -36,5 +36,10 @@ namespace Goval.FacturaDigital.DataContracts.MobileModel
         [DataMember]
         public int ProductQuantity { get; set; }
 
+        [DataMember]
+        public decimal TotalCost { get; set; }
+        [DataMember]
+        public Boolean IsUsed { get; set; } = false;
+
     }
 }

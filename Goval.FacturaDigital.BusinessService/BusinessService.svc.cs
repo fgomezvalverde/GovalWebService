@@ -14,8 +14,7 @@ using Newtonsoft.Json;
 
 namespace Goval.FacturaDigital.BusinessService
 {
-    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "Service1" in code, svc and config file together.
-    // NOTE: In order to launch WCF Test Client for testing this service, please select Service1.svc or Service1.svc.cs at the Solution Explorer and start debugging.
+    //[ServiceBehavior(IncludeExceptionDetailInFaults = true)]
     public class BusinessService : IBusinessService
     {
         private string TEMPORAL_VALIDATION_TOKEN = "0ed4b262-9fe5-4ad2-ad07-49cad10c7262";
@@ -705,18 +704,28 @@ namespace Goval.FacturaDigital.BusinessService
                     vContext.Database.Connection.Open();
                     var vBillList = vContext.Bill.AsQueryable();
                     long vBillNumber = -1;
+                    UserEntity vUser = null;
+                    ClientEntity vClient = null;
                     if (vBillList != null)
                     {
                         var vUserBillsList = vBillList.Where<BillEntity>(x => x.User.UserId.Equals(pBillRequest.User.UserId));
                         if (vUserBillsList != null && vUserBillsList.Any())
                         {
                             vBillNumber = vUserBillsList.Max(x => x.ConsecutiveNumber) + 1;
+                            vUser = vUserBillsList.First().User;
+                            vClient = vUserBillsList.First().Client;
                         }
                         else
                         {
-                            var vClientConfigurationQuery = vContext.AppConfiguration.AsQueryable();
-                            var vClientConfiguration = vClientConfigurationQuery.Where<AppConfigurationEntity>(x => x.User.UserId.Equals(pBillRequest.User.UserId)).FirstOrDefault();
-                            vBillNumber = vClientConfiguration.StartBillNumber;
+                            var vUserConfigurationQuery = vContext.AppConfiguration.AsQueryable();
+                            var vUserConfiguration = vUserConfigurationQuery.Where<AppConfigurationEntity>(x => x.User.UserId.Equals(pBillRequest.User.UserId)).First();
+                            vBillNumber = vUserConfiguration.StartBillNumber;
+                            vUser = vUserConfiguration.User;
+
+                            var vClientConfigurationQuery = vContext.Client.AsQueryable();
+                            var vClientConfiguration = vClientConfigurationQuery.Where<ClientEntity>(x => x.ClientId.Equals(pBillRequest.ClientBill.ClientId)).First();
+                            vClient = vClientConfiguration;
+
                         }
 
                     }
@@ -761,13 +770,80 @@ namespace Goval.FacturaDigital.BusinessService
                             ExonerationAmount = 0,
                             Observation = pBillRequest.ClientBill.Observation
                         };
+                        vBillToCreate.User = vUser;
+                        vBillToCreate.Client = vClient;
+
+                        //Try to process the bill
+                        var vHaciendaResponse = BillingManager.ProcessBill(ref vBillToCreate);
+                        vResponse.IsSuccessful = vHaciendaResponse.IsSuccessful;
+                        vResponse.TechnicalMessage = vHaciendaResponse.TechnicalMessage;
+                        vResponse.UserMessage = vHaciendaResponse.UserMessage;
+
+
                         vContext.Bill.Add(vBillToCreate);
                         vContext.SaveChanges();
                         vContext.Database.Connection.Close();
-                        vResponse.IsSuccessful = true;
+                        
                         
                     }
                     
+                }
+            }
+            catch (Exception ex)
+            {
+                vResponse.IsSuccessful = false;
+                vResponse.TechnicalMessage = ex.ToString();
+                vResponse.UserMessage = ex.Message;
+            }
+            return vResponse;
+        }
+
+        public BillResponse TryToBillWithHacienda(BillRequest pBillRequest)
+        {
+            BillResponse vResponse = new BillResponse();
+            try
+            {
+                if (!ValidateToken(pBillRequest.SSOT))
+                {
+                    vResponse.UserMessage = "Sesión Caducada";
+                    vResponse.IsSuccessful = false;
+                    return vResponse;
+                }
+                using (BusinessDataModelEntities vContext = new BusinessDataModelEntities())
+                {
+                    vContext.Database.Connection.Open();
+                    var vBillList = vContext.Bill.AsQueryable();
+                    if (vBillList != null)
+                    {
+                        var vUserBill = vBillList.Where<BillEntity>(x => x.User.UserId.Equals(pBillRequest.User.UserId) &&
+                        x.BillId.Equals(pBillRequest.ClientBill.BillId)).FirstOrDefault();
+                        if (vUserBill != null)
+                        {
+                            var vHaciendaResponse = BillingManager.ProcessBill(ref vUserBill);
+                            vResponse.IsSuccessful = vHaciendaResponse.IsSuccessful;
+                            vResponse.TechnicalMessage = vHaciendaResponse.TechnicalMessage;
+                            vResponse.UserMessage = vHaciendaResponse.UserMessage;
+
+                            vContext.Bill.Attach(vUserBill);
+                            vContext.Entry(vUserBill).State = System.Data.Entity.EntityState.Modified;
+                            vContext.SaveChanges();
+                            vContext.Database.Connection.Close();
+                        }
+                        else
+                        {
+                            vResponse.IsSuccessful = false;
+                            vResponse.TechnicalMessage = "No se encontro Bill con el Id de Request ";
+                            vResponse.UserMessage = "Hay un conflicto con la Factura actual";
+                        }
+                    }
+                    else
+                    {
+                        vResponse.IsSuccessful = false;
+                        vResponse.TechnicalMessage = "La conexion no ha sido exitosa";
+                        vResponse.UserMessage = "La conexion no ha sido exitosa";
+                    }
+
+                    vContext.Database.Connection.Close();
                 }
             }
             catch (Exception ex)

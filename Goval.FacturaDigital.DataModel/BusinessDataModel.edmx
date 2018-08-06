@@ -41,8 +41,8 @@
           <Property Name="DiscountAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="TotalToPay" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="ClientId_FK" Type="bigint" Nullable="false" />
-          <Property Name="XMLSendedToHacienda" Type="xml" Nullable="false" />
-          <Property Name="XMLReceivedFromHacienda" Type="xml" />
+          <Property Name="XMLSendedToHacienda" Type="nvarchar(max)" />
+          <Property Name="XMLReceivedFromHacienda" Type="nvarchar(max)" />
           <Property Name="SoldProductsJSON" Type="nvarchar(max)" Nullable="false" />
           <Property Name="HaciendaFailCounter" Type="int" Nullable="false" />
           <Property Name="DocumentKey" Type="varchar" MaxLength="50" Nullable="false" />
@@ -775,7 +775,7 @@
           <Property Name="DiscountAmount" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="TotalToPay" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="ClientId_FK" Type="Int64" Nullable="false" />
-          <Property Name="XMLSendedToHacienda" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="XMLSendedToHacienda" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="XMLReceivedFromHacienda" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="SoldProductsJSON" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="HaciendaFailCounter" Type="Int32" Nullable="false" />
