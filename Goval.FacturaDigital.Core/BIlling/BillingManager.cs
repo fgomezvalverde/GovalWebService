@@ -2,6 +2,7 @@
 using BitOne.FE.EN;
 using Goval.FacturaDigital.DataContracts.BaseModel;
 using Goval.FacturaDigital.DataContracts.MobileModel;
+using Goval.FacturaDigital.DataContracts.Utils;
 using Goval.FacturaDigital.DataModel;
 using Newtonsoft.Json;
 using Syncfusion.ExcelToPdfConverter;
@@ -13,7 +14,9 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Goval.FacturaDigital.Core.BIlling
 {
@@ -25,7 +28,13 @@ namespace Goval.FacturaDigital.Core.BIlling
         private const string UrlhaciendaApiDesarrollo = "https://api.comprobanteselectronicos.go.cr/recepcion-sandbox/v1/";
 
         private static int MaxRetryCount = 100;
-        
+
+        private const string AcceptedHTTPCode = "202";
+
+        private const string BillingMailSubjectFormat = "Nueva Factura Electronica - {0} - Factura N° {1}";
+        private const string XMLNameSendedToHaciendaFormat = "XMLEnviadoHaciendaNumero{0}.xml";
+        private const string XMLNameReceivedToHaciendaFormat = "XMLRecibidoHaciendaNumero{0}.xml";
+        private const string PDFBillNameFormat = "Factura{0}.pdf";
 
         static Dictionary<string, string> SellConditions = new Dictionary<string, string>()
                 {
@@ -37,9 +46,112 @@ namespace Goval.FacturaDigital.Core.BIlling
                     {"06","Arrendamiento en función financiera"},
                     {"99","Otros"}
                 };
+        public static BaseResponse TryToRefreshBillStatus(ref BillEntity pBill)
+        {
+            BaseResponse vResponse = new BaseResponse { IsSuccessful = false };
+            try
+            {
+                var vServicioBLL = new ServicioBLL();
+                var vTributacionBLL = new TributacionBLL();
+                var vUsuarioHacienda = new UsuarioHacienda();
+
+                // Datos de Hacienda
+                vUsuarioHacienda.username = pBill.Client.User.HaciendaUsername;
+                vUsuarioHacienda.password = pBill.Client.User.HaciendaPassword;
+                vUsuarioHacienda.Pin = pBill.Client.User.HaciendaCryptographicPIN;
+                vUsuarioHacienda.Certificado = pBill.Client.User.HaciendaCryptographicFile;
+                vUsuarioHacienda.modalidadProduccion = false;
+                vUsuarioHacienda.urlhaciendaAuthApiDesarrollo = UrlhaciendaAuthApiDesarrollo;
+                vUsuarioHacienda.urlhaciendaAuthApiProduccion = UrlhaciendaAuthApiProduccion;
+                vUsuarioHacienda.urlhaciendaApiDesarrollo = UrlhaciendaApiDesarrollo;
+                vUsuarioHacienda.urlhaciendaApiProduccion = UrlhaciendaApiProduccion;
+
+
+                var vReplyValidaCertificado = vServicioBLL.fValidarCertificado(vUsuarioHacienda);
+                if (vReplyValidaCertificado.ok)
+                {
+                    var vReplyGeneraToken = vTributacionBLL.fGeneraToken(vUsuarioHacienda);
+                    if (vReplyGeneraToken.ok && vReplyGeneraToken.contingencia == false)
+                    {
+                        Boolean vValidAnswer = false;
+                        for (int vCounter = 0; vCounter < MaxRetryCount && !vValidAnswer; vCounter++)
+                        {
+                            var vReplyObtieneRespuesta = vTributacionBLL.fObtenerDocumento(vUsuarioHacienda, pBill.DocumentKey, vReplyGeneraToken.token);
+
+                            pBill.ReasonPhraseGETHacienda = vReplyObtieneRespuesta.reasonPhraseGETHacienda;
+                            pBill.StatusCodeGETHacienda = vReplyObtieneRespuesta.statusCodeGETHacienda;
+
+                            if (vReplyObtieneRespuesta.ok)
+                            {
+                                pBill.XMLReceivedFromHacienda = vReplyObtieneRespuesta.xmlRespuesta;
+
+                                switch (vReplyObtieneRespuesta.msg)
+                                {
+                                    case "ACEPTADO":
+
+                                        pBill.SystemMesagges = "Documento: " + pBill.DocumentKey + " | POST Hacienda: True |  GET Hacienda: True | Descripción: ACEPTADO";
+                                        vResponse.UserMessage = pBill.SystemMesagges;
+                                        pBill.Status = BillStatus.Done.ToString();
+                                        vResponse.IsSuccessful = true;
+                                        vValidAnswer = true;
+                                        break;
+
+                                    case "RECHAZADO":
+                                        pBill.SystemMesagges = "Documento: " + pBill.DocumentKey + " | POST Hacienda: True |  GET Hacienda: True | Descripción: RECHAZADO";
+                                        vResponse.UserMessage = pBill.SystemMesagges;
+                                        pBill.Status = BillStatus.Rejected.ToString();
+                                        vResponse.IsSuccessful = false;
+                                        vValidAnswer = true;
+                                        break;
+
+
+                                    case "PROCESANDO":
+
+                                        pBill.SystemMesagges = "Documento: " + pBill.DocumentKey + " | POST Hacienda: True |  GET Hacienda: True | Descripción: PROCESANDO";
+                                        pBill.Status = BillStatus.Processing.ToString();
+                                        break;
+
+
+                                    default:
+
+                                        pBill.SystemMesagges = "Documento: " + pBill.DocumentKey + " | POST Hacienda: True |  GET Hacienda: True | Descripción: ERROR HACIENDA. CONTACTE A SOPORTE HACIENDA";
+                                        pBill.Status = BillStatus.Error.ToString();
+                                        break;
+
+                                }
+                            }
+                            else
+                            {
+                                pBill.SystemMesagges = "Documento: " + pBill.DocumentKey + " | POST Hacienda: True | GET Hacienda: True | Descripción: " + vReplyObtieneRespuesta.msg;
+                                pBill.Status = BillStatus.Error.ToString();
+                            }
+                            pBill.SystemMesagges = vReplyObtieneRespuesta.estado + "-" + pBill.SystemMesagges + string.Format("| REASON GET: {0} | REASON POST: {1}", pBill.ReasonPhraseGETHacienda, pBill.ReasonPhrasePOSTHacienda);
+                        }
+                    }
+                    else
+                    {
+                        vResponse.UserMessage = vReplyGeneraToken.msg;
+                        vResponse.TechnicalMessage = vReplyGeneraToken.msg;
+                    }
+                }
+                else
+                {
+                    vResponse.UserMessage = vReplyValidaCertificado.msg;
+                    vResponse.TechnicalMessage = vReplyValidaCertificado.msg;
+                }
+            }
+            catch (Exception vEx)
+            {
+                vResponse.UserMessage = vEx.Message;
+                vResponse.TechnicalMessage = vEx.ToString();
+                vResponse.IsSuccessful = false;
+            }
+            return vResponse;
+        }
         public static BaseResponse ProcessBill(ref BillEntity pBill)
         {
             BaseResponse vResponse = new BaseResponse {IsSuccessful= false };
+            pBill.Status = BillStatus.Error.ToString();
             try
             {
                 var vServicioBLL = new ServicioBLL();
@@ -57,8 +169,8 @@ namespace Goval.FacturaDigital.Core.BIlling
                 vDocumentoEncabezado.PlazoCredito = string.IsNullOrEmpty(pBill.CreditTerm)?"0": pBill.CreditTerm;
                 vDocumentoEncabezado.NormativaFechaResolucion = "20-02-2017 13:22:22";
                 vDocumentoEncabezado.NormativaNumeroResolucion = "DGT-R-48-2016";
-                vDocumentoEncabezado.Observacion = pBill.Observation;
-                vDocumentoEncabezado.SubTotal = Convert.ToDouble(pBill.TotalToPay);
+                vDocumentoEncabezado.Observacion = string.IsNullOrEmpty(pBill.Observation) ? string.Empty: pBill.Observation;
+                vDocumentoEncabezado.SubTotal = Convert.ToDouble(pBill.SubTotalProducts);
                 vDocumentoEncabezado.Descuento = Convert.ToDouble(pBill.DiscountAmount);
                 vDocumentoEncabezado.Impuesto = Convert.ToDouble(pBill.TaxesToPay);
                 vDocumentoEncabezado.DocumentoConsecutivo = pBill.ConsecutiveNumber+"";
@@ -106,8 +218,9 @@ namespace Goval.FacturaDigital.Core.BIlling
                     if (vProducto.ProductQuantity > 0)
                     {
                         //Detalle del Producto
+                        decimal vProductTotal = vProducto.Price * vProducto.ProductQuantity;
                         var vLinea = new DocumentoDetalle();
-                        vLinea.Cantidad = 1;// vProducto.ProductQuantity;
+                        vLinea.Cantidad = vProducto.ProductQuantity;
                         vLinea.Nombre = vProducto.Name;
                         vLinea.Descripcion = vProducto.Description;
                         vLinea.Codigo = vProducto.ProductCode;
@@ -116,19 +229,20 @@ namespace Goval.FacturaDigital.Core.BIlling
                         vLinea.UnidadMedidaComercial = string.IsNullOrEmpty(vProducto.MeasurementUnitType)?string.Empty: vProducto.MeasurementUnitType;
                         vLinea.EsProducto = true;
                         vLinea.Precio = Convert.ToDouble(vProducto.Price);
-                        vLinea.Descuento = Convert.ToDouble(((vProducto.Price* vProducto.ProductQuantity)/100) *pBill.Client.DefaultDiscountPercentage);
-                        vLinea.DescuentoDescripcion = pBill.DiscountNature;
-
+                        vLinea.Descuento = Convert.ToDouble((vProductTotal / 100) *pBill.Client.DefaultDiscountPercentage);
+                        vLinea.DescuentoDescripcion = string.IsNullOrEmpty(pBill.DiscountNature) ? string.Empty : pBill.DiscountNature;
                         if (pBill.Client.DefaultTaxesPercentage > 0)
                         {
+                            
+
                             // Impuestos
                             var vLineaListaImpuesto = new List<DocumentoDetalleImpuesto>();
                             var vLineaImpuesto = new DocumentoDetalleImpuesto();
                             vLineaImpuesto.Tipo = pBill.TaxCode;
                             vLineaImpuesto.Tarifa = Convert.ToDouble(pBill.Client.DefaultTaxesPercentage);
-                            vLineaImpuesto.Monto = Convert.ToDouble(((vProducto.Price * vProducto.ProductQuantity) / 100) * pBill.Client.DefaultTaxesPercentage);
+                            vLineaImpuesto.Monto = 
+                                Convert.ToDouble(((vProductTotal - Convert.ToDecimal(vLinea.Descuento)) / 100) * pBill.Client.DefaultTaxesPercentage);
                             vLineaListaImpuesto.Add(vLineaImpuesto);
-
                             // Se agrega el impuesto a Lista
                             vLinea.DocumentoDetalleImpuesto = vLineaListaImpuesto;
                         }
@@ -156,16 +270,39 @@ namespace Goval.FacturaDigital.Core.BIlling
                 vUsuarioHacienda.urlhaciendaApiProduccion = UrlhaciendaApiProduccion;
 
                 var vReply = vServicioBLL.fGenerarDocumento(vDocumentoEncabezado, vUsuarioHacienda, MaxRetryCount);
-                string json = JsonConvert.SerializeObject(vDocumentoEncabezado);
                 if (vReply != null)
                 {
-                    pBill.SystemMesagges = vReply.estado + "-" + vReply.msg;
+                    // try to save the Sended XML always
+                    if (!string.IsNullOrEmpty(vReply.xmlDocumento))
+                    {
+                        pBill.XMLSendedToHacienda = vReply.xmlDocumento;
+                    }
+
+                    if (!string.IsNullOrEmpty(vReply.xmlRespuesta))
+                    {
+                        Regex vRegex = new Regex("<DetalleMensaje>(.+)</DetalleMensaje>");
+                        string msgWithoutChangeLines = Regex.Replace(vReply.xmlRespuesta, "\r\n?|\n", "");
+                        var vMatch = vRegex.Match(msgWithoutChangeLines);
+                        if (vMatch.Success)
+                        {
+                            pBill.SystemMesagges = vReply.estado + "-" + vReply.msg + vMatch.Value;
+                        }
+                        else
+                        {
+                            pBill.SystemMesagges = vReply.estado + "-" + vReply.msg;
+                        }
+                        
+                    }
+                    else
+                    {
+                        pBill.SystemMesagges = vReply.estado + "-" + vReply.msg + 
+                            string.Format("| REASON GET: {0} | REASON POST: {1}",vReply.reasonPhraseGETHacienda,vReply.reasonPhrasePOSTHacienda);
+                    }
+                    
+                    
                     if (vReply.ok)
                     {
-                        if (!string.IsNullOrEmpty(vReply.xmlDocumento))
-                        {
-                            pBill.XMLSendedToHacienda = vReply.xmlDocumento;
-                        }
+                        
                         if (!string.IsNullOrEmpty(vReply.xmlRespuesta))
                         {
                             pBill.XMLReceivedFromHacienda = vReply.xmlRespuesta;
@@ -177,7 +314,7 @@ namespace Goval.FacturaDigital.Core.BIlling
                                 vResponse.IsSuccessful = true;
                                 break;
                             case BillStatusHacienda.Rechazada:
-                                pBill.Status = BillStatus.Error.ToString();
+                                pBill.Status = BillStatus.Rejected.ToString();
                                 vResponse.IsSuccessful = false;
                                 break;
                             case BillStatusHacienda.Procesando:
@@ -189,15 +326,49 @@ namespace Goval.FacturaDigital.Core.BIlling
                                 vResponse.IsSuccessful = false;
                                 break;
                         }
+
+                        if (string.IsNullOrEmpty(pBill.SystemMesagges))
+                        {
+                            pBill.SystemMesagges = pBill.Status + vReply.msg;
+                        }
+                        vResponse.UserMessage = pBill.SystemMesagges;
                         
-                        vResponse.UserMessage = pBill.Status+ vReply.msg;
-                        pBill.SystemMesagges = vReply.msg;
                     }
                     else {
-                        pBill.Status = BillStatus.Error.ToString();
-                        pBill.SystemMesagges = "Error."+"La respuesta no fue positiva:"+ vReply.msg;
+                        if (string.IsNullOrEmpty(pBill.Status))
+                        {
+                            pBill.Status = BillStatus.Error.ToString();
+                        }
+                        if(string.IsNullOrEmpty(pBill.SystemMesagges))
+                        {
+                            pBill.SystemMesagges = "Error." + "La respuesta no fue positiva:" + vReply.msg;
+                        }
+
+
+                        if (string.IsNullOrEmpty(vReply.statusCodePOSTHacienda) || !vReply.statusCodePOSTHacienda.Equals(AcceptedHTTPCode))
+                        {
+                            if (!string.IsNullOrEmpty(vReply.msg) && vReply.msg.Contains("ya fue recibido anteriormente"))
+                            {
+                                pBill.Status = BillStatus.Processing.ToString();
+                            }
+                            else
+                            {
+                                pBill.Status = BillStatus.Error.ToString();
+                            }
+                            
+                        }
+                        else
+                        {
+                                pBill.Status = BillStatus.Processing.ToString();
+                        }
+                        pBill.ReasonPhraseGETHacienda = vReply.reasonPhraseGETHacienda;
+                        pBill.ReasonPhrasePOSTHacienda = vReply.reasonPhrasePOSTHacienda;
+
+                        pBill.StatusCodeGETHacienda = vReply.statusCodeGETHacienda;
+                        pBill.StatusCodePOSTHacienda = vReply.statusCodePOSTHacienda;
+
                         vResponse.IsSuccessful = false;
-                        vResponse.UserMessage = vReply.msg;
+                        vResponse.UserMessage = pBill.SystemMesagges;
                     }
 
                 }
@@ -205,7 +376,7 @@ namespace Goval.FacturaDigital.Core.BIlling
                 {
                     pBill.SystemMesagges = "No se recibio respuesta de hacienda";
                     vResponse.UserMessage = "Error." + "No se recibio respuesta de hacienda";
-                    pBill.Status = BillStatus.Processing.ToString();
+                    pBill.Status = BillStatus.Error.ToString();
                 }
 
                 pBill.HaciendaFailCounter++;
@@ -319,8 +490,10 @@ namespace Goval.FacturaDigital.Core.BIlling
             values.Add("billTotal",
                     "¢" + FormatNumericToString(pBill.TotalToPay));
 
-            Utils util = new Utils();
+            values.Add("documentKey", pBill.DocumentKey);
 
+            Utils util = new Utils();
+            
             values.Add("billTotalInText",
                    util.IntegerToWritten((FormatNumericToString(pBill.TotalToPay))));
 
@@ -363,6 +536,90 @@ namespace Goval.FacturaDigital.Core.BIlling
             workbook.Close();
             pdfDocument.Dispose();
             return vResult;
+        }
+
+        public static BaseResponse SendMailFromSuccessfulyBillTransaction(BillEntity pBill, User pUser, byte[] pBillPdf)
+        {
+            BaseResponse vResponse = new BaseResponse();
+            try
+            {
+                string uUserOficialName = pUser.Name;
+                string vUserMail = pUser.Email;
+                string vClientMail = pBill.Client.Email;
+                string vSubject = string.Format(BillingMailSubjectFormat, uUserOficialName, pBill.ConsecutiveNumber+"");
+                List<string> vClientsList = new List<string>() { vClientMail };
+
+                var path = System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath;
+                var finalPath = Path.Combine(path, @"Files/DefaultHTMLEmail/MailTemplate.html");
+
+                var vBody = System.IO.File.ReadAllText(finalPath);
+
+                vBody = vBody.Replace("$NOMBRE_CLIENTE$", uUserOficialName);
+                vBody = vBody.Replace("$NUMERO_FACTURA$", pBill.ConsecutiveNumber + "");
+                vBody = vBody.Replace("$MONTO_TOTAL$", pBill.TotalToPay+"");
+                vBody = vBody.Replace("$FECHA$", DateTime.Now.ToString());
+                vBody = vBody.Replace("$TELEFONO$", pUser.PhoneNumber);
+
+                XmlDocument vXMLSendedToHacienda = new XmlDocument();
+                vXMLSendedToHacienda.LoadXml(pBill.XMLSendedToHacienda);
+
+                Stream vStreamSendedToHacienda = new MemoryStream();
+                vXMLSendedToHacienda.Save(vStreamSendedToHacienda);
+                vStreamSendedToHacienda.Flush();
+                vStreamSendedToHacienda.Position = 0;
+
+
+                XmlDocument vXMLReceivedFromHacienda = new XmlDocument();
+                vXMLReceivedFromHacienda.LoadXml(pBill.XMLReceivedFromHacienda);
+                Stream vStreamReceivedFromHacienda = new MemoryStream();
+                vXMLReceivedFromHacienda.Save(vStreamReceivedFromHacienda);
+                vStreamReceivedFromHacienda.Flush();
+                vStreamReceivedFromHacienda.Position = 0;
+
+                Stream vStreamBillPDF = new MemoryStream(pBillPdf);
+
+                List<AttachmentMail> vAttachments = new List<AttachmentMail>()
+                {
+                    new AttachmentMail{
+                        FileName = string.Format(XMLNameSendedToHaciendaFormat,pBill.ConsecutiveNumber + ""),
+                        FileData = vStreamSendedToHacienda
+                    },
+                    new AttachmentMail{
+                        FileName = string.Format(XMLNameReceivedToHaciendaFormat,pBill.ConsecutiveNumber + ""),
+                        FileData = vStreamReceivedFromHacienda
+                    },
+                    new AttachmentMail{
+                        FileName = string.Format(PDFBillNameFormat,pBill.ConsecutiveNumber + ""),
+                        FileData = vStreamBillPDF
+                    }
+                };
+
+                var vResponseFromEmail = Utils.SendMail(vSubject, vBody, vClientsList, vAttachments, true);
+                if (vResponseFromEmail.IsSuccessful)
+                {
+                    vResponse.IsSuccessful = true;
+                }
+                else
+                {
+                    vResponse.TechnicalMessage = vResponseFromEmail.TechnicalMessage;
+                    vResponse.UserMessage = vResponseFromEmail.UserMessage;
+                    vResponse.IsSuccessful = false;
+                }
+
+                vStreamSendedToHacienda.Dispose();
+                vStreamReceivedFromHacienda.Dispose();
+                vStreamBillPDF.Dispose();
+                vAttachments = null;
+
+               
+            }
+            catch (Exception vEx)
+            {
+                vResponse.IsSuccessful = false;
+                vResponse.UserMessage = vEx.Message;
+                vResponse.TechnicalMessage = vEx.ToString();
+            }
+            return vResponse;
         }
 
         public static byte[] ReadFully(Stream input)

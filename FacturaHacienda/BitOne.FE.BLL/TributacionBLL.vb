@@ -267,52 +267,42 @@ Public Class TributacionBLL
 
             Try
 
-                Dim vIntentosMax = 0
 
-                ' Recorrer mientras sea respuesta sea nothing o intentos menor a 3
-                While vReply.xmlRespuesta = Nothing Or vIntentosMax < 3
+                Dim vStr As String = " "
 
-                    Dim vStr As String = " "
+                ' Consulta por la clave del documento
+                vResponse = vClient.GetAsync("recepcion/" + pClave).Result
 
-                    ' Consulta por la clave del documento
-                    vResponse = vClient.GetAsync("recepcion/" + pClave).Result
+                If Not vResponse.ReasonPhrase Is Nothing Then
+                    vReply.reasonPhraseGETHacienda = vResponse.ReasonPhrase
+                End If
 
-                    If Not vResponse.ReasonPhrase Is Nothing Then
-                        vReply.reasonPhraseGETHacienda = vResponse.ReasonPhrase
-                    End If
+                If (vResponse.StatusCode) Then
+                    vReply.statusCodeGETHacienda = vResponse.StatusCode
+                End If
 
-                    If (vResponse.StatusCode) Then
-                        vReply.statusCodeGETHacienda = vResponse.StatusCode
-                    End If
+                'Si se realizo correctamente
+                If (vResponse.IsSuccessStatusCode) Then
 
-                    'Si se realizo correctamente
-                    If (vResponse.IsSuccessStatusCode) Then
+                    vStr = vResponse.Content.ReadAsStringAsync().Result
+                    vMsg = JsonConvert.DeserializeObject(Of ResponseMessage)(vStr)
 
-                        vStr = vResponse.Content.ReadAsStringAsync().Result
-                        vMsg = JsonConvert.DeserializeObject(Of ResponseMessage)(vStr)
+                    ' Asigna respuesta de hacienda
+                    vReply.msg = vMsg.indEstado.ToUpper
+                    vReply.ok = True
 
-                        ' Asigna respuesta de hacienda
-                        vReply.msg = vMsg.indEstado.ToUpper
-                        vReply.ok = True
-
-                        ' Si el mensaje no es nulo o vació
-                        If Not String.IsNullOrEmpty(vMsg.respuestaXml) Then
-                            vReply.xmlRespuesta = vCommon.Decrypt(vMsg.respuestaXml)
-                            vIntentosMax = 3
-                        Else
-                            vReply.xmlRespuesta = Nothing
-                        End If
-
+                    ' Si el mensaje no es nulo o vació
+                    If Not String.IsNullOrEmpty(vMsg.respuestaXml) Then
+                        vReply.xmlRespuesta = vCommon.Decrypt(vMsg.respuestaXml)
                     Else
-                        Dim header As [String]() = vResponse.Headers.GetValues("X-Error-Cause")
-                        vReply.msg = header(0)
-                        vReply.ok = False
-                        vIntentosMax = 3
+                        vReply.xmlRespuesta = Nothing
                     End If
 
-                    vIntentosMax = vIntentosMax + 1
-
-                End While
+                Else
+                    Dim header As [String]() = vResponse.Headers.GetValues("X-Error-Cause")
+                    vReply.msg = header(0)
+                    vReply.ok = False
+                End If
 
             Catch ex As Exception
 
@@ -352,7 +342,7 @@ Public Class TributacionBLL
         spi.PolicyIdentifier = "https://tribunet.hacienda.go.cr/docs/esquemas/2017/v4.2/Resolucion%20Comprobantes%20Electronicos%20%20DGT-R-48-2016.pdf"
         spi.PolicyUri = ""
         spi.PolicyHash = "NmI5Njk1ZThkNzI0MmIzMGJmZDAyNDc4YjUwNzkzODM2NTBiOWUxNTBkMmI2YjgzYzZjM2I5NTZlNDQ4OWQzMQ=="
-        spi.PolicyDigestAlgorithm = FirmaXadesNet.Crypto.DigestMethod.SHA256
+        spi.PolicyDigestAlgorithm = DigestMethod.SHA256
         parametros.SignaturePolicyInfo = spi
         'Otros parametros
         parametros.SignaturePackaging = SignaturePackaging.ENVELOPED
@@ -400,8 +390,13 @@ Public Class TributacionBLL
 
             vReply = New X509Certificate2(pUsuarioHacienda.Certificado, pUsuarioHacienda.Pin)
 
+            ' Test PrivateKey
+            Dim vTestPrivatekey As Security.Cryptography.AsymmetricAlgorithm
+            vTestPrivatekey = vReply.GetRSAPrivateKey()
+
         Catch ex As Exception
-            vReply = Nothing
+            Throw ex
+            'vReply = Nothing
         End Try
 
         Return vReply

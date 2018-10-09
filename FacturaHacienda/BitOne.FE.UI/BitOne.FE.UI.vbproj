@@ -11,7 +11,7 @@
     <AssemblyName>BitOne.FE.UI</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
@@ -31,6 +31,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -163,20 +164,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BitOne.FE.BLL\BitOne.FE.BLL.vbproj">
-      <Project>{9bbb7a37-47c1-4404-8083-8b69d03bf097}</Project>
-      <Name>BitOne.FE.BLL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BitOne.FE.EN\BitOne.FE.EN.vbproj">
-      <Project>{49b9dc66-4426-4d0f-bca5-314a88efe5db}</Project>
-      <Name>BitOne.FE.EN</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BitOne.FE.Resources\BitOne.FE.Resources.vbproj">
-      <Project>{63baf6f1-b40c-47bd-8931-0424df37075e}</Project>
-      <Name>BitOne.FE.Resources</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="favicon.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -195,6 +182,20 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BitOne.FE.BLL\BitOne.FE.BLL.vbproj">
+      <Project>{9bbb7a37-47c1-4404-8083-8b69d03bf097}</Project>
+      <Name>BitOne.FE.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BitOne.FE.EN\BitOne.FE.EN.vbproj">
+      <Project>{49b9dc66-4426-4d0f-bca5-314a88efe5db}</Project>
+      <Name>BitOne.FE.EN</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BitOne.FE.Resources\BitOne.FE.Resources.vbproj">
+      <Project>{63baf6f1-b40c-47bd-8931-0424df37075e}</Project>
+      <Name>BitOne.FE.Resources</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -4,6 +4,7 @@ Imports BitOne.FE.EN
 Imports System.Xml
 Imports System.Text
 Imports System.IO
+Imports BitOne.FE.EN.BitOne.FE.EN.MensajeReceptor
 
 
 Public Class FrmInicio
@@ -36,7 +37,7 @@ Public Class FrmInicio
 
 
         ' Emisor
-        vDocumentoEncabezado.Emisor.Identificacion = "0000000000"
+        vDocumentoEncabezado.Emisor.Identificacion = "3101000000"
         vDocumentoEncabezado.Emisor.IdentificacionTipo = "02"
         vDocumentoEncabezado.Emisor.Direccion = "San José"
         vDocumentoEncabezado.Emisor.CodigoPais = "506"
@@ -44,35 +45,34 @@ Public Class FrmInicio
         vDocumentoEncabezado.Emisor.Canton = "01"
         vDocumentoEncabezado.Emisor.Distrito = "01"
         'vDocumentoEncabezado.Emisor.Barrio = "01"
-        vDocumentoEncabezado.Emisor.Nombre = "EJEMPLO S.A."
+        vDocumentoEncabezado.Emisor.Nombre = "ABC S.A."
         vDocumentoEncabezado.Emisor.NombreComercial = ""
-        vDocumentoEncabezado.Emisor.Telefono = "00000000"
+        vDocumentoEncabezado.Emisor.Telefono = "22000000"
         vDocumentoEncabezado.Emisor.Fax = "00000000"
-        vDocumentoEncabezado.Emisor.Email = "email@email.com"
-
+        vDocumentoEncabezado.Emisor.Email = "test@gmail.com"
 
         ' Receptor        
-        'vDocumentoEncabezado.Receptor.IdentificacionExtranjero = "0000000000" ' Max 20 caracteres
-        ''vDocumentoEncabezado.Receptor.Identificacion = "0000000000"
-        'vDocumentoEncabezado.Receptor.IdentificacionTipo = "02"
-        'vDocumentoEncabezado.Receptor.Direccion = "Cartago"
-        'vDocumentoEncabezado.Receptor.CodigoPais = "506"
-        'vDocumentoEncabezado.Receptor.Provincia = "1"
-        'vDocumentoEncabezado.Receptor.Canton = "01"
-        'vDocumentoEncabezado.Receptor.Distrito = "01"
-        ''vDocumentoEncabezado.Receptor.Barrio = "01"
-        'vDocumentoEncabezado.Receptor.Nombre = "Empresa S.A."
-        'vDocumentoEncabezado.Receptor.NombreComercial = "Marca"
-        'vDocumentoEncabezado.Receptor.Telefono = "00000000"
-        'vDocumentoEncabezado.Receptor.Fax = "00000000"
-        'vDocumentoEncabezado.Receptor.Email = "test@test.com"
+        'vDocumentoEncabezado.Receptor.IdentificacionExtranjero = "A659595959595" ' Max 20 caracteres
+        vDocumentoEncabezado.Receptor.Identificacion = "3101000000"
+        vDocumentoEncabezado.Receptor.IdentificacionTipo = "02"
+        vDocumentoEncabezado.Receptor.Direccion = "Cartago"
+        vDocumentoEncabezado.Receptor.CodigoPais = "506"
+        vDocumentoEncabezado.Receptor.Provincia = "1"
+        vDocumentoEncabezado.Receptor.Canton = "01"
+        vDocumentoEncabezado.Receptor.Distrito = "01"
+        vDocumentoEncabezado.Receptor.Barrio = "01"
+        vDocumentoEncabezado.Receptor.Nombre = "ABC S.A."
+        vDocumentoEncabezado.Receptor.NombreComercial = ""
+        vDocumentoEncabezado.Receptor.Telefono = "22000000"
+        vDocumentoEncabezado.Receptor.Fax = "00000000"
+        vDocumentoEncabezado.Receptor.Email = "test@gmail.com"
 
         ' Encabezado
-        vDocumentoEncabezado.Clave = "50611011800310163508400100001040000000105100000002"
+        vDocumentoEncabezado.Clave = "50611011800310100000000100001040000000105100000002"
         vDocumentoEncabezado.TipoCambio = 1 '571 '1
         vDocumentoEncabezado.Fecha = DateTime.Now
         vDocumentoEncabezado.Moneda = "CRC" '"USD"
-        vDocumentoEncabezado.CondicionVenta = "Item01"
+        vDocumentoEncabezado.CondicionVenta = "01"
         vDocumentoEncabezado.PlazoCredito = "0"
         vDocumentoEncabezado.NormativaFechaResolucion = "20-02-2017 13:22:22"
         vDocumentoEncabezado.NormativaNumeroResolucion = "DGT-R-48-2016"
@@ -83,18 +83,18 @@ Public Class FrmInicio
         'Dim vLineasReferencia As New List(Of DocumentoReferencia)
 
         'Dim referencia1 As New DocumentoReferencia
-        'referencia1.TipoDoc = "Item01"
+        'referencia1.TipoDoc = "01"
         'referencia1.Numero = "010"
         'referencia1.FechaEmision = "2018-01-31T11:20:51.7553435-06:00"
-        'referencia1.Codigo = "Item03"
+        'referencia1.Codigo = "03"
         'referencia1.Razon = "Comprobante Provisional"
         'vLineasReferencia.Add(referencia1)
 
         'Dim referencia2 As New DocumentoReferencia
-        'referencia2.TipoDoc = "Item02"
+        'referencia2.TipoDoc = "02"
         'referencia2.Numero = "011"
         'referencia2.FechaEmision = "2018-01-17T20:12:21.3698995-06:00"
-        'referencia2.Codigo = "Item03"
+        'referencia2.Codigo = "03"
         'referencia2.Razon = "Comprobante Provisional"
         'vLineasReferencia.Add(referencia2)
 
@@ -104,11 +104,11 @@ Public Class FrmInicio
 
         ' Medios de Pago
         Dim vMedioPago1 As New DocumentoMedioPago
-        vMedioPago1.Codigo = "Item01"
+        vMedioPago1.Codigo = "01"
         vMediosPago.Add(vMedioPago1)
 
         'Dim vMedioPago2 As New DocumentoMedioPago
-        'vMedioPago2.Codigo = "Item02"
+        'vMedioPago2.Codigo = "02"
         'vMediosPago.Add(vMedioPago2)
         'vDocumentoEncabezado.MedioPago = vMediosPago
 
@@ -121,7 +121,7 @@ Public Class FrmInicio
         'vLinea1.Nombre = "Producto 1"
         'vLinea1.Descripcion = "Descripción del Producto 1"
         'vLinea1.Codigo = "00Gen."
-        'vLinea1.Tipo = "Item99"
+        'vLinea1.Tipo = "99"
         'vLinea1.Unidad = "Unid"
         'vLinea1.EsProducto = True
         'vLinea1.Precio = 1000.0
@@ -131,13 +131,13 @@ Public Class FrmInicio
         'Dim vListadoImpuesto As New List(Of DocumentoDetalleImpuesto)
 
         'Dim vImpuesto1 As New DocumentoDetalleImpuesto
-        'vImpuesto1.Tipo = "Item01"
+        'vImpuesto1.Tipo = "01"
         'vImpuesto1.Tarifa = 13
         'vImpuesto1.Monto = 117
         'vListadoImpuesto.Add(vImpuesto1)
 
         'Dim vImpuesto2 As New DocumentoDetalleImpuesto
-        'vImpuesto2.Tipo = "Item02"
+        'vImpuesto2.Tipo = "02"
         'vImpuesto2.Tarifa = 5
         'vImpuesto2.Monto = 500.0
         'vListadoImpuesto.Add(vImpuesto2)
@@ -199,7 +199,7 @@ Public Class FrmInicio
 
 
         ' Emisor
-        vDocumentoEncabezado.Emisor.Identificacion = "0000000000"
+        vDocumentoEncabezado.Emisor.Identificacion = "3101635084"
         vDocumentoEncabezado.Emisor.IdentificacionTipo = "02"
         vDocumentoEncabezado.Emisor.Direccion = "San José"
         vDocumentoEncabezado.Emisor.CodigoPais = "506"
@@ -207,70 +207,70 @@ Public Class FrmInicio
         vDocumentoEncabezado.Emisor.Canton = "01"
         vDocumentoEncabezado.Emisor.Distrito = "01"
         'vDocumentoEncabezado.Emisor.Barrio = "01"
-        vDocumentoEncabezado.Emisor.Nombre = "EJEMPLO S.A."
+        vDocumentoEncabezado.Emisor.Nombre = "ABC S.A."
         vDocumentoEncabezado.Emisor.NombreComercial = ""
-        vDocumentoEncabezado.Emisor.Telefono = "00000000"
+        vDocumentoEncabezado.Emisor.Telefono = "22000000"
         vDocumentoEncabezado.Emisor.Fax = "00000000"
-        vDocumentoEncabezado.Emisor.Email = "email@email.com"
+        vDocumentoEncabezado.Emisor.Email = "test@gmail.com"
 
         ' Receptor        
-        'vDocumentoEncabezado.Receptor.IdentificacionExtranjero = "0000000000" ' Max 20 caracteres
-        ''vDocumentoEncabezado.Receptor.Identificacion = "0000000000"
-        'vDocumentoEncabezado.Receptor.IdentificacionTipo = "02"
-        'vDocumentoEncabezado.Receptor.Direccion = "Cartago"
-        'vDocumentoEncabezado.Receptor.CodigoPais = "506"
-        'vDocumentoEncabezado.Receptor.Provincia = "1"
-        'vDocumentoEncabezado.Receptor.Canton = "01"
-        'vDocumentoEncabezado.Receptor.Distrito = "01"
-        ''vDocumentoEncabezado.Receptor.Barrio = "01"
-        'vDocumentoEncabezado.Receptor.Nombre = "Empresa S.A."
-        'vDocumentoEncabezado.Receptor.NombreComercial = "Marca"
-        'vDocumentoEncabezado.Receptor.Telefono = "00000000"
-        'vDocumentoEncabezado.Receptor.Fax = "00000000"
-        'vDocumentoEncabezado.Receptor.Email = "test@test.com"
+        'vDocumentoEncabezado.Receptor.IdentificacionExtranjero = "A659595959595" ' Max 20 caracteres
+        vDocumentoEncabezado.Receptor.Identificacion = "3101000000"
+        vDocumentoEncabezado.Receptor.IdentificacionTipo = "02"
+        vDocumentoEncabezado.Receptor.Direccion = "Cartago"
+        vDocumentoEncabezado.Receptor.CodigoPais = "506"
+        vDocumentoEncabezado.Receptor.Provincia = "1"
+        vDocumentoEncabezado.Receptor.Canton = "01"
+        vDocumentoEncabezado.Receptor.Distrito = "01"
+        vDocumentoEncabezado.Receptor.Barrio = "01"
+        vDocumentoEncabezado.Receptor.Nombre = "ABC S.A."
+        vDocumentoEncabezado.Receptor.NombreComercial = ""
+        vDocumentoEncabezado.Receptor.Telefono = "22000000"
+        vDocumentoEncabezado.Receptor.Fax = "00000000"
+        vDocumentoEncabezado.Receptor.Email = "test@gmail.com"
 
 
         ' Encabezado
-        vDocumentoEncabezado.Clave = "50611011800310163508400100001010000000206100000002"
+        vDocumentoEncabezado.Clave = "50611011800310100000000100001010000000224100000002"
         vDocumentoEncabezado.TipoCambio = 1 '571 '1
         vDocumentoEncabezado.Fecha = DateTime.Now
         vDocumentoEncabezado.Moneda = "CRC" '"USD"
-        vDocumentoEncabezado.CondicionVenta = "Item01"
+        vDocumentoEncabezado.CondicionVenta = "01"
         vDocumentoEncabezado.PlazoCredito = "0"
         vDocumentoEncabezado.NormativaFechaResolucion = "20-02-2017 13:22:22"
         vDocumentoEncabezado.NormativaNumeroResolucion = "DGT-R-48-2016"
         vDocumentoEncabezado.Observacion = "Esta es la observación"
 
-        '' Referencia
-        'Dim vLineasReferencia As New List(Of DocumentoReferencia)
+        ' Referencia
+        Dim vLineasReferencia As New List(Of DocumentoReferencia)
 
-        'Dim referencia1 As New DocumentoReferencia
-        'referencia1.TipoDoc = "Item01"
-        'referencia1.Numero = "010"
-        'referencia1.FechaEmision = "2018-01-31T11:20:51.7553435-06:00"
-        'referencia1.Codigo = "Item03"
-        'referencia1.Razon = "Comprobante Provisional"
-        'vLineasReferencia.Add(referencia1)
+        Dim referencia1 As New DocumentoReferencia
+        referencia1.TipoDoc = "01"
+        referencia1.Numero = "010"
+        referencia1.FechaEmision = "2018-01-31T11:20:51.7553435-06:00"
+        referencia1.Codigo = "03"
+        referencia1.Razon = "Comprobante Provisional"
+        vLineasReferencia.Add(referencia1)
 
-        'Dim referencia2 As New DocumentoReferencia
-        'referencia2.TipoDoc = "Item02"
-        'referencia2.Numero = "011"
-        'referencia2.FechaEmision = "2018-01-17T20:12:21.3698995-06:00"
-        'referencia2.Codigo = "Item03"
-        'referencia2.Razon = "Comprobante Provisional"
-        'vLineasReferencia.Add(referencia2)
+        Dim referencia2 As New DocumentoReferencia
+        referencia2.TipoDoc = "02"
+        referencia2.Numero = "011"
+        referencia2.FechaEmision = "2018-01-17T20:12:21.3698995-06:00"
+        referencia2.Codigo = "03"
+        referencia2.Razon = "Comprobante Provisional"
+        vLineasReferencia.Add(referencia2)
 
-        'vDocumentoEncabezado.Referencia = vLineasReferencia
+        vDocumentoEncabezado.Referencia = vLineasReferencia
 
 
         ' Medios de Pago
         Dim vMedioPago1 As New DocumentoMedioPago
-        vMedioPago1.Codigo = "Item01"
+        vMedioPago1.Codigo = "01"
         vMediosPago.Add(vMedioPago1)
 
-        'Dim vMedioPago2 As New DocumentoMedioPago
-        'vMedioPago2.Codigo = "Item02"
-        'vMediosPago.Add(vMedioPago2)
+        Dim vMedioPago2 As New DocumentoMedioPago
+        vMedioPago2.Codigo = "02"
+        vMediosPago.Add(vMedioPago2)
         vDocumentoEncabezado.MedioPago = vMediosPago
 
         ' Detalle de las lineas
@@ -282,8 +282,8 @@ Public Class FrmInicio
         vLinea1.Nombre = "Producto 1"
         vLinea1.Descripcion = "Descripción del Producto 1"
         vLinea1.Codigo = "00Gen."
-        vLinea1.Tipo = "Item99"
-        vLinea1.Unidad = "Unid"
+        vLinea1.Tipo = "99"
+        vLinea1.Unidad = "m³" '"Unid"
         vLinea1.EsProducto = True
         vLinea1.Precio = 1000.0
         vLinea1.Descuento = 0 ' %
@@ -292,51 +292,51 @@ Public Class FrmInicio
         Dim vListadoImpuesto As New List(Of DocumentoDetalleImpuesto)
 
         Dim vImpuesto1 As New DocumentoDetalleImpuesto
-        vImpuesto1.Tipo = "Item01"
+        vImpuesto1.Tipo = "01"
         vImpuesto1.Tarifa = 13
-        vImpuesto1.Monto = 130
+        vImpuesto1.Monto = 136.5 '130
 
-        '' La exoneración solamente aplica para 
-        '' el Impuesto de Ventas Item01
-        'Dim vImpuesto1Exoneracion As New DocumentoDetalleImpuestoExoneracion
+        ' La exoneración solamente aplica para 
+        ' el Impuesto de Ventas 01
+        Dim vImpuesto1Exoneracion As New DocumentoDetalleImpuestoExoneracion
 
-        'vImpuesto1Exoneracion.TipoDocumento = "Item01"
-        'vImpuesto1Exoneracion.NumeroDocumento = "001"
-        'vImpuesto1Exoneracion.NombreInstitucion = "Cruz Roja Costarricense"
-        'vImpuesto1Exoneracion.FechaEmision = DateTime.Now
-        'vImpuesto1Exoneracion.MontoImpuesto = 68.25
-        'vImpuesto1Exoneracion.PorcentajeCompra = 50
+        vImpuesto1Exoneracion.TipoDocumento = "01"
+        vImpuesto1Exoneracion.NumeroDocumento = "001"
+        vImpuesto1Exoneracion.NombreInstitucion = "Cruz Roja Costarricense"
+        vImpuesto1Exoneracion.FechaEmision = DateTime.Now
+        vImpuesto1Exoneracion.MontoImpuesto = 68.25
+        vImpuesto1Exoneracion.PorcentajeCompra = 50
 
-        'vImpuesto1.Exoneracion = vImpuesto1Exoneracion
+        vImpuesto1.Exoneracion = vImpuesto1Exoneracion
 
         vListadoImpuesto.Add(vImpuesto1)
 
-        'Dim vImpuesto2 As New DocumentoDetalleImpuesto
-        'vImpuesto2.Tipo = "Item02"
-        'vImpuesto2.Tarifa = 5
-        'vImpuesto2.Monto = 50.0
+        Dim vImpuesto2 As New DocumentoDetalleImpuesto
+        vImpuesto2.Tipo = "02"
+        vImpuesto2.Tarifa = 5
+        vImpuesto2.Monto = 50.0
 
-        'vListadoImpuesto.Add(vImpuesto2)
+        vListadoImpuesto.Add(vImpuesto2)
 
         vLinea1.DocumentoDetalleImpuesto = vListadoImpuesto
 
         vLineas.Add(vLinea1)
 
 
-        'Dim vLinea2 As New DocumentoDetalle
+        Dim vLinea2 As New DocumentoDetalle
 
-        'vLinea2.Cantidad = 1
-        'vLinea2.Nombre = "Servicios Profesionales"
-        'vLinea2.Descripcion = "Servicios Profesionales"
-        'vLinea2.Codigo = "00Gen."
-        'vLinea2.Tipo = "Item99"
-        'vLinea2.Unidad = "Unid"
-        'vLinea2.EsProducto = False
-        'vLinea2.Precio = 1145.7
-        'vLinea2.Descuento = 0
-        'vLinea2.DescuentoDescripcion = ""
+        vLinea2.Cantidad = 1
+        vLinea2.Nombre = "Servicios Profesionales"
+        vLinea2.Descripcion = "Servicios Profesionales"
+        vLinea2.Codigo = "00Gen."
+        vLinea2.Tipo = "99"
+        vLinea2.Unidad = "Unid"
+        vLinea2.EsProducto = False
+        vLinea2.Precio = 1145.7
+        vLinea2.Descuento = 0
+        vLinea2.DescuentoDescripcion = ""
 
-        'vLineas.Add(vLinea2)
+        vLineas.Add(vLinea2)
 
         vDocumentoEncabezado.DocumentoDetalle = vLineas
 
@@ -516,7 +516,7 @@ Public Class FrmInicio
 
 
         ' Emisor
-        vDocumentoEncabezado.Emisor.Identificacion = "0000000000"
+        vDocumentoEncabezado.Emisor.Identificacion = "3101000000"
         vDocumentoEncabezado.Emisor.IdentificacionTipo = "02"
         vDocumentoEncabezado.Emisor.Direccion = "San José"
         vDocumentoEncabezado.Emisor.CodigoPais = "506"
@@ -524,35 +524,34 @@ Public Class FrmInicio
         vDocumentoEncabezado.Emisor.Canton = "01"
         vDocumentoEncabezado.Emisor.Distrito = "01"
         'vDocumentoEncabezado.Emisor.Barrio = "01"
-        vDocumentoEncabezado.Emisor.Nombre = "EJEMPLO S.A."
+        vDocumentoEncabezado.Emisor.Nombre = "ABC S.A."
         vDocumentoEncabezado.Emisor.NombreComercial = ""
-        vDocumentoEncabezado.Emisor.Telefono = "00000000"
+        vDocumentoEncabezado.Emisor.Telefono = "22000000"
         vDocumentoEncabezado.Emisor.Fax = "00000000"
-        vDocumentoEncabezado.Emisor.Email = "email@email.com"
-
+        vDocumentoEncabezado.Emisor.Email = "test@gmail.com"
 
         ' Receptor        
-        'vDocumentoEncabezado.Receptor.IdentificacionExtranjero = "0000000000" ' Max 20 caracteres
-        ''vDocumentoEncabezado.Receptor.Identificacion = "0000000000"
-        'vDocumentoEncabezado.Receptor.IdentificacionTipo = "02"
-        'vDocumentoEncabezado.Receptor.Direccion = "Cartago"
-        'vDocumentoEncabezado.Receptor.CodigoPais = "506"
-        'vDocumentoEncabezado.Receptor.Provincia = "1"
-        'vDocumentoEncabezado.Receptor.Canton = "01"
-        'vDocumentoEncabezado.Receptor.Distrito = "01"
-        ''vDocumentoEncabezado.Receptor.Barrio = "01"
-        'vDocumentoEncabezado.Receptor.Nombre = "Empresa S.A."
-        'vDocumentoEncabezado.Receptor.NombreComercial = "Marca"
-        'vDocumentoEncabezado.Receptor.Telefono = "00000000"
-        'vDocumentoEncabezado.Receptor.Fax = "00000000"
-        'vDocumentoEncabezado.Receptor.Email = "test@test.com"
+        'vDocumentoEncabezado.Receptor.IdentificacionExtranjero = "A659595959595" ' Max 20 caracteres
+        vDocumentoEncabezado.Receptor.Identificacion = "3101000000"
+        vDocumentoEncabezado.Receptor.IdentificacionTipo = "02"
+        vDocumentoEncabezado.Receptor.Direccion = "Cartago"
+        vDocumentoEncabezado.Receptor.CodigoPais = "506"
+        vDocumentoEncabezado.Receptor.Provincia = "1"
+        vDocumentoEncabezado.Receptor.Canton = "01"
+        vDocumentoEncabezado.Receptor.Distrito = "01"
+        vDocumentoEncabezado.Receptor.Barrio = "01"
+        vDocumentoEncabezado.Receptor.Nombre = "ABC S.A."
+        vDocumentoEncabezado.Receptor.NombreComercial = ""
+        vDocumentoEncabezado.Receptor.Telefono = "22000000"
+        vDocumentoEncabezado.Receptor.Fax = "00000000"
+        vDocumentoEncabezado.Receptor.Email = "test@gmail.com"
 
         ' Encabezado
         vDocumentoEncabezado.Clave = "50611011800310163508400100001020000000110100000002"
         vDocumentoEncabezado.TipoCambio = 1
         vDocumentoEncabezado.Fecha = DateTime.Now
         vDocumentoEncabezado.Moneda = "CRC"
-        vDocumentoEncabezado.CondicionVenta = "Item01"
+        vDocumentoEncabezado.CondicionVenta = "01"
         vDocumentoEncabezado.PlazoCredito = "0"
         vDocumentoEncabezado.NormativaFechaResolucion = "20-02-2017 13:22:22"
         vDocumentoEncabezado.NormativaNumeroResolucion = "DGT-R-48-2016"
@@ -562,18 +561,18 @@ Public Class FrmInicio
         Dim vLineasReferencia As New List(Of DocumentoReferencia)
 
         Dim referencia1 As New DocumentoReferencia
-        referencia1.TipoDoc = "Item01"
+        referencia1.TipoDoc = "01"
         referencia1.Numero = "50611011800310163508400100001010000000169100000002"
         referencia1.FechaEmision = "2017-10-09T21:36:21.35"
-        referencia1.Codigo = "Item03"
+        referencia1.Codigo = "03"
         referencia1.Razon = "Monto Modificado"
         vLineasReferencia.Add(referencia1)
 
         'Dim referencia2 As New DocumentoReferencia
-        'referencia2.TipoDoc = "Item01"
+        'referencia2.TipoDoc = "01"
         'referencia2.Numero = "001"
         'referencia2.FechaEmision = "2018-01-17T20:12:21.3698995-06:00"
-        'referencia2.Codigo = "Item03"
+        'referencia2.Codigo = "03"
         'referencia2.Razon = "Comprobante Provisional"
         'vLineasReferencia.Add(referencia2)
 
@@ -582,11 +581,11 @@ Public Class FrmInicio
 
         ' Medios de Pago
         Dim vMedioPago1 As New DocumentoMedioPago
-        vMedioPago1.Codigo = "Item01"
+        vMedioPago1.Codigo = "01"
         vMediosPago.Add(vMedioPago1)
 
         'Dim vMedioPago2 As New DocumentoMedioPago
-        'vMedioPago2.Codigo = "Item02"
+        'vMedioPago2.Codigo = "02"
         'vMediosPago.Add(vMedioPago2)
         'vDocumentoEncabezado.MedioPago = vMediosPago
 
@@ -599,7 +598,7 @@ Public Class FrmInicio
         'vLinea1.Nombre = "Producto 1"
         'vLinea1.Descripcion = "Descripción del Producto 1"
         'vLinea1.Codigo = "00Gen."
-        'vLinea1.Tipo = "Item99"
+        'vLinea1.Tipo = "99"
         'vLinea1.Unidad = "Unid"
         'vLinea1.EsProducto = True
         'vLinea1.Precio = 10000.0
@@ -609,13 +608,13 @@ Public Class FrmInicio
         'Dim vListadoImpuesto As New List(Of DocumentoDetalleImpuesto)
 
         'Dim vImpuesto1 As New DocumentoDetalleImpuesto
-        'vImpuesto1.Tipo = "Item01"
+        'vImpuesto1.Tipo = "01"
         'vImpuesto1.Tarifa = 13
         'vImpuesto1.Monto = 1300.0
         'vListadoImpuesto.Add(vImpuesto1)
 
         ''Dim vImpuesto2 As New DocumentoDetalleImpuesto
-        ''vImpuesto2.Tipo = "Item02"
+        ''vImpuesto2.Tipo = "02"
         ''vImpuesto2.Tarifa = 5
         ''vImpuesto2.Monto = 500.0
         ''vListadoImpuesto.Add(vImpuesto2)
@@ -630,7 +629,7 @@ Public Class FrmInicio
         vLinea2.Nombre = "Servicios Profesionales"
         vLinea2.Descripcion = "Servicios Profesionales"
         vLinea2.Codigo = "00Gen."
-        vLinea2.Tipo = "Item99"
+        vLinea2.Tipo = "99"
         vLinea2.Unidad = "Unid"
         vLinea2.EsProducto = False
         vLinea2.Precio = 1145.7
@@ -693,7 +692,7 @@ Public Class FrmInicio
 
 
         ' Emisor
-        vDocumentoEncabezado.Emisor.Identificacion = "0000000000"
+        vDocumentoEncabezado.Emisor.Identificacion = "3101000000"
         vDocumentoEncabezado.Emisor.IdentificacionTipo = "02"
         vDocumentoEncabezado.Emisor.Direccion = "San José"
         vDocumentoEncabezado.Emisor.CodigoPais = "506"
@@ -701,55 +700,60 @@ Public Class FrmInicio
         vDocumentoEncabezado.Emisor.Canton = "01"
         vDocumentoEncabezado.Emisor.Distrito = "01"
         'vDocumentoEncabezado.Emisor.Barrio = "01"
-        vDocumentoEncabezado.Emisor.Nombre = "EJEMPLO S.A."
+        vDocumentoEncabezado.Emisor.Nombre = "ABC S.A."
         vDocumentoEncabezado.Emisor.NombreComercial = ""
-        vDocumentoEncabezado.Emisor.Telefono = "00000000"
+        vDocumentoEncabezado.Emisor.Telefono = "22000000"
         vDocumentoEncabezado.Emisor.Fax = "00000000"
-        vDocumentoEncabezado.Emisor.Email = "email@email.com"
+        vDocumentoEncabezado.Emisor.Email = "test@gmail.com"
 
         ' Receptor        
-        'vDocumentoEncabezado.Receptor.IdentificacionExtranjero = "0000000000" ' Max 20 caracteres
-        ''vDocumentoEncabezado.Receptor.Identificacion = "0000000000"
-        'vDocumentoEncabezado.Receptor.IdentificacionTipo = "02"
-        'vDocumentoEncabezado.Receptor.Direccion = "Cartago"
-        'vDocumentoEncabezado.Receptor.CodigoPais = "506"
-        'vDocumentoEncabezado.Receptor.Provincia = "1"
-        'vDocumentoEncabezado.Receptor.Canton = "01"
-        'vDocumentoEncabezado.Receptor.Distrito = "01"
-        ''vDocumentoEncabezado.Receptor.Barrio = "01"
-        'vDocumentoEncabezado.Receptor.Nombre = "Empresa S.A."
-        'vDocumentoEncabezado.Receptor.NombreComercial = "Marca"
-        'vDocumentoEncabezado.Receptor.Telefono = "00000000"
-        'vDocumentoEncabezado.Receptor.Fax = "00000000"
-        'vDocumentoEncabezado.Receptor.Email = "test@test.com"
+        'vDocumentoEncabezado.Receptor.IdentificacionExtranjero = "A659595959595" ' Max 20 caracteres
+        vDocumentoEncabezado.Receptor.Identificacion = "3101000000"
+        vDocumentoEncabezado.Receptor.IdentificacionTipo = "02"
+        vDocumentoEncabezado.Receptor.Direccion = "Cartago"
+        vDocumentoEncabezado.Receptor.CodigoPais = "506"
+        vDocumentoEncabezado.Receptor.Provincia = "1"
+        vDocumentoEncabezado.Receptor.Canton = "01"
+        vDocumentoEncabezado.Receptor.Distrito = "01"
+        vDocumentoEncabezado.Receptor.Barrio = "01"
+        vDocumentoEncabezado.Receptor.Nombre = "ABC S.A."
+        vDocumentoEncabezado.Receptor.NombreComercial = ""
+        vDocumentoEncabezado.Receptor.Telefono = "22000000"
+        vDocumentoEncabezado.Receptor.Fax = "00000000"
+        vDocumentoEncabezado.Receptor.Email = "test@gmail.com"
 
         ' Encabezado
         vDocumentoEncabezado.Clave = "50611011800310163508400100001030000000005100000002"
         vDocumentoEncabezado.TipoCambio = 1
         vDocumentoEncabezado.Fecha = DateTime.Now
         vDocumentoEncabezado.Moneda = "CRC"
-        vDocumentoEncabezado.CondicionVenta = "Item01"
+        vDocumentoEncabezado.CondicionVenta = "01"
         vDocumentoEncabezado.PlazoCredito = "0"
         vDocumentoEncabezado.NormativaFechaResolucion = "20-02-2017 13:22:22"
         vDocumentoEncabezado.NormativaNumeroResolucion = "DGT-R-48-2016"
         vDocumentoEncabezado.Observacion = "Esta es la observación"
 
+        '00100001030000000005
+        '00100001010000000006
+
+        '00100001010000151104
+
         ' Referencia
         Dim vLineasReferencia As New List(Of DocumentoReferencia)
 
         Dim referencia1 As New DocumentoReferencia
-        referencia1.TipoDoc = "Item01"
+        referencia1.TipoDoc = "01"
         referencia1.Numero = "50609121700310163508400100001010000000006100000002"
         referencia1.FechaEmision = "2017-10-09T21:36:21.35"
-        referencia1.Codigo = "Item01"
+        referencia1.Codigo = "01"
         referencia1.Razon = "Anula Documento"
         vLineasReferencia.Add(referencia1)
 
         'Dim referencia2 As New DocumentoReferencia
-        'referencia2.TipoDoc = "Item01"
+        'referencia2.TipoDoc = "01"
         'referencia2.Numero = "001"
         'referencia2.FechaEmision = "2018-01-17T20:12:21.3698995-06:00"
-        'referencia2.Codigo = "Item03"
+        'referencia2.Codigo = "03"
         'referencia2.Razon = "Comprobante Provisional"
         'vLineasReferencia.Add(referencia2)
 
@@ -758,11 +762,11 @@ Public Class FrmInicio
 
         ' Medios de Pago
         Dim vMedioPago1 As New DocumentoMedioPago
-        vMedioPago1.Codigo = "Item01"
+        vMedioPago1.Codigo = "01"
         vMediosPago.Add(vMedioPago1)
 
         'Dim vMedioPago2 As New DocumentoMedioPago
-        'vMedioPago2.Codigo = "Item02"
+        'vMedioPago2.Codigo = "02"
         'vMediosPago.Add(vMedioPago2)
         'vDocumentoEncabezado.MedioPago = vMediosPago
 
@@ -775,7 +779,7 @@ Public Class FrmInicio
         'vLinea1.Nombre = "Producto 1"
         'vLinea1.Descripcion = "Descripción del Producto 1"
         'vLinea1.Codigo = "00Gen."
-        'vLinea1.Tipo = "Item99"
+        'vLinea1.Tipo = "99"
         'vLinea1.Unidad = "Unid"
         'vLinea1.EsProducto = True
         'vLinea1.Precio = 10000.0
@@ -785,13 +789,13 @@ Public Class FrmInicio
         'Dim vListadoImpuesto As New List(Of DocumentoDetalleImpuesto)
 
         'Dim vImpuesto1 As New DocumentoDetalleImpuesto
-        'vImpuesto1.Tipo = "Item01"
+        'vImpuesto1.Tipo = "01"
         'vImpuesto1.Tarifa = 13
         'vImpuesto1.Monto = 1300.0
         'vListadoImpuesto.Add(vImpuesto1)
 
         ''Dim vImpuesto2 As New DocumentoDetalleImpuesto
-        ''vImpuesto2.Tipo = "Item02"
+        ''vImpuesto2.Tipo = "02"
         ''vImpuesto2.Tarifa = 5
         ''vImpuesto2.Monto = 500.0
         ''vListadoImpuesto.Add(vImpuesto2)
@@ -806,7 +810,7 @@ Public Class FrmInicio
         vLinea2.Nombre = "Servicios Profesionales"
         vLinea2.Descripcion = "Servicios Profesionales"
         vLinea2.Codigo = "00Gen."
-        vLinea2.Tipo = "Item99"
+        vLinea2.Tipo = "99"
         vLinea2.Unidad = "Unid"
         vLinea2.EsProducto = False
         vLinea2.Precio = 1145.7
@@ -878,10 +882,16 @@ Public Class FrmInicio
     Private Sub btnEnviarRespuesta_Click(sender As Object, e As EventArgs) Handles btnEnviarRespuesta.Click
 
         Dim vReply As New Reply
+        Dim vReplyValidacion As Reply
         Dim b() As Byte = IO.File.ReadAllBytes(txtCertificado.Text)
         Dim vDocumentoEncabezado As New DocumentoEncabezado()
         Dim vUsuarioHacienda As New UsuarioHacienda()
         Dim vRespuesta As String
+        Dim vClaveXMLProveedor As String
+        Dim vMensajeReceptor As New MensajeReceptor()
+        Dim vProveedorReceptorIdentificacion As String
+        Dim vTotalFactura As Decimal = 0
+        Dim vMontoTotalImpuesto As Decimal = 0
 
 
         If (rb05.Checked) Then
@@ -900,11 +910,62 @@ Public Class FrmInicio
 
         VDocumentoProveedor.Load(fs)
 
+        ' Valida que el existe un XML
+        If (VDocumentoProveedor Is Nothing) Then
+
+            vReply.msg = "Ingrese un documento XML."
+            vReply.ok = False
+            vReply.estado = "ERROR"
+
+        End If
+
+        ' Obtiene datos
+        Dim VDocumento As XElement = XElement.Parse(VDocumentoProveedor.InnerXml)
+        Dim vNameSpace As XNamespace = VDocumento.Attribute("xmlns").Value
+
+        ' Si el elemento no existe
+        If (vNameSpace Is Nothing) Then
+
+            vReply.msg = "El XML recibido por el proveedor es invalido. Imposible de leer."
+            vReply.estado = "ERROR"
+
+        End If
+
+        ' Existe el nodo clave
+        If VDocumento.Element(vNameSpace + "Clave") Is Nothing Then
+
+            vReply.msg = "El XML recibido por el proveedor es invalido. Imposible de leer la clave."
+            vReply.estado = "ERROR"
+
+        End If
+
+        ' Asigna la clave
+        vClaveXMLProveedor = VDocumento.Element(vNameSpace + "Clave")
+
+        ' Asigna datos del receptor
+        ' Los datos del proveedor
+        vProveedorReceptorIdentificacion = VDocumento.Element(vNameSpace + "Emisor").Element(vNameSpace + "Identificacion").Element(vNameSpace + "Numero").Value
+
+
+        If Not VDocumento.Element(vNameSpace + "ResumenFactura").Element(vNameSpace + "TotalImpuesto").Value Is Nothing Then
+            Dim montoImpuesto As String = (VDocumento.Element(vNameSpace + "ResumenFactura").Element(vNameSpace + "TotalImpuesto").Value).Replace(".", ",")
+            vMontoTotalImpuesto = Convert.ToDecimal(montoImpuesto)
+        Else
+            vMontoTotalImpuesto = Nothing
+        End If
+
+        If Not VDocumento.Element(vNameSpace + "ResumenFactura").Element(vNameSpace + "TotalComprobante").Value Is Nothing Then
+            Dim montoTotal As String = (VDocumento.Element(vNameSpace + "ResumenFactura").Element(vNameSpace + "TotalComprobante").Value).Replace(".", ",")
+            vTotalFactura = Convert.ToDecimal(montoTotal)
+        End If
+
+        vClaveXMLProveedor = VDocumento.Element(vNameSpace + "Clave")
+
 
         ' Emisor
         ' Datos de la empresa a la cual va dirigido el XML emito por el 
         ' proveedor
-        vDocumentoEncabezado.Emisor.Identificacion = "0000000000"
+        vDocumentoEncabezado.Emisor.Identificacion = "3101000000"
         vDocumentoEncabezado.Emisor.IdentificacionTipo = "02"
         vDocumentoEncabezado.Emisor.Direccion = "San José"
         vDocumentoEncabezado.Emisor.CodigoPais = "506"
@@ -912,14 +973,14 @@ Public Class FrmInicio
         vDocumentoEncabezado.Emisor.Canton = "01"
         vDocumentoEncabezado.Emisor.Distrito = "01"
         'vDocumentoEncabezado.Emisor.Barrio = "01"
-        vDocumentoEncabezado.Emisor.Nombre = "EMPRESA S.A."
+        vDocumentoEncabezado.Emisor.Nombre = "ABC S.A."
         vDocumentoEncabezado.Emisor.NombreComercial = ""
-        vDocumentoEncabezado.Emisor.Telefono = "00000000"
+        vDocumentoEncabezado.Emisor.Telefono = "22000000"
         vDocumentoEncabezado.Emisor.Fax = "00000000"
-        vDocumentoEncabezado.Emisor.Email = "test@test.com"
+        vDocumentoEncabezado.Emisor.Email = "test@gmail.com"
 
         ' Encabezado
-        vDocumentoEncabezado.Clave = "50607051800310163508400100001" & vRespuesta & "0000000005100000002"
+        vDocumentoEncabezado.Clave = "50609051800310100000000100001" & vRespuesta & "0000000000100000002"
         vDocumentoEncabezado.Fecha = DateTime.Now
         vDocumentoEncabezado.Observacion = "" '"Este es el detalle del Mensaje" ' MAX 80 caracteres
 
@@ -935,10 +996,27 @@ Public Class FrmInicio
         vUsuarioHacienda.urlhaciendaApiProduccion = vUrlhaciendaApiProduccion
 
 
+        ' Valida documento emitido por el proveedor
+        vReplyValidacion = New DocumentoBLL().fValidarDocumentoRecepcion(vDocumentoEncabezado, VDocumentoProveedor, vClaveXMLProveedor)
+
+        ' Si el documento es invalido
+        If vReplyValidacion.ok = False Then
+
+            vReply.msg = vReplyValidacion.msg
+
+        End If
+
+        vMensajeReceptor.Mensaje = vRespuesta
+        vMensajeReceptor.Clave = vClaveXMLProveedor ' Clave del proveedor
+        vMensajeReceptor.NumeroCedulaEmisor = vProveedorReceptorIdentificacion.PadLeft(12, "0")
+        vMensajeReceptor.MontoTotalImpuesto = vMontoTotalImpuesto
+        vMensajeReceptor.TotalFactura = vTotalFactura
+
+
         ' Atención: Debido a las validaciones que deben realizarse a la hora de comprobar el estado del XML del proveedor
         ' contra el servicio de hacienda, está función solamente admite un estado NORMAL. El estado de CONTINGENCIA y SIN INTERNET
         ' como se contempla ni contemplará en este complemento
-        vReply = vServicioBLL.fRegistraRecepcion(vDocumentoEncabezado, vUsuarioHacienda, VDocumentoProveedor, vRespuesta, 100)
+        vReply = vServicioBLL.fRegistraRecepcion(vDocumentoEncabezado, vUsuarioHacienda, vMensajeReceptor, 100, False)
 
         If vReply.ok Then
 
@@ -970,8 +1048,11 @@ Public Class FrmInicio
 
         End If
 
-
         MessageBox.Show("Mensaje: " & vReply.msg & Chr(13))
+
+    End Sub
+
+    Private Sub GroupBox3_Enter(sender As Object, e As EventArgs) Handles GroupBox3.Enter
 
     End Sub
 End Class

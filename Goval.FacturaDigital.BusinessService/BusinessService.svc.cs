@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using Goval.FacturaDigital.Core;
 using Goval.FacturaDigital.Core.BIlling;
 using Goval.FacturaDigital.DataContracts.BaseModel;
 using Goval.FacturaDigital.DataContracts.BusinessServiceModel;
@@ -365,6 +366,8 @@ namespace Goval.FacturaDigital.BusinessService
                         PhoneNumberCountryCode = pNewClient.UserClient.PhoneNumberCountryCode,
                         FaxCountryCode = pNewClient.UserClient.FaxCountryCode,
                         Fax = pNewClient.UserClient.Fax,
+                        TaxCode = pNewClient.UserClient.TaxCode,
+                        DiscountNature = pNewClient.UserClient.DiscountNature,
                         ProductsByClient = vListProduct
                     };
                     vContext.Client.Add(vNewClient);
@@ -456,6 +459,8 @@ namespace Goval.FacturaDigital.BusinessService
                                         PhoneNumberCountryCode = vClient.PhoneNumberCountryCode,
                                         FaxCountryCode = vClient.FaxCountryCode,
                                         Fax = vClient.Fax,
+                                        TaxCode = vClient.TaxCode,
+                                        DiscountNature = vClient.DiscountNature,
                                         ClientProducts = vClientProducts
                                     }
                                 );
@@ -540,6 +545,8 @@ namespace Goval.FacturaDigital.BusinessService
                         BarrioCode = pChangedClient.UserClient.BarrioCode,
                         PhoneNumberCountryCode = pChangedClient.UserClient.PhoneNumberCountryCode,
                         FaxCountryCode = pChangedClient.UserClient.FaxCountryCode,
+                        TaxCode = pChangedClient.UserClient.TaxCode,
+                        DiscountNature = pChangedClient.UserClient.DiscountNature,
                         Fax = pChangedClient.UserClient.Fax,
                     };
                     vContext.Client.Attach(vChangedClient);
@@ -737,8 +744,8 @@ namespace Goval.FacturaDigital.BusinessService
                         pBillRequest.ClientBill.Status = BillStatus.Processing.ToString();
                         vResponse.BillNumber = vBillNumber;
                         pBillRequest.ClientBill.ConsecutiveNumber = vBillNumber;
+                        pBillRequest.ClientBill.DocumentKey = Core.Utils.GenerateDocumentKey(pBillRequest.ClientBill, pBillRequest.User, HaciendaTransactionType.Factura_Electronica);
                         vResponse.PdfInvoice = BillingManager.GenerateBillPDF(pBillRequest.ClientBill, pBillRequest.User);
-                        pBillRequest.ClientBill.DocumentKey = Core.Utils.GenerateDocumentKey(pBillRequest.ClientBill, pBillRequest.User);
 
                         BillEntity vBillToCreate = new BillEntity
                         {
@@ -778,6 +785,12 @@ namespace Goval.FacturaDigital.BusinessService
                         vResponse.IsSuccessful = vHaciendaResponse.IsSuccessful;
                         vResponse.TechnicalMessage = vHaciendaResponse.TechnicalMessage;
                         vResponse.UserMessage = vHaciendaResponse.UserMessage;
+
+                        // Send Emails if the Bill was successfuly created
+                        if (vHaciendaResponse.IsSuccessful)
+                        {
+                            BillingManager.SendMailFromSuccessfulyBillTransaction(vBillToCreate, pBillRequest.User, vResponse.PdfInvoice);
+                        }
 
 
                         vContext.Bill.Add(vBillToCreate);
@@ -823,6 +836,13 @@ namespace Goval.FacturaDigital.BusinessService
                             vResponse.IsSuccessful = vHaciendaResponse.IsSuccessful;
                             vResponse.TechnicalMessage = vHaciendaResponse.TechnicalMessage;
                             vResponse.UserMessage = vHaciendaResponse.UserMessage;
+                            vResponse.PdfInvoice = BillingManager.GenerateBillPDF(pBillRequest.ClientBill, pBillRequest.User);
+
+                            // Send Emails if the Bill was successfuly created
+                            if (vHaciendaResponse.IsSuccessful)
+                            {
+                                BillingManager.SendMailFromSuccessfulyBillTransaction(vUserBill, pBillRequest.User, vResponse.PdfInvoice);
+                            }
 
                             vContext.Bill.Attach(vUserBill);
                             vContext.Entry(vUserBill).State = System.Data.Entity.EntityState.Modified;
@@ -854,7 +874,99 @@ namespace Goval.FacturaDigital.BusinessService
             }
             return vResponse;
         }
+
+        public BillResponse TryToRefreshBillStatus(BillRequest pBillRequest)
+        {
+            BillResponse vResponse = new BillResponse();
+            try
+            {
+                if (!ValidateToken(pBillRequest.SSOT))
+                {
+                    vResponse.UserMessage = "Sesión Caducada";
+                    vResponse.IsSuccessful = false;
+                    return vResponse;
+                }
+                using (BusinessDataModelEntities vContext = new BusinessDataModelEntities())
+                {
+                    vContext.Database.Connection.Open();
+                    var vBillList = vContext.Bill.AsQueryable();
+                    if (vBillList != null)
+                    {
+                        var vUserBill = vBillList.Where<BillEntity>(x => x.User.UserId.Equals(pBillRequest.User.UserId) &&
+                        x.BillId.Equals(pBillRequest.ClientBill.BillId)).FirstOrDefault();
+                        if (vUserBill != null)
+                        {
+                            var vHaciendaResponse = BillingManager.TryToRefreshBillStatus(ref vUserBill);
+                            vResponse.IsSuccessful = vHaciendaResponse.IsSuccessful;
+                            vResponse.TechnicalMessage = vHaciendaResponse.TechnicalMessage;
+                            vResponse.UserMessage = vHaciendaResponse.UserMessage;
+                            vResponse.PdfInvoice = BillingManager.GenerateBillPDF(pBillRequest.ClientBill, pBillRequest.User);
+
+                            // Send Emails if the Bill was successfuly created
+                            if (vHaciendaResponse.IsSuccessful)
+                            {
+                                BillingManager.SendMailFromSuccessfulyBillTransaction(vUserBill, pBillRequest.User, vResponse.PdfInvoice);
+                            }
+
+                            vContext.Bill.Attach(vUserBill);
+                            vContext.Entry(vUserBill).State = System.Data.Entity.EntityState.Modified;
+                            vContext.SaveChanges();
+                            vContext.Database.Connection.Close();
+                        }
+                        else
+                        {
+                            vResponse.IsSuccessful = false;
+                            vResponse.TechnicalMessage = "No se encontro Bill con el Id de Request ";
+                            vResponse.UserMessage = "Hay un conflicto con la Factura actual";
+                        }
+                    }
+                    else
+                    {
+                        vResponse.IsSuccessful = false;
+                        vResponse.TechnicalMessage = "La conexion no ha sido exitosa";
+                        vResponse.UserMessage = "La conexion no ha sido exitosa";
+                    }
+
+                    vContext.Database.Connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                vResponse.IsSuccessful = false;
+                vResponse.TechnicalMessage = ex.ToString();
+                vResponse.UserMessage = ex.Message;
+            }
+            return vResponse;
+        }
+
+        public BillResponse GetBillInvoice(BillRequest pBillRequest)
+        {
+            BillResponse vResponse = new BillResponse();
+            try
+            {
+                if (!ValidateToken(pBillRequest.SSOT))
+                {
+                    vResponse.UserMessage = "Sesión Caducada";
+                    vResponse.IsSuccessful = false;
+                    return vResponse;
+                }
+                else
+                {
+                    vResponse.PdfInvoice = BillingManager.GenerateBillPDF(pBillRequest.ClientBill, pBillRequest.User);
+                    vResponse.IsSuccessful = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                vResponse.IsSuccessful = false;
+                vResponse.TechnicalMessage = ex.ToString();
+                vResponse.UserMessage = ex.Message;
+            }
+            return vResponse;
+        }
         #endregion
+
+
 
 
         public LoginResponse RegisterUser(SignupRequest pNewUser)
@@ -982,35 +1094,7 @@ namespace Goval.FacturaDigital.BusinessService
                         var vUserList = vContext.User.AsQueryable();
                         var vActualUser = vUserList.Where(x => x.UserId.Equals(pRequestValidationUser.User.UserId)).First();
 
-                        /*var vChangedUser = new UserEntity
-                        {
-                            UserId = pRequestValidationUser.User.UserId,
-                            UserName = pRequestValidationUser.User.UserName,
-                            Name = pRequestValidationUser.User.Name,
-                            LastName = pRequestValidationUser.User.LastName,
-                            SecondName = pRequestValidationUser.User.SecondName,
-                            Email = pRequestValidationUser.User.Email,
-                            UserLegalNumber = pRequestValidationUser.User.UserLegalNumber,
-                            HaciendaUsername = pRequestValidationUser.User.HaciendaUsername,
-                            HaciendaPassword = pRequestValidationUser.User.HaciendaPassword,
-                            Password = pRequestValidationUser.User.Password,
-                            HaciendaCryptographicPIN = pRequestValidationUser.User.HaciendaCryptographicPIN,
-                            //HaciendaCryptographicFile = Convert.FromBase64String(pRequestValidationUser.User.HaciendaCryptographicFile),
-                            HaciendaCryptographicFileName = pRequestValidationUser.User.HaciendaCryptographicFileName,
-                            PhoneNumber = pRequestValidationUser.User.PhoneNumber,
-                            HaciendaUserValidation = true,
-                            IdentificationType = pRequestValidationUser.User.IdentificationType,
-                            ComercialName = pRequestValidationUser.User.ComercialName,
-                            ProvinciaCode = pRequestValidationUser.User.ProvinciaCode,
-                            CantonCode = pRequestValidationUser.User.CantonCode,
-                            DistritoCode = pRequestValidationUser.User.DistritoCode,
-                            BarrioCode = pRequestValidationUser.User.BarrioCode,
-                            LocationDescription = pRequestValidationUser.User.LocationDescription,
-                            PhoneNumberCountryCode = pRequestValidationUser.User.PhoneNumberCountryCode,
-                            FaxCountryCode = pRequestValidationUser.User.FaxCountryCode,
-                            Fax = pRequestValidationUser.User.Fax,
-
-                        };*/
+                        
                         vActualUser.HaciendaUsername = pRequestValidationUser.User.HaciendaUsername;
                         vActualUser.HaciendaPassword = pRequestValidationUser.User.HaciendaPassword;
                         vActualUser.HaciendaCryptographicPIN = pRequestValidationUser.User.HaciendaCryptographicPIN;

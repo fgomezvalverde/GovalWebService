@@ -57,6 +57,10 @@
           <Property Name="ExonerationAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="Observation" Type="nvarchar" MaxLength="300" />
           <Property Name="SystemMesagges" Type="nvarchar(max)" />
+          <Property Name="ReasonPhrasePOSTHacienda" Type="nvarchar" MaxLength="200" />
+          <Property Name="ReasonPhraseGETHacienda" Type="nvarchar" MaxLength="200" />
+          <Property Name="StatusCodePOSTHacienda" Type="nvarchar" MaxLength="5" />
+          <Property Name="StatusCodeGETHacienda" Type="nvarchar" MaxLength="5" />
         </EntityType>
         <EntityType Name="BillingHistory">
           <Key>
@@ -162,6 +166,8 @@
           <Property Name="PhoneNumberCountryCode" Type="varchar" MaxLength="3" />
           <Property Name="FaxCountryCode" Type="varchar" MaxLength="3" />
           <Property Name="Fax" Type="varchar" MaxLength="20" />
+          <Property Name="DiscountNature" Type="varchar" MaxLength="80" />
+          <Property Name="TaxCode" Type="varchar" MaxLength="2" />
         </EntityType>
         <EntityType Name="CreditOrDebitNote">
           <Key>
@@ -798,6 +804,10 @@
           <NavigationProperty Name="CreditOrDebitNote" Relationship="Self.FK_CreditOrDebitNote_Bill" FromRole="Bill" ToRole="CreditOrDebitNote" />
           <Property Name="Observation" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
           <Property Name="SystemMesagges" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ReasonPhrasePOSTHacienda" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="ReasonPhraseGETHacienda" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="StatusCodePOSTHacienda" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="StatusCodeGETHacienda" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="BillingHistoryEntity">
           <Key>
@@ -849,6 +859,8 @@
           <NavigationProperty Name="IdentificationType1" Relationship="Self.FK_Client_IdentificationType" FromRole="Client" ToRole="IdentificationType" />
           <NavigationProperty Name="ProductsByClient" Relationship="Self.FK_ProductsByClient_Client" FromRole="Client" ToRole="ProductsByClient" />
           <NavigationProperty Name="User" Relationship="Self.FK_User_Client" FromRole="Client" ToRole="User" />
+          <Property Name="DiscountNature" Type="String" MaxLength="80" Unicode="false" FixedLength="false" />
+          <Property Name="TaxCode" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="CreditOrDebitNoteEntity">
           <Key>
@@ -1542,6 +1554,10 @@
           <EntitySetMapping Name="Bill">
             <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.BillEntity">
               <MappingFragment StoreEntitySet="Bill">
+                <ScalarProperty Name="StatusCodeGETHacienda" ColumnName="StatusCodeGETHacienda" />
+                <ScalarProperty Name="StatusCodePOSTHacienda" ColumnName="StatusCodePOSTHacienda" />
+                <ScalarProperty Name="ReasonPhraseGETHacienda" ColumnName="ReasonPhraseGETHacienda" />
+                <ScalarProperty Name="ReasonPhrasePOSTHacienda" ColumnName="ReasonPhrasePOSTHacienda" />
                 <ScalarProperty Name="SystemMesagges" ColumnName="SystemMesagges" />
                 <ScalarProperty Name="Observation" ColumnName="Observation" />
                 <ScalarProperty Name="BillId" ColumnName="BillId" />
@@ -1597,6 +1613,8 @@
           <EntitySetMapping Name="Client">
             <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.ClientEntity">
               <MappingFragment StoreEntitySet="Client">
+                <ScalarProperty Name="TaxCode" ColumnName="TaxCode" />
+                <ScalarProperty Name="DiscountNature" ColumnName="DiscountNature" />
                 <ScalarProperty Name="ClientId" ColumnName="ClientId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="DefaultDiscountPercentage" ColumnName="DefaultDiscountPercentage" />

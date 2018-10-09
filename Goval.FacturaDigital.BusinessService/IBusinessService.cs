@@ -48,6 +48,9 @@ namespace Goval.FacturaDigital.BusinessService
         BillResponse TryToBillWithHacienda(BillRequest pBillRequest);
 
         [OperationContract]
+        BillResponse TryToRefreshBillStatus(BillRequest pBillRequest);
+
+        [OperationContract]
         BillResponse GetUserBills(BillRequest pBillRequest);
 
         [OperationContract]
@@ -64,5 +67,8 @@ namespace Goval.FacturaDigital.BusinessService
 
         [OperationContract]
         CodesDirectionListResponse GetBarrios(CodesDirectionListRequest pRequest);
+
+        [OperationContract]
+        BillResponse GetBillInvoice(BillRequest pBillRequest);
     }
 }

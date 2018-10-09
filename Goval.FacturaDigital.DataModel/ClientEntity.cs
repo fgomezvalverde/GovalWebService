@@ -44,6 +44,8 @@ namespace Goval.FacturaDigital.DataModel
         public string PhoneNumberCountryCode { get; set; }
         public string FaxCountryCode { get; set; }
         public string Fax { get; set; }
+        public string DiscountNature { get; set; }
+        public string TaxCode { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BillEntity> Bill { get; set; }

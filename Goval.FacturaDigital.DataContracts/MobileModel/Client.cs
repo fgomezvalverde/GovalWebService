@@ -19,6 +19,10 @@ namespace Goval.FacturaDigital.DataContracts.MobileModel
         [DataMember]
         public decimal DefaultTaxesPercentage { get; set; }
         [DataMember]
+        public string DiscountNature { get; set; }
+        [DataMember]
+        public string TaxCode { get; set; }
+        [DataMember]
         public string PhoneNumber { get; set; }
         [DataMember]
         public string ClientLegalNumber { get; set; }

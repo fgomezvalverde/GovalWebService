@@ -55,7 +55,6 @@ Partial Class FrmInicio
         Me.Label10 = New System.Windows.Forms.Label()
         Me.txtClaveRecepcion = New System.Windows.Forms.TextBox()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
-        Me.Label14 = New System.Windows.Forms.Label()
         Me.btnEnviarRespuesta = New System.Windows.Forms.Button()
         Me.rb07 = New System.Windows.Forms.RadioButton()
         Me.rb06 = New System.Windows.Forms.RadioButton()
@@ -393,7 +392,6 @@ Partial Class FrmInicio
         '
         'TabPage3
         '
-        Me.TabPage3.Controls.Add(Me.Label14)
         Me.TabPage3.Controls.Add(Me.btnEnviarRespuesta)
         Me.TabPage3.Controls.Add(Me.rb07)
         Me.TabPage3.Controls.Add(Me.rb06)
@@ -409,15 +407,6 @@ Partial Class FrmInicio
         Me.TabPage3.TabIndex = 2
         Me.TabPage3.Text = "RECEPCION DE DOCUMENTOS DE PROVEEDORES"
         Me.TabPage3.UseVisualStyleBackColor = True
-        '
-        'Label14
-        '
-        Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(25, 224)
-        Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(67, 13)
-        Me.Label14.TabIndex = 39
-        Me.Label14.Text = "3- Resultado"
         '
         'btnEnviarRespuesta
         '
@@ -707,7 +696,7 @@ Partial Class FrmInicio
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(259, 13)
         Me.Label9.TabIndex = 11
-        Me.Label9.Text = "Todos los derechos reservados 2018 Versión: 2.0.0.0"
+        Me.Label9.Text = "Todos los derechos reservados 2018 Versión: 2.0.0.1"
         '
         'FrmInicio
         '
@@ -807,5 +796,4 @@ Partial Class FrmInicio
     Friend WithEvents rb06 As System.Windows.Forms.RadioButton
     Friend WithEvents rb05 As System.Windows.Forms.RadioButton
     Friend WithEvents btnEnviarRespuesta As System.Windows.Forms.Button
-    Friend WithEvents Label14 As System.Windows.Forms.Label
 End Class

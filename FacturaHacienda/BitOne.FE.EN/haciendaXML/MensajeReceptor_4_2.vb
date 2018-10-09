@@ -34,7 +34,7 @@ Namespace BitOne.FE.EN.MensajeReceptor
 
         Private fechaEmisionDocField As Date
 
-        Private mensajeField As MensajeReceptorMensaje
+        Private mensajeField As String
 
         Private detalleMensajeField As String
 
@@ -79,12 +79,12 @@ Namespace BitOne.FE.EN.MensajeReceptor
         End Property
 
         '''<remarks/>
-        Public Property Mensaje() As MensajeReceptorMensaje
+        Public Property Mensaje() As String
             Get
                 Return Me.mensajeField
             End Get
-            Set(value As MensajeReceptorMensaje)
-                Me.mensajeField = Value
+            Set(value As String)
+                Me.mensajeField = value
             End Set
         End Property
 
@@ -108,16 +108,16 @@ Namespace BitOne.FE.EN.MensajeReceptor
             End Set
         End Property
 
-        ' '''<remarks/>
-        '<System.Xml.Serialization.XmlIgnoreAttribute()> _
-        'Public Property MontoTotalImpuestoSpecified() As Boolean
-        '    Get
-        '        Return Me.montoTotalImpuestoFieldSpecified
-        '    End Get
-        '    Set(value As Boolean)
-        '        Me.montoTotalImpuestoFieldSpecified = Value
-        '    End Set
-        'End Property
+        '''<remarks/>
+        <System.Xml.Serialization.XmlIgnoreAttribute()> _
+        Public Property MontoTotalImpuestoSpecified() As Boolean
+            Get
+                Return Me.montoTotalImpuestoFieldSpecified
+            End Get
+            Set(value As Boolean)
+                Me.montoTotalImpuestoFieldSpecified = Value
+            End Set
+        End Property
 
         '''<remarks/>
         Public Property TotalFactura() As Decimal
@@ -149,24 +149,5 @@ Namespace BitOne.FE.EN.MensajeReceptor
             End Set
         End Property
     End Class
-
-    '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440"), _
-     System.SerializableAttribute(), _
-     System.Xml.Serialization.XmlTypeAttribute(AnonymousType:=True, [Namespace]:="https://tribunet.hacienda.go.cr/docs/esquemas/2017/v4.2/mensajeReceptor")> _
-    Public Enum MensajeReceptorMensaje
-
-        '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("1")> _
-        Item1
-
-        '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("2")> _
-        Item2
-
-        '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("3")> _
-        Item3
-    End Enum
 
 End Namespace

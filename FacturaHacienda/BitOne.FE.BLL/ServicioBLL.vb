@@ -3,8 +3,8 @@ Imports BitOne.FE.EN
 Imports BitOne.FE.Resources
 Imports System.IO
 Imports System.Text
-Imports System.Text.RegularExpressions
 Imports System.Xml
+Imports BitOne.FE.EN.BitOne.FE.EN.MensajeReceptor
 
 Public Class ServicioBLL
 
@@ -21,24 +21,20 @@ Public Class ServicioBLL
     ''' Esta función se utiliza para validar, enviar hacienda y al proveedor
     ''' la respuesta
     ''' </summary>
-    ''' <param name="pXmlProveedor"></param>
-    ''' <param name="pRespuesta"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
     Public Function fRegistraRecepcion(pDocumento As DocumentoEncabezado, pUsuarioHacienda As UsuarioHacienda,
-                                       pXmlProveedor As XmlDocument, pRespuesta As String, pIntentosRecepcion As Integer) As Reply
+                                       pRespuesta As MensajeReceptor, pIntentosRecepcion As Integer,
+                                       pImpuestos As Boolean) As Reply
 
         Dim vReply As New Reply
         Dim vReplyValidacion As New Reply
-        Dim vReplyAcuse As New Reply
         Dim vReplyGeneraXML As New Reply
         Dim vReplyValidaCertificado As New Reply
         Dim vReplyGeneraToken As New Reply
         Dim vReplyFirmaXML As New Reply
         Dim vReplyEnvioHacienda As New Reply
         Dim vReplyObtieneRespuesta As New Reply
-        Dim vClaveXMLProveedor As String = String.Empty
-        Dim vDocCondicion As String = String.Empty
         Dim vCommon As New Common
         Dim vConsecutivoReceptor As String = String.Empty
         Dim vHaciendaDocumento As New EN.BitOne.FE.EN.Hacienda.HaciendaDocumento()
@@ -56,74 +52,11 @@ Public Class ServicioBLL
             vReply.reasonPhraseGETHacienda = String.Empty
             vReply.reasonPhrasePOSTHacienda = String.Empty
 
-            ' Valida que el existe un XML
-            If (pXmlProveedor Is Nothing) Then
-
-                vReply.msg = "Ingrese un documento XML."
-                vReply.ok = False
-                vReply.estado = "ERROR"
-                Return vReply
-
-            End If
-
-            ' Obtiene datos
-            Dim VDocumento As XElement = XElement.Parse(pXmlProveedor.InnerXml)
-            Dim vNameSpace As XNamespace = VDocumento.Attribute("xmlns").Value
-
-            ' Si el elemento no existe
-            If (vNameSpace Is Nothing) Then
-
-                vReply.msg = "El XML recibido por el proveedor es invalido. Imposible de leer."
-                vReply.estado = "ERROR"
-                Return vReply
-
-            End If
-
-            ' Existe el nodo clave
-            If VDocumento.Element(vNameSpace + "Clave") Is Nothing Then
-
-                vReply.msg = "El XML recibido por el proveedor es invalido. Imposible de leer la clave."
-                vReply.estado = "ERROR"
-                Return vReply
-
-            End If
-
-            ' Asigna la clave
-            vClaveXMLProveedor = VDocumento.Element(vNameSpace + "Clave")
 
             ' Si el detalle es mayor de 80 Caracteres
             If (pDocumento.Observacion.Length > 80) Then
 
                 vReply.msg = "El detalle del documento respuesta es mayor de 80 caracteres."
-                vReply.estado = "ERROR"
-                Return vReply
-
-            End If
-
-            ' Obtiene la condición 
-            vDocCondicion = pDocumento.Clave.Substring(41, 1)
-
-            ' Valida documento emitido por el proveedor
-            vReplyValidacion = vDocumentoBLL.fValidarDocumentoRecepcion(pDocumento, pXmlProveedor, vClaveXMLProveedor)
-
-            ' Si el documento es invalido
-            If vReplyValidacion.ok = False Then
-
-                vReply.msg = vReplyValidacion.msg
-                Return vReply
-
-            End If
-
-            ' Asigna datos del receptor
-            ' Los datos del proveedor
-            pDocumento.Receptor.Identificacion = VDocumento.Element(vNameSpace + "Emisor").Element(vNameSpace + "Identificacion").Element(vNameSpace + "Numero").Value
-            pDocumento.Receptor.IdentificacionTipo = VDocumento.Element(vNameSpace + "Emisor").Element(vNameSpace + "Identificacion").Element(vNameSpace + "Tipo").Value
-
-            ' Si CONDICION DOCUMENTO = NORMAL
-            If vDocCondicion <> Diccionario.SituacionNormal Then
-
-                vReply.contingencia = False
-                vReply.msg = "Para la generación de la respuesta esté complemento solamente admite estado NORMAL"
                 vReply.estado = "ERROR"
                 Return vReply
 
@@ -140,147 +73,125 @@ Public Class ServicioBLL
 
             End If
 
-            ' Obtiene acuse de recibo de Hacienda
-            vReplyAcuse = fHaciendaRespuestaDocumento(vClaveXMLProveedor, pUsuarioHacienda, vReplyGeneraToken)
 
+            ' Validar Certificado
+            vReplyValidaCertificado = vTributacionBLL.fValidarCertificado(pUsuarioHacienda)
 
-            ' Si ocurrió un error al traer el acuse de recibo
-            If vReplyAcuse.ok = False Then
+            ' Si el certificado es invalido
+            If vReplyValidaCertificado.ok = False Then
 
-                vReply.msg = "El Documento XML recibo de su proveedor no puede ser consultado en Hacienda"
+                vReply.msg = vReplyValidaCertificado.msg
                 Return vReply
 
             End If
 
-            If vReplyAcuse.ok And vReplyAcuse.estado = "ACEPTADO" Then
+            ' Genera XML de respuesta
+            vReplyGeneraXML = vDocumentoBLL.fGenerarXMLMensajeReceptor(pDocumento, pRespuesta, pImpuestos)
 
-                ' Validar Certificado
-                vReplyValidaCertificado = vTributacionBLL.fValidarCertificado(pUsuarioHacienda)
+            ' Si el archivo XML no se genero
+            If vReplyGeneraXML.ok = False Then
 
-                ' Si el certificado es invalido
-                If vReplyValidaCertificado.ok = False Then
-
-                    vReply.msg = vReplyValidaCertificado.msg
-                    Return vReply
-
-                End If
-
-                ' Genera XML de respuesta
-                vReplyGeneraXML = vDocumentoBLL.fGenerarXMLMensajeReceptor(pDocumento, pRespuesta, pXmlProveedor)
-
-                ' Si el archivo XML no se genero
-                If vReplyGeneraXML.ok = False Then
-
-                    vReply.msg = vReplyGeneraXML.msg
-                    Return vReply
-
-                Else
-                    vReply.xmlDocumento = vReplyGeneraXML.xmlDocumento
-                End If
-
-                ' Firma el XML
-                vReplyFirmaXML = vTributacionBLL.fFirmarDocumento(pUsuarioHacienda, vReplyGeneraXML.xmlDocumento)
-
-                ' Si el archivo XML no se firmo
-                If vReplyFirmaXML.ok = False Then
-
-                    vReply.msg = vReplyFirmaXML.msg
-                    Return vReply
-
-                Else
-                    vReply.xmlDocumento = vReplyFirmaXML.xmlDocumento
-                End If
-
-
-                ' Asigna datos del Objeto Hacienda Documento
-                vHaciendaDocumento.clave = vClaveXMLProveedor
-                vHaciendaDocumento.fecha = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:sszzz")
-                vHaciendaDocumento.emisor = New EN.BitOne.FE.EN.Hacienda.emisor With {.numeroIdentificacion = pDocumento.Emisor.Identificacion.PadLeft(12, "0"),
-                                                                                      .tipoIdentificacion = pDocumento.Emisor.IdentificacionTipo}
-                vHaciendaDocumento.receptor = New EN.BitOne.FE.EN.Hacienda.receptor With {.numeroIdentificacion = pDocumento.Receptor.Identificacion.PadLeft(12, "0"),
-                                                                                          .tipoIdentificacion = pDocumento.Receptor.IdentificacionTipo}
-
-                vHaciendaDocumento.comprobanteXml = vCommon.Encrypt(vReply.xmlDocumento)
-                vHaciendaDocumento.consecutivoReceptor = pDocumento.Clave.Substring(21, 20) ' Clave generada para la respuesta
-
-
-                ' 6- Envia documento a Hacienda
-                vReplyEnvioHacienda = vTributacionBLL.fEnvioDocumento(vHaciendaDocumento, pUsuarioHacienda, vReplyGeneraToken.token)
-
-                ' Asigna respuesta Hacienda
-                vReply.reasonPhrasePOSTHacienda = vReplyEnvioHacienda.reasonPhrasePOSTHacienda
-                vReply.statusCodePOSTHacienda = vReplyEnvioHacienda.statusCodePOSTHacienda
-
-                ' Si no se envió el XML con éxito
-                If vReplyEnvioHacienda.ok = False Then
-                    vReply.msg = vReplyEnvioHacienda.msg
-                    Return vReply
-                End If
-
-                ' Recorre la cantidad de intentos
-                Dim vIntentos As Integer = 1
-                While vIntentos <= pIntentosRecepcion
-
-                    ' Obtiene la respuesta de Hacienda
-                    vReplyObtieneRespuesta = vTributacionBLL.fObtenerDocumento(pUsuarioHacienda, vClaveXMLProveedor & "-" & pDocumento.Clave.Substring(21, 20), vReplyGeneraToken.token)
-
-                    ' Asigna respuesta Hacienda
-                    vReply.reasonPhraseGETHacienda = vReplyObtieneRespuesta.reasonPhraseGETHacienda
-                    vReply.statusCodeGETHacienda = vReplyObtieneRespuesta.statusCodeGETHacienda
-
-                    ' Si el documento se proceso
-                    If vReplyObtieneRespuesta.ok Then
-
-                        ' Asigna el Xml respuesta de Hacienda
-                        vReply.xmlRespuesta = vReplyObtieneRespuesta.xmlRespuesta
-
-                        ' Respuesta de Hacienda
-                        Select Case vReplyObtieneRespuesta.msg
-                            Case "ACEPTADO"
-
-                                vReply.msg = "Documento: " & pDocumento.Clave & " | POST Hacienda: True |  GET Hacienda: True | Descripción: ACEPTADO"
-                                vReply.ok = True
-                                vReply.estado = "ACEPTADO"
-                                Return vReply
-
-                            Case "RECHAZADO"
-
-                                vReply.msg = "Documento: " & pDocumento.Clave & " | POST Hacienda: True |  GET Hacienda: True | Descripción: RECHAZADO"
-                                vReply.ok = True
-                                vReply.estado = "RECHAZADO"
-                                Return vReply
-
-                            Case "PROCESANDO"
-
-                                vReply.msg = "Documento: " & pDocumento.Clave & " | POST Hacienda: True |  GET Hacienda: True | Descripción: PROCESANDO"
-                                vReply.estado = "PROCESANDO"
-                                vReply.ok = True
-
-                            Case Else
-
-                                vReply.msg = "Documento: " & pDocumento.Clave & " | POST Hacienda: True |  GET Hacienda: True | Descripción: ERROR HACIENDA. CONTACTE A SOPORTE HACIENDA"
-                                vReply.ok = False
-
-                        End Select
-
-                    Else
-                        vReply.msg = "Documento: " & pDocumento.Clave & " | POST Hacienda: True | GET Hacienda: True | Descripción: " & vReplyObtieneRespuesta.msg
-                        vReply.ok = False
-                        Return vReply
-                    End If
-
-                    vIntentos = vIntentos + 1
-
-                End While
+                vReply.msg = vReplyGeneraXML.msg
+                Return vReply
 
             Else
+                vReply.xmlDocumento = vReplyGeneraXML.xmlDocumento
+            End If
 
-                vReply.msg = "El XML recibido del proveedor es invalido. No se encuentra ACEPTADO por Hacienda. (" + vReplyAcuse.estado + ")"
-                vReply.ok = False
-                vReply.estado = "ERROR"
+            ' Firma el XML
+            vReplyFirmaXML = vTributacionBLL.fFirmarDocumento(pUsuarioHacienda, vReplyGeneraXML.xmlDocumento)
+
+            ' Si el archivo XML no se firmo
+            If vReplyFirmaXML.ok = False Then
+
+                vReply.msg = vReplyFirmaXML.msg
                 Return vReply
 
+            Else
+                vReply.xmlDocumento = vReplyFirmaXML.xmlDocumento
             End If
+
+
+            ' Asigna datos del Objeto Hacienda Documento
+            vHaciendaDocumento.clave = pRespuesta.Clave ' Clave Proveedor
+            vHaciendaDocumento.fecha = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:sszzz")
+            vHaciendaDocumento.emisor = New EN.BitOne.FE.EN.Hacienda.emisor With {.numeroIdentificacion = pDocumento.Emisor.Identificacion.PadLeft(12, "0"),
+                                                                                  .tipoIdentificacion = pDocumento.Emisor.IdentificacionTipo}
+            vHaciendaDocumento.receptor = New EN.BitOne.FE.EN.Hacienda.receptor With {.numeroIdentificacion = pDocumento.Receptor.Identificacion.PadLeft(12, "0"),
+                                                                                      .tipoIdentificacion = pDocumento.Receptor.IdentificacionTipo}
+
+            vHaciendaDocumento.comprobanteXml = vCommon.Encrypt(vReply.xmlDocumento)
+            vHaciendaDocumento.consecutivoReceptor = pDocumento.Clave ' Clave generada para la respuesta
+
+
+            ' Envia documento a Hacienda
+            vReplyEnvioHacienda = vTributacionBLL.fEnvioDocumento(vHaciendaDocumento, pUsuarioHacienda, vReplyGeneraToken.token)
+
+            ' Asigna respuesta Hacienda
+            vReply.reasonPhrasePOSTHacienda = vReplyEnvioHacienda.reasonPhrasePOSTHacienda
+            vReply.statusCodePOSTHacienda = vReplyEnvioHacienda.statusCodePOSTHacienda
+
+            ' Si no se envió el XML con éxito
+            If vReplyEnvioHacienda.ok = False Then
+                vReply.msg = vReplyEnvioHacienda.msg
+                Return vReply
+            End If
+
+            ' Recorre la cantidad de intentos
+            Dim vIntentos As Integer = 1
+            While vIntentos <= pIntentosRecepcion
+
+                ' Obtiene la respuesta de Hacienda
+                vReplyObtieneRespuesta = vTributacionBLL.fObtenerDocumento(pUsuarioHacienda, pRespuesta.Clave & "-" & pDocumento.Clave, vReplyGeneraToken.token)
+
+                ' Asigna respuesta Hacienda
+                vReply.reasonPhraseGETHacienda = vReplyObtieneRespuesta.reasonPhraseGETHacienda
+                vReply.statusCodeGETHacienda = vReplyObtieneRespuesta.statusCodeGETHacienda
+
+                ' Si el documento se proceso
+                If vReplyObtieneRespuesta.ok Then
+
+                    ' Asigna el Xml respuesta de Hacienda
+                    vReply.xmlRespuesta = vReplyObtieneRespuesta.xmlRespuesta
+
+                    ' Respuesta de Hacienda
+                    Select Case vReplyObtieneRespuesta.msg
+                        Case "ACEPTADO"
+
+                            vReply.msg = "Documento: " & pDocumento.Clave & " | POST Hacienda: True |  GET Hacienda: True | Descripción: ACEPTADO"
+                            vReply.ok = True
+                            vReply.estado = "ACEPTADO"
+                            Return vReply
+
+                        Case "RECHAZADO"
+
+                            vReply.msg = "Documento: " & pDocumento.Clave & " | POST Hacienda: True |  GET Hacienda: True | Descripción: RECHAZADO"
+                            vReply.ok = True
+                            vReply.estado = "RECHAZADO"
+                            Return vReply
+
+                        Case "PROCESANDO"
+
+                            vReply.msg = "Documento: " & pDocumento.Clave & " | POST Hacienda: True |  GET Hacienda: True | Descripción: PROCESANDO"
+                            vReply.estado = "PROCESANDO"
+                            vReply.ok = True
+
+                        Case Else
+
+                            vReply.msg = "Documento: " & pDocumento.Clave & " | POST Hacienda: True |  GET Hacienda: True | Descripción: ERROR HACIENDA. CONTACTE A SOPORTE HACIENDA"
+                            vReply.ok = False
+
+                    End Select
+
+                Else
+                    vReply.msg = "Documento: " & pDocumento.Clave & " | POST Hacienda: True | GET Hacienda: True | Descripción: " & vReplyObtieneRespuesta.msg
+                    vReply.ok = False
+                    Return vReply
+                End If
+
+                vIntentos = vIntentos + 1
+
+            End While
 
             Return vReply
 
@@ -302,7 +213,7 @@ Public Class ServicioBLL
     ''' <returns>Objeto Reply(OK, MSG y OBJ(XML))</returns>
     ''' <remarks></remarks>
     Public Function fGenerarDocumento(pDocumento As DocumentoEncabezado,
-                                       pUsuarioHacienda As UsuarioHacienda, pIntentosRecepcion As Integer) As Reply
+                                       pUsuarioHacienda As UsuarioHacienda, pIntentosRecepcion As Integer, Optional pReplyToken As Reply = Nothing) As Reply
 
         Dim vReply As New Reply
         Dim vReplyValidaDocumento As New Reply
@@ -363,11 +274,20 @@ Public Class ServicioBLL
 
             End If
 
-            ' Si CONDICION DOCUMENTO = SIN INTERNET no debe ingresar
+            ' Si CONDICION DOCUMENTO = SIN INTERNET no debe ingresar 
             If vDocCondicion <> Diccionario.SituacionSinInternet Then
 
-                ' 3- Genera token
-                vReplyGeneraToken = vTributacionBLL.fGeneraToken(pUsuarioHacienda)
+                ' Si el Token no es nulo
+                If pReplyToken Is Nothing Then
+
+                    ' 3- Genera token
+                    vReplyGeneraToken = vTributacionBLL.fGeneraToken(pUsuarioHacienda)
+
+                Else
+                    vReplyGeneraToken = pReplyToken
+                End If
+
+
 
                 ' Si la contingencia es True
                 If vReplyGeneraToken.contingencia = True Then
@@ -417,7 +337,7 @@ Public Class ServicioBLL
             End If
 
 
-            ' Si CONDICION DOCUMENTO = SIN INTERNET no debe ingresar
+            ' Si CONDICION DOCUMENTO = SIN INTERNET no debe ingresar 
             If vDocCondicion <> Diccionario.SituacionSinInternet Then
 
                 ' Asigna datos del Objeto Hacienda Documento
@@ -435,28 +355,42 @@ Public Class ServicioBLL
                 vHaciendaDocumento.consecutivoReceptor = Nothing
 
 
-                ' 6- Envia documento a Hacienda
-                vReplyEnvioHacienda = vTributacionBLL.fEnvioDocumento(vHaciendaDocumento, pUsuarioHacienda, vReplyGeneraToken.token)
+                ' Recorre la cantidad de intentos
+                Dim vIntentos2 As Integer = 1
+                While vIntentos2 <= pIntentosRecepcion
 
-                ' Asigna respuesta Hacienda
-                vReply.reasonPhrasePOSTHacienda = vReplyEnvioHacienda.reasonPhrasePOSTHacienda
-                vReply.statusCodePOSTHacienda = vReplyEnvioHacienda.statusCodePOSTHacienda
+                    ' 6- Envia documento a Hacienda
+                    vReplyEnvioHacienda = vTributacionBLL.fEnvioDocumento(vHaciendaDocumento, pUsuarioHacienda, vReplyGeneraToken.token)
 
-                ' Si la contingencia es True
-                If vReplyEnvioHacienda.contingencia = True Then
+                    ' Asigna respuesta Hacienda
+                    vReply.reasonPhrasePOSTHacienda = vReplyEnvioHacienda.reasonPhrasePOSTHacienda
+                    vReply.statusCodePOSTHacienda = vReplyEnvioHacienda.statusCodePOSTHacienda
 
-                    vReply.contingencia = True
-                    vReply.msg = vReplyEnvioHacienda.msg
-                    vReply.estado = "CONTINGENCIA"
-                    Return vReply
+                    ' Si existe un código
+                    If Not vReplyEnvioHacienda.statusCodePOSTHacienda Is Nothing Then
+                        ' Iguala para salir del ciclo
+                        vIntentos2 = pIntentosRecepcion
+                    End If
 
-                End If
+                    ' Si la contingencia es True
+                    If vReplyEnvioHacienda.contingencia = True Then
 
-                ' Si no se envió el XML con éxito
-                If vReplyEnvioHacienda.ok = False Then
-                    vReply.msg = vReplyEnvioHacienda.msg
-                    Return vReply
-                End If
+                        vReply.contingencia = True
+                        vReply.msg = vReplyEnvioHacienda.msg
+                        vReply.estado = "CONTINGENCIA"
+                        Return vReply
+
+                    End If
+
+                    ' Si no se envió el XML con éxito
+                    If vReplyEnvioHacienda.ok = False Then
+                        vReply.msg = vReplyEnvioHacienda.msg
+                        Return vReply
+                    End If
+
+                    vIntentos2 = vIntentos2 + 1
+
+                End While
 
                 ' Recorre la cantidad de intentos
                 Dim vIntentos As Integer = 1
@@ -485,14 +419,8 @@ Public Class ServicioBLL
                                 Return vReply
 
                             Case "RECHAZADO"
-                                Dim regex As Regex = New Regex("<DetalleMensaje>(.+)</DetalleMensaje>")
-                                Dim msgWithoutChangeLines = Regex.Replace(vReplyObtieneRespuesta.xmlRespuesta, "\r\n?|\n", "")
-                                Dim match As Match = regex.Match(msgWithoutChangeLines)
-                                If match.Success Then
-                                    vReply.msg = "Documento: " & pDocumento.Clave & " | POST Hacienda: True |  GET Hacienda: True | Descripción: " + match.Value
-                                Else
-                                    vReply.msg = "Documento: " & pDocumento.Clave & " | POST Hacienda: True |  GET Hacienda: True | Descripción: RECHAZADO"
-                                End If
+
+                                vReply.msg = "Documento: " & pDocumento.Clave & " | POST Hacienda: True |  GET Hacienda: True | Descripción: RECHAZADO"
                                 vReply.ok = True
                                 vReply.estado = "RECHAZADO"
                                 Return vReply
@@ -533,7 +461,7 @@ Public Class ServicioBLL
             Return vReply
 
         Catch ex As Exception
-            vReply.msg = "Ocurrió un error al procesar el documento " & pDocumento.Clave
+            vReply.msg = "Ocurrió un error al procesar el documento " & pDocumento.Clave & "|" & ex.ToString()
             vReply.ok = False
         End Try
 
@@ -557,7 +485,8 @@ Public Class ServicioBLL
     Public Function fHaciendaEnviaDocumento(pPath As String, pClave As String, pUsuarioHacienda As UsuarioHacienda,
                                             pEmisorIdentificacion As String, pEmisorIdentificacionTipo As String,
                                             Optional pReceptorIdentificacion As String = Nothing,
-                                            Optional pReceptorIdentificacionTipo As String = Nothing) As Reply
+                                            Optional pReceptorIdentificacionTipo As String = Nothing,
+                                            Optional pReplyToken As Reply = Nothing) As Reply
 
         Dim vReply As New Reply
         Dim vReplyEnvio As New Reply
@@ -574,7 +503,7 @@ Public Class ServicioBLL
                                                                                   .tipoIdentificacion = pEmisorIdentificacionTipo}
 
             ' Si el receptor existe
-            If (Not pReceptorIdentificacion Is Nothing) Then
+            If (Not pReceptorIdentificacion Is Nothing And String.IsNullOrEmpty(pReceptorIdentificacion) = False) Then
                 vHaciendaDocumento.receptor = New EN.BitOne.FE.EN.Hacienda.receptor With {.numeroIdentificacion = pReceptorIdentificacion.PadLeft(12, "0"),
                                                                                           .tipoIdentificacion = pReceptorIdentificacionTipo}
 
@@ -588,12 +517,21 @@ Public Class ServicioBLL
             vHaciendaDocumento.comprobanteXml = vCommon.Encrypt(allText)
             vHaciendaDocumento.consecutivoReceptor = Nothing
 
-            ' Genera el Token
-            vReplyToken = vTributacionBLL.fGeneraToken(pUsuarioHacienda)
+            If pReplyToken Is Nothing Then
+                ' Genera el Token
+                vReplyToken = vTributacionBLL.fGeneraToken(pUsuarioHacienda)
+            Else
+                vReplyToken = pReplyToken
+            End If
 
             If (vReplyToken.ok) Then
 
                 vReplyEnvio = vTributacionBLL.fEnvioDocumento(vHaciendaDocumento, pUsuarioHacienda, vReplyToken.token)
+
+                vReply.xmlDocumento = allText
+                vReply.statusCodePOSTHacienda = vReplyEnvio.statusCodePOSTHacienda
+                vReply.reasonPhrasePOSTHacienda = vReplyEnvio.reasonPhrasePOSTHacienda
+
 
                 If vReplyEnvio.ok Then
                     vReply.ok = True
@@ -649,11 +587,16 @@ Public Class ServicioBLL
 
                 vReplyObtieneRespuesta = vTributacionBLL.fObtenerDocumento(pUsuarioHacienda, pClave, vReplyToken.token)
 
+                ' Asigna el Xml respuesta de 
+                If Not vReplyObtieneRespuesta.xmlRespuesta Is Nothing Then
+                    vReply.xmlRespuesta = vReplyObtieneRespuesta.xmlRespuesta
+                End If
+
+                vReply.reasonPhraseGETHacienda = vReplyObtieneRespuesta.reasonPhraseGETHacienda
+                vReply.statusCodeGETHacienda = vReplyObtieneRespuesta.statusCodeGETHacienda
+
                 ' Si el documento se proceso
                 If vReplyObtieneRespuesta.ok Then
-
-                    ' Asigna el Xml respuesta de Hacienda
-                    vReply.xmlRespuesta = vReplyObtieneRespuesta.xmlRespuesta
 
                     ' Respuesta de Hacienda
                     Select Case vReplyObtieneRespuesta.msg

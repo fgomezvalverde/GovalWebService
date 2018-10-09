@@ -48,6 +48,10 @@ namespace Goval.FacturaDigital.DataModel
         public decimal ExonerationAmount { get; set; }
         public string Observation { get; set; }
         public string SystemMesagges { get; set; }
+        public string ReasonPhrasePOSTHacienda { get; set; }
+        public string ReasonPhraseGETHacienda { get; set; }
+        public string StatusCodePOSTHacienda { get; set; }
+        public string StatusCodeGETHacienda { get; set; }
     
         public virtual ClientEntity Client { get; set; }
         public virtual ExonerationEntity Exoneration { get; set; }

@@ -4,11 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Net;
+using System.Net.Mail;
+using Goval.FacturaDigital.DataContracts.Utils;
+using System.IO;
+using System.Security.Cryptography.X509Certificates;
+using Goval.FacturaDigital.DataContracts.BaseModel;
 
 namespace Goval.FacturaDigital.Core
 {
     public class Utils
     {
+        static MailAddress FromAddress = new MailAddress("goval.automatic@gmail.com", "Factura Goval APP");
+        static string UserName = "goval.automatic";
+        static string Password = "gomezvalverde5";
+
         #region NumberToName
 
         private String[] UNIDADES = { "", "un ", "dos ", "tres ", "cuatro ", "cinco ", "seis ", "siete ", "ocho ", "nueve " };
@@ -180,7 +190,7 @@ namespace Goval.FacturaDigital.Core
         #endregion
 
 
-        public static string GenerateDocumentKey(DataContracts.MobileModel.Bill pBill, DataContracts.MobileModel.User pUser)
+        public static string GenerateDocumentKey(DataContracts.MobileModel.Bill pBill, DataContracts.MobileModel.User pUser, string pDocumentType)
         {
             string vCountryCode = "506";
 
@@ -192,7 +202,7 @@ namespace Goval.FacturaDigital.Core
 
             // BIll ConsecutiveNumber
             // https://tribunet.hacienda.go.cr/tribunet/docs/esquemas/2016/v4.2/ResolucionComprobantesElectronicosDGT-R-48-2016_4.2.pdf
-            string vConsecutiveNumber = "001"+"00001"+ HaciendaTransactionType.Factura_Electronica+ pBill.ConsecutiveNumber.ToString().PadLeft(10, '0');
+            string vConsecutiveNumber = "001"+"00001"+ pDocumentType + pBill.ConsecutiveNumber.ToString().PadLeft(10, '0');
 
             //Situacion del Comprobante Electronico
             string vElectronicVoucher = "1";  
@@ -204,6 +214,57 @@ namespace Goval.FacturaDigital.Core
             string vResultKey = vCountryCode+ vDateString+ vIdentification+ vConsecutiveNumber+ vElectronicVoucher+ vSecurityCode;
 
             return vResultKey;
+        }
+
+        public static BaseResponse SendMail(String pSubject, String pBody, List<string> pCopyEmails, List<AttachmentMail> pAttachments = null, Boolean pIsHtmlBody = false)
+        {
+            MailMessage mail = new MailMessage();
+            SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+            BaseResponse vResponse = new BaseResponse();
+
+            try
+            {
+                mail.From = FromAddress;
+                if (pCopyEmails != null && pCopyEmails.Any())
+                {
+                    foreach (var address in pCopyEmails)
+                    {
+                        mail.To.Add(address);
+                    }
+                }
+
+
+                if (pAttachments != null && pAttachments.Any())
+                {
+                    foreach (var attachment in pAttachments)
+                    {
+                        Attachment newAttachment = new Attachment(attachment.FileData, attachment.FileName);
+                        mail.Attachments.Add(newAttachment);
+                    }
+                }
+
+                mail.Subject = pSubject;
+                mail.Body = pBody;
+                mail.IsBodyHtml = pIsHtmlBody;
+                SmtpServer.Port = 587;  //gmail default port
+                SmtpServer.Credentials = new System.Net.NetworkCredential(UserName, Password);
+                SmtpServer.EnableSsl = true;
+                ServicePointManager.ServerCertificateValidationCallback = delegate (object sender, X509Certificate certificate, X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
+                {
+                    return true;
+                };
+                SmtpServer.Send(mail);
+                vResponse.IsSuccessful = true;
+            }
+
+            catch (Exception vEx)
+            {
+                vResponse.IsSuccessful = false;
+                vResponse.UserMessage = vEx.Message;
+                vResponse.TechnicalMessage = vEx.ToString();
+
+            }
+            return vResponse;
         }
     }
 }

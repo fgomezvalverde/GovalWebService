@@ -15,8 +15,6 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "BitOne.FE.EN", "FacturaHaci
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "BitOne.FE.Resources", "FacturaHacienda\BitOne.FE.Resources\BitOne.FE.Resources.vbproj", "{63BAF6F1-B40C-47BD-8931-0424DF37075E}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "BitOne.FE.UI", "FacturaHacienda\BitOne.FE.UI\BitOne.FE.UI.vbproj", "{83236206-0A64-455A-A3C6-B1B70A42D637}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goval.FacturaDigital.DataContracts", "Goval.FacturaDigital.DataContracts\Goval.FacturaDigital.DataContracts.csproj", "{8E529B7A-3B7D-4D8D-884A-687122BFD9A7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goval.FacturaDigital.AuthenticationService", "Goval.FacturaDigital.AuthenticationService\Goval.FacturaDigital.AuthenticationService.csproj", "{B8C4AB5F-DA95-433B-849D-AF66CF921C79}"
@@ -42,7 +40,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dlls", "Dlls", "{578DE265-D
 		dlls\Syncfusion.SfChart.WPF.xml = dlls\Syncfusion.SfChart.WPF.xml
 		dlls\Syncfusion.XlsIO.Base.dll = dlls\Syncfusion.XlsIO.Base.dll
 		dlls\Syncfusion.XlsIO.Base.xml = dlls\Syncfusion.XlsIO.Base.xml
+		dlls\System.Security.dll = dlls\System.Security.dll
+		dlls\System.Security.xml = dlls\System.Security.xml
 	EndProjectSection
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "BitOne.FE.UI", "FacturaHacienda\BitOne.FE.UI\BitOne.FE.UI.vbproj", "{83236206-0A64-455A-A3C6-B1B70A42D637}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirmaXadesNet", "FirmaXadesNet\FirmaXadesNet.csproj", "{84B87815-DD45-4C60-B343-C11D45847BDF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -70,10 +74,6 @@ Global
 		{63BAF6F1-B40C-47BD-8931-0424DF37075E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63BAF6F1-B40C-47BD-8931-0424DF37075E}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{63BAF6F1-B40C-47BD-8931-0424DF37075E}.Release|Any CPU.Build.0 = Debug|Any CPU
-		{83236206-0A64-455A-A3C6-B1B70A42D637}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{83236206-0A64-455A-A3C6-B1B70A42D637}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{83236206-0A64-455A-A3C6-B1B70A42D637}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{83236206-0A64-455A-A3C6-B1B70A42D637}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{8E529B7A-3B7D-4D8D-884A-687122BFD9A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8E529B7A-3B7D-4D8D-884A-687122BFD9A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E529B7A-3B7D-4D8D-884A-687122BFD9A7}.Release|Any CPU.ActiveCfg = Debug|Any CPU
@@ -90,6 +90,14 @@ Global
 		{60A93FD8-DC96-4F66-87F0-D55D5FDC6ECB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60A93FD8-DC96-4F66-87F0-D55D5FDC6ECB}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{60A93FD8-DC96-4F66-87F0-D55D5FDC6ECB}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{83236206-0A64-455A-A3C6-B1B70A42D637}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83236206-0A64-455A-A3C6-B1B70A42D637}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83236206-0A64-455A-A3C6-B1B70A42D637}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83236206-0A64-455A-A3C6-B1B70A42D637}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84B87815-DD45-4C60-B343-C11D45847BDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84B87815-DD45-4C60-B343-C11D45847BDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84B87815-DD45-4C60-B343-C11D45847BDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84B87815-DD45-4C60-B343-C11D45847BDF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +107,7 @@ Global
 		{49B9DC66-4426-4D0F-BCA5-314A88EFE5DB} = {9416FBD2-46DC-4881-86C9-5ED563377374}
 		{63BAF6F1-B40C-47BD-8931-0424DF37075E} = {9416FBD2-46DC-4881-86C9-5ED563377374}
 		{83236206-0A64-455A-A3C6-B1B70A42D637} = {9416FBD2-46DC-4881-86C9-5ED563377374}
+		{84B87815-DD45-4C60-B343-C11D45847BDF} = {9416FBD2-46DC-4881-86C9-5ED563377374}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2A0C73E5-CB6F-4482-AB12-8923739BDF95}

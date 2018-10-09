@@ -10,11 +10,12 @@
     <AssemblyName>BitOne.FE.BLL</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,12 +48,8 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FirmaXadesNet, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencias\FirmaXadesNet.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Xades">
-      <HintPath>..\..\Dependencias\Microsoft.Xades.dll</HintPath>
+    <Reference Include="BouncyCastle.Crypto, Version=1.7.4137.9688, Culture=neutral, PublicKeyToken=a4292a325f69b123, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\BouncyCastle.1.7.0\lib\Net40-Client\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -94,6 +91,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="ServicioBLL.vb" />
+    <Compile Include="SMTP.vb" />
     <Compile Include="TributacionBLL.vb" />
   </ItemGroup>
   <ItemGroup>
@@ -117,6 +115,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\FirmaXadesNet\FirmaXadesNet.csproj">
+      <Project>{84b87815-dd45-4c60-b343-c11d45847bdf}</Project>
+      <Name>FirmaXadesNet</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BitOne.FE.EN\BitOne.FE.EN.vbproj">
       <Project>{49b9dc66-4426-4d0f-bca5-314a88efe5db}</Project>
       <Name>BitOne.FE.EN</Name>

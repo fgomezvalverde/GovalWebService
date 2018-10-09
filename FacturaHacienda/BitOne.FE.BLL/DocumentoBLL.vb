@@ -179,15 +179,20 @@ Public Class DocumentoBLL
 
             End If
 
-            'Si existe identificación Extranjero en el receptor no puede tener más de 20 caracteres
-            If Not pDocumento.Receptor.IdentificacionExtranjero Is Nothing Then
-                If pDocumento.Receptor.IdentificacionExtranjero.Length > 20 Then
 
-                    vReply.msg = "La Identificación extranjera de un receptor debe tener máximo 20 caracteres."
-                    vReply.ok = False
+            If Not pDocumento.Receptor Is Nothing Then
 
-                    Return vReply
+                'Si existe identificación Extranjero en el receptor no puede tener más de 20 caracteres
+                If Not pDocumento.Receptor.IdentificacionExtranjero Is Nothing Then
+                    If pDocumento.Receptor.IdentificacionExtranjero.Length > 20 Then
+
+                        vReply.msg = "La Identificación extranjera de un receptor debe tener máximo 20 caracteres."
+                        vReply.ok = False
+
+                        Return vReply
+                    End If
                 End If
+
             End If
 
             ' Receptor
@@ -260,6 +265,9 @@ Public Class DocumentoBLL
             ElseIf pDocumento.Receptor.IdentificacionExtranjero Is Nothing Then
                 pDocumento.Receptor = Nothing
             End If
+
+
+
 
 
             'Valida que la sucursal siempre tenga 3 y termial 5
@@ -492,7 +500,7 @@ Public Class DocumentoBLL
 
                 ' Código
                 vHaciendaDetalle.Codigo = {New BitOne.FE.EN.CodigoType With {.Codigo = vDetalle.Codigo,
-                                                                             .Tipo = CType([Enum].Parse(GetType(BitOne.FE.EN.CodigoTypeTipo), vDetalle.Tipo, True), BitOne.FE.EN.CodigoTypeTipo)}}
+                                                                             .Tipo = vDetalle.Tipo}}
 
                 ' Número de Línea
                 vHaciendaDetalle.NumeroLinea = vNumeroLinea
@@ -504,7 +512,7 @@ Public Class DocumentoBLL
                 vHaciendaDetalle.Detalle = vDetalle.Nombre
 
                 ' Unidad
-                vHaciendaDetalle.UnidadMedida = CType([Enum].Parse(GetType(BitOne.FE.EN.UnidadMedidaType), vDetalle.Unidad, True), BitOne.FE.EN.UnidadMedidaType)
+                vHaciendaDetalle.UnidadMedida = vDetalle.Unidad
 
                 ' Unidad de Medida Comercial
                 If (vDetalle.UnidadMedidaComercial Is Nothing) Then
@@ -528,13 +536,13 @@ Public Class DocumentoBLL
                 ' Si el monto del descuento y la descripción es vació
                 If vHaciendaDetalle.MontoDescuento > 0 Then
                     vHaciendaDetalle.MontoDescuentoSpecified = True
-                    If vHaciendaDetalle.NaturalezaDescuento = String.Empty Then
+                    If String.IsNullOrEmpty(vHaciendaDetalle.NaturalezaDescuento) Then
                         vHaciendaDetalle.NaturalezaDescuento = "N/D"
                     End If
                 End If
 
-                    ' Subtotal
-                    vHaciendaDetalle.SubTotal = FormatNumber((vDetalle.Cantidad * vDetalle.Precio) - vDetalle.Descuento, 5)
+                ' Subtotal
+                vHaciendaDetalle.SubTotal = FormatNumber((vDetalle.Cantidad * vDetalle.Precio) - vDetalle.Descuento, 5)
                 'vHaciendaDetalle.SubTotal = FormatNumber((vDetalle.Cantidad * vDetalle.Precio), 5)
 
                 ' ------------------------- Detalle Impuesto -------------------------
@@ -549,16 +557,16 @@ Public Class DocumentoBLL
                         Imp.Monto = FormatNumber(Imp.Monto, 5)
 
                         ' Si es Gravado (Posee impuesto de Ventas) 
-                        If Imp.Tipo = "Item01" Then
+                        If Imp.Tipo = "01" Then
                             esGravado = True
                         End If
 
                         ' Si es gravado y posee exoneración
-                        If Imp.Tipo = "Item01" And Not Imp.Exoneracion Is Nothing Then
+                        If Imp.Tipo = "01" And Not Imp.Exoneracion Is Nothing Then
 
                             Dim pExoneracion As New ExoneracionType
 
-                            pExoneracion.TipoDocumento = CType([Enum].Parse(GetType(BitOne.FE.EN.ExoneracionTypeTipoDocumento), Imp.Exoneracion.TipoDocumento, True), BitOne.FE.EN.ExoneracionTypeTipoDocumento)
+                            pExoneracion.TipoDocumento = Imp.Exoneracion.TipoDocumento
                             pExoneracion.NumeroDocumento = Imp.Exoneracion.NumeroDocumento
                             pExoneracion.NombreInstitucion = Imp.Exoneracion.NombreInstitucion
                             pExoneracion.FechaEmision = Imp.Exoneracion.FechaEmision.ToString("o")
@@ -569,14 +577,14 @@ Public Class DocumentoBLL
                             Imp.Monto = Imp.Monto - pExoneracion.MontoImpuesto
                             Imp.Tarifa = Imp.Tarifa - (Imp.Tarifa * (pExoneracion.PorcentajeCompra / 100))
 
-                            ListadoImpuestoType.Add(New BitOne.FE.EN.ImpuestoType With {.Codigo = DirectCast([Enum].Parse(GetType(ImpuestoTypeCodigo), Imp.Tipo), ImpuestoTypeCodigo),
+                            ListadoImpuestoType.Add(New BitOne.FE.EN.ImpuestoType With {.Codigo = Imp.Tipo,
                                                                                         .Monto = FormatNumber(Imp.Monto, 5),
                                                                                         .Tarifa = FormatNumber(Imp.Tarifa, 2),
                                                                                         .Exoneracion = pExoneracion})
 
                         Else
 
-                            ListadoImpuestoType.Add(New BitOne.FE.EN.ImpuestoType With {.Codigo = DirectCast([Enum].Parse(GetType(ImpuestoTypeCodigo), Imp.Tipo), ImpuestoTypeCodigo),
+                            ListadoImpuestoType.Add(New BitOne.FE.EN.ImpuestoType With {.Codigo = Imp.Tipo,
                                                             .Monto = FormatNumber(Imp.Monto, 5),
                                                             .Tarifa = FormatNumber(Imp.Tarifa, 2)})
 
@@ -673,63 +681,49 @@ Public Class DocumentoBLL
     ''' </summary>
     ''' <param name="pDocumento"></param>
     ''' <param name="pRespuesta"></param>
-    ''' <param name="pXmlProveedor"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Function fGenerarXMLMensajeReceptor(pDocumento As DocumentoEncabezado, pRespuesta As String, pXmlProveedor As XmlDocument) As Reply
+    Public Function fGenerarXMLMensajeReceptor(pDocumento As DocumentoEncabezado,
+                                               pRespuesta As MensajeReceptor, pPoseeImpuestos As Boolean) As Reply
 
         Dim vReply As New Reply
-        Dim vDocumentoProveedor As New DocumentoProveedor()
         Dim vCommon As New Common
-        Dim vMontoTotalImpuesto As Decimal = 0
-        Dim vTotalFactura As Decimal = 0
-        Dim vClaveXMLProveedor As String = String.Empty
 
         Try
 
             ' Aceptado
-            If pRespuesta = "05" Then
-                pRespuesta = "Item1"
-            ElseIf pRespuesta = "06" Then
-                pRespuesta = "Item2"
+            If pRespuesta.Mensaje = "05" Then
+                pRespuesta.Mensaje = "1"
+            ElseIf pRespuesta.Mensaje = "06" Then
+                pRespuesta.Mensaje = "2"
             Else
-                pRespuesta = "Item3"
+                pRespuesta.Mensaje = "3"
             End If
-
-            ' Obtiene datos
-            Dim vXMLProveedor As XElement = XElement.Parse(pXmlProveedor.InnerXml)
-            Dim vNameSpace As XNamespace = vXMLProveedor.Attribute("xmlns").Value
-
-            vDocumentoProveedor.EmisorIdentificacion = vXMLProveedor.Element(vNameSpace + "Emisor").Element(vNameSpace + "Identificacion").Element(vNameSpace + "Numero").Value
-            vDocumentoProveedor.EmisorIdentificacionTipo = vXMLProveedor.Element(vNameSpace + "Emisor").Element(vNameSpace + "Identificacion").Element(vNameSpace + "Tipo").Value
-
-            If Not vXMLProveedor.Element(vNameSpace + "ResumenFactura").Element(vNameSpace + "TotalImpuesto").Value Is Nothing Then
-                vMontoTotalImpuesto = vXMLProveedor.Element(vNameSpace + "ResumenFactura").Element(vNameSpace + "TotalImpuesto").Value
-            End If
-
-            If Not vXMLProveedor.Element(vNameSpace + "ResumenFactura").Element(vNameSpace + "TotalComprobante").Value Is Nothing Then
-                vTotalFactura = vXMLProveedor.Element(vNameSpace + "ResumenFactura").Element(vNameSpace + "TotalComprobante").Value
-            End If
-
-            vClaveXMLProveedor = vXMLProveedor.Element(vNameSpace + "Clave")
-
-            vDocumento = Nothing
-
-            vDocumento = New MensajeReceptor
 
             ' Asigna datos del XML
-            vDocumento.Clave = vClaveXMLProveedor
-            vDocumento.NumeroCedulaEmisor = vDocumentoProveedor.EmisorIdentificacion.PadLeft(12, "0")
-            vDocumento.FechaEmisionDoc = pDocumento.Fecha
-            vDocumento.Mensaje = CType([Enum].Parse(GetType(MensajeReceptorMensaje), pRespuesta, True), MensajeReceptorMensaje)
-            vDocumento.DetalleMensaje = pDocumento.Observacion
-            vDocumento.MontoTotalImpuesto = vMontoTotalImpuesto
-            vDocumento.TotalFactura = vTotalFactura
-            vDocumento.NumeroCedulaReceptor = pDocumento.Emisor.Identificacion.PadLeft(12, "0")
-            vDocumento.NumeroConsecutivoReceptor = pDocumento.Clave.Substring(21, 20)
+            pRespuesta.Clave = pRespuesta.Clave ' Clave del proveedor
+            pRespuesta.NumeroCedulaEmisor = pRespuesta.NumeroCedulaEmisor.PadLeft(12, "0")
+            pRespuesta.FechaEmisionDoc = pDocumento.Fecha
+            pRespuesta.Mensaje = pRespuesta.Mensaje
+            pRespuesta.DetalleMensaje = pDocumento.Observacion
+
+            ' Si no posee impuestos
+            If pPoseeImpuestos = False Then
+                pRespuesta.MontoTotalImpuestoSpecified = False
+                pRespuesta.MontoTotalImpuesto = Nothing
+            Else
+                pRespuesta.MontoTotalImpuestoSpecified = True
+                pRespuesta.MontoTotalImpuesto = FormatNumber(pRespuesta.MontoTotalImpuesto, 5)
+            End If
+
+            'pRespuesta.TotalFactura = pRespuesta.TotalFactura
+
+            pRespuesta.NumeroConsecutivoReceptor = pDocumento.Clave
+            pRespuesta.NumeroCedulaReceptor = pDocumento.Emisor.Identificacion.PadLeft(12, "0")
+
 
             ' Asigna el string con el XML
-            vReply.xmlDocumento = vCommon.SerializeToXML(vDocumento)
+            vReply.xmlDocumento = vCommon.SerializeToXML(pRespuesta)
             vReply.msg = "Documento XML Generado"
             vReply.ok = True
 
@@ -771,7 +765,7 @@ Public Class DocumentoBLL
                     vCodigoMoneda = DirectCast([Enum].Parse(GetType(FacturaElectronicaResumenFacturaCodigoMoneda), pDocumento.Moneda), FacturaElectronicaResumenFacturaCodigoMoneda)
                     vDocumento.Normativa = New FacturaElectronicaNormativa
                     vDocumento.ResumenFactura = New FacturaElectronicaResumenFactura
-                    vDocumento.CondicionVenta = DirectCast([Enum].Parse(GetType(FacturaElectronicaCondicionVenta), pDocumento.CondicionVenta), FacturaElectronicaCondicionVenta)
+                    vDocumento.CondicionVenta = pDocumento.CondicionVenta
 
                     ' Observación
                     If (pDocumento.Observacion.Length > 0) Then
@@ -780,9 +774,9 @@ Public Class DocumentoBLL
                     End If
 
                     ' Medios de Pago
-                    vMediosPagos = New List(Of FacturaElectronicaMedioPago)
+                    vMediosPagos = New List(Of String)
                     For Each vMetodoPago As DocumentoMedioPago In pDocumento.MedioPago
-                        vMediosPagos.Add(DirectCast([Enum].Parse(GetType(FacturaElectronicaMedioPago), vMetodoPago.Codigo), FacturaElectronicaMedioPago))
+                        vMediosPagos.Add(vMetodoPago.Codigo)
                     Next
 
                 Case Diccionario.TipoDocumentoTiquete
@@ -792,7 +786,7 @@ Public Class DocumentoBLL
                     vCodigoMoneda = DirectCast([Enum].Parse(GetType(TiqueteElectronicoResumenFacturaCodigoMoneda), pDocumento.Moneda), TiqueteElectronicoResumenFacturaCodigoMoneda)
                     vDocumento.Normativa = New TiqueteElectronicoNormativa
                     vDocumento.ResumenFactura = New TiqueteElectronicoResumenFactura
-                    vDocumento.CondicionVenta = DirectCast([Enum].Parse(GetType(TiqueteElectronicoCondicionVenta), pDocumento.CondicionVenta), TiqueteElectronicoCondicionVenta)
+                    vDocumento.CondicionVenta = pDocumento.CondicionVenta
 
                     ' Observación
                     If (pDocumento.Observacion.Length > 0) Then
@@ -801,9 +795,9 @@ Public Class DocumentoBLL
                     End If
 
                     ' Medios de Pago
-                    vMediosPagos = New List(Of TiqueteElectronicoMedioPago)
+                    vMediosPagos = New List(Of String)
                     For Each vMetodoPago As DocumentoMedioPago In pDocumento.MedioPago
-                        vMediosPagos.Add(DirectCast([Enum].Parse(GetType(TiqueteElectronicoMedioPago), vMetodoPago.Codigo), TiqueteElectronicoMedioPago))
+                        vMediosPagos.Add(vMetodoPago.Codigo)
                     Next
 
                 Case Diccionario.TipoDocumentoNotaCredito
@@ -813,7 +807,7 @@ Public Class DocumentoBLL
                     vCodigoMoneda = DirectCast([Enum].Parse(GetType(NotaCreditoElectronicaResumenFacturaCodigoMoneda), pDocumento.Moneda), NotaCreditoElectronicaResumenFacturaCodigoMoneda)
                     vDocumento.Normativa = New NotaCreditoElectronicaNormativa
                     vDocumento.ResumenFactura = New NotaCreditoElectronicaResumenFactura
-                    vDocumento.CondicionVenta = DirectCast([Enum].Parse(GetType(NotaCreditoElectronicaCondicionVenta), pDocumento.CondicionVenta), NotaCreditoElectronicaCondicionVenta)
+                    vDocumento.CondicionVenta = pDocumento.CondicionVenta
 
                     ' Observación
                     If (pDocumento.Observacion.Length > 0) Then
@@ -822,9 +816,9 @@ Public Class DocumentoBLL
                     End If
 
                     ' Medios de Pago
-                    vMediosPagos = New List(Of NotaCreditoElectronicaMedioPago)
+                    vMediosPagos = New List(Of String)
                     For Each vMetodoPago As DocumentoMedioPago In pDocumento.MedioPago
-                        vMediosPagos.Add(DirectCast([Enum].Parse(GetType(NotaCreditoElectronicaMedioPago), vMetodoPago.Codigo), NotaCreditoElectronicaMedioPago))
+                        vMediosPagos.Add(vMetodoPago.Codigo)
                     Next
 
                 Case Diccionario.TipoDocumentoNotaDebito
@@ -834,7 +828,7 @@ Public Class DocumentoBLL
                     vCodigoMoneda = DirectCast([Enum].Parse(GetType(NotaDebitoElectronicaResumenFacturaCodigoMoneda), pDocumento.Moneda), NotaDebitoElectronicaResumenFacturaCodigoMoneda)
                     vDocumento.Normativa = New NotaDebitoElectronicaNormativa
                     vDocumento.ResumenFactura = New NotaDebitoElectronicaResumenFactura
-                    vDocumento.CondicionVenta = DirectCast([Enum].Parse(GetType(NotaDebitoElectronicaCondicionVenta), pDocumento.CondicionVenta), NotaDebitoElectronicaCondicionVenta)
+                    vDocumento.CondicionVenta = pDocumento.CondicionVenta
 
                     ' Observación
                     If (pDocumento.Observacion.Length > 0) Then
@@ -843,9 +837,9 @@ Public Class DocumentoBLL
                     End If
 
                     ' Medios de Pago
-                    vMediosPagos = New List(Of NotaDebitoElectronicaMedioPago)
+                    vMediosPagos = New List(Of String)
                     For Each vMetodoPago As DocumentoMedioPago In pDocumento.MedioPago
-                        vMediosPagos.Add(DirectCast([Enum].Parse(GetType(NotaDebitoElectronicaMedioPago), vMetodoPago.Codigo), NotaDebitoElectronicaMedioPago))
+                        vMediosPagos.Add(vMetodoPago.Codigo)
                     Next
 
             End Select
@@ -927,10 +921,10 @@ Public Class DocumentoBLL
 
                     Dim vInformacionReferencia As New InformacionReferencia
 
-                    vInformacionReferencia.TipoDoc = CType([Enum].Parse(GetType(InformacionReferenciaTipoDoc), vReferencia.TipoDoc, True), InformacionReferenciaTipoDoc)
+                    vInformacionReferencia.TipoDoc = vReferencia.TipoDoc
                     vInformacionReferencia.Numero = vReferencia.Numero
                     vInformacionReferencia.FechaEmision = vReferencia.FechaEmision
-                    vInformacionReferencia.Codigo = CType([Enum].Parse(GetType(InformacionReferenciaCodigo), vReferencia.Codigo, True), InformacionReferenciaCodigo)
+                    vInformacionReferencia.Codigo = vReferencia.Codigo
                     vInformacionReferencia.Razon = vReferencia.Razon
 
                     vReferencias.Add(vInformacionReferencia)
@@ -983,18 +977,12 @@ Public Class DocumentoBLL
                 vReply.ok = True
 
                 pDocumento.Emisor.Telefono = Regex.Replace(pDocumento.Emisor.Telefono, "[^0-9]", " ")
+
+
                 pDocumento.Emisor.Fax = Regex.Replace(pDocumento.Emisor.Fax, "[^0-9]", " ")
 
-                Select Case pDocumento.Emisor.IdentificacionTipo
-                    Case "01"
-                        vDocumento.Emisor.Identificacion.Tipo = BitOne.FE.EN.IdentificacionTypeTipo.Item01
-                    Case "02"
-                        vDocumento.Emisor.Identificacion.Tipo = BitOne.FE.EN.IdentificacionTypeTipo.Item02
-                    Case "03"
-                        vDocumento.Emisor.Identificacion.Tipo = BitOne.FE.EN.IdentificacionTypeTipo.Item03
-                    Case "04"
-                        vDocumento.Emisor.Identificacion.Tipo = BitOne.FE.EN.IdentificacionTypeTipo.Item04
-                End Select
+
+                vDocumento.Emisor.Identificacion.Tipo = pDocumento.Emisor.IdentificacionTipo
 
                 vDocumento.Emisor.Identificacion.Numero = pDocumento.Emisor.Identificacion
                 vDocumento.Emisor.Nombre = pDocumento.Emisor.Nombre
@@ -1060,17 +1048,7 @@ Public Class DocumentoBLL
 
                 Else
 
-                    Select Case pDocumento.Receptor.IdentificacionTipo
-                        Case "01"
-                            vDocumento.Receptor.Identificacion.Tipo = BitOne.FE.EN.IdentificacionTypeTipo.Item01
-                        Case "02"
-                            vDocumento.Receptor.Identificacion.Tipo = BitOne.FE.EN.IdentificacionTypeTipo.Item02
-                        Case "03"
-                            vDocumento.Receptor.Identificacion.Tipo = BitOne.FE.EN.IdentificacionTypeTipo.Item03
-                        Case "04"
-                            vDocumento.Receptor.Identificacion.Tipo = BitOne.FE.EN.IdentificacionTypeTipo.Item04
-                    End Select
-
+                    vDocumento.Receptor.Identificacion.Tipo = pDocumento.Receptor.IdentificacionTipo
                     vDocumento.Receptor.Identificacion.Numero = pDocumento.Receptor.Identificacion
 
                 End If
