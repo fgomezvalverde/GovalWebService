@@ -618,7 +618,6 @@ namespace Goval.FacturaDigital.BusinessService
         }
         #endregion
 
-
         #region Billing
         public BillResponse GetUserBills(BillRequest pBillRequest)
         {
@@ -764,6 +763,7 @@ namespace Goval.FacturaDigital.BusinessService
                             SoldProductsJSON = JsonConvert.SerializeObject(pBillRequest.ClientBill.SoldProductsJSON),
                             LastSendDate = pBillRequest.ClientBill.LastSendDate ?? DateTime.Now,
                             HaciendaFailCounter = 0,
+                            ReferenceDocumentType = HaciendaTransactionType.Factura_Electronica,
                             EmissionDate = pBillRequest.ClientBill.EmissionDate ?? DateTime.Now,
                             DocumentKey = pBillRequest.ClientBill.DocumentKey,
                             ConsecutiveNumber = vBillNumber,
@@ -964,8 +964,73 @@ namespace Goval.FacturaDigital.BusinessService
             }
             return vResponse;
         }
+
+        public BaseResponse CancellBill(BillRequest pBillRequest)
+        {
+            /*BillResponse vResponse = new BillResponse();
+            try
+            {
+                if (!ValidateToken(pBillRequest.SSOT))
+                {
+                    vResponse.UserMessage = "Sesión Caducada";
+                    vResponse.IsSuccessful = false;
+                    return vResponse;
+                }
+                using (BusinessDataModelEntities vContext = new BusinessDataModelEntities())
+                {
+                    vContext.Database.Connection.Open();
+                    var vBillList = vContext.Bill.AsQueryable();
+                    if (vBillList != null)
+                    {
+                        var vUserBill = vBillList.Where<BillEntity>(x => x.User.UserId.Equals(pBillRequest.User.UserId) &&
+                        x.BillId.Equals(pBillRequest.ClientBill.BillId)).FirstOrDefault();
+                        if (vUserBill != null)
+                        {
+                            var vHaciendaResponse = BillingManager.TryToRefreshBillStatus(ref vUserBill);
+                            vResponse.IsSuccessful = vHaciendaResponse.IsSuccessful;
+                            vResponse.TechnicalMessage = vHaciendaResponse.TechnicalMessage;
+                            vResponse.UserMessage = vHaciendaResponse.UserMessage;
+                            vResponse.PdfInvoice = BillingManager.GenerateBillPDF(pBillRequest.ClientBill, pBillRequest.User);
+
+                            // Send Emails if the Bill was successfuly created
+                            if (vHaciendaResponse.IsSuccessful)
+                            {
+                                BillingManager.SendMailFromSuccessfulyBillTransaction(vUserBill, pBillRequest.User, vResponse.PdfInvoice);
+                            }
+
+                            vContext.Bill.Attach(vUserBill);
+                            vContext.Entry(vUserBill).State = System.Data.Entity.EntityState.Modified;
+                            vContext.SaveChanges();
+                            vContext.Database.Connection.Close();
+                        }
+                        else
+                        {
+                            vResponse.IsSuccessful = false;
+                            vResponse.TechnicalMessage = "No se encontro Bill con el Id de Request ";
+                            vResponse.UserMessage = "Hay un conflicto con la Factura actual";
+                        }
+                    }
+                    else
+                    {
+                        vResponse.IsSuccessful = false;
+                        vResponse.TechnicalMessage = "La conexion no ha sido exitosa";
+                        vResponse.UserMessage = "La conexion no ha sido exitosa";
+                    }
+
+                    vContext.Database.Connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                vResponse.IsSuccessful = false;
+                vResponse.TechnicalMessage = ex.ToString();
+                vResponse.UserMessage = ex.Message;
+            }
+            return vResponse;*/
+        }
         #endregion
 
+        
 
 
 

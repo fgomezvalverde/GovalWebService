@@ -51,11 +51,13 @@ namespace Goval.FacturaDigital.DataModel
         public string ReasonPhrasePOSTHacienda { get; set; }
         public string ReasonPhraseGETHacienda { get; set; }
         public string StatusCodePOSTHacienda { get; set; }
+        public string ReferenceDocumentType { get; set; }
         public string StatusCodeGETHacienda { get; set; }
     
         public virtual ClientEntity Client { get; set; }
         public virtual ExonerationEntity Exoneration { get; set; }
         public virtual PaymentMethodTypeEntity PaymentMethodType { get; set; }
+        public virtual ReferenceDocumentTypeEntity ReferenceDocumentType1 { get; set; }
         public virtual SellConditionsTypeEntity SellConditionsType { get; set; }
         public virtual TaxesTypeEntity TaxesType { get; set; }
         public virtual UserEntity User { get; set; }

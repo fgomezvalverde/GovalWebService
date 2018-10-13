@@ -15,16 +15,13 @@ namespace Goval.FacturaDigital.DataModel
     public partial class CreditOrDebitNoteEntity
     {
         public long CreditOrDebitNoteId { get; set; }
-        public bool IsCreditNote { get; set; }
         public Nullable<long> BillId_FK { get; set; }
         public string DocuementKey { get; set; }
-        public string ReferenceDocumentType { get; set; }
         public System.DateTime EmissionDate { get; set; }
         public string ReferenceCode { get; set; }
         public string ReasonDescription { get; set; }
     
         public virtual BillEntity Bill { get; set; }
-        public virtual ReferenceDocumentTypeEntity ReferenceDocumentType1 { get; set; }
         public virtual ReferencesCodeTypeEntity ReferencesCodeType { get; set; }
     }
 }

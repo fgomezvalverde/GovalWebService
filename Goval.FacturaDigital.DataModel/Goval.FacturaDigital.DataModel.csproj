@@ -30,6 +30,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'smarteraspDEV|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\smarteraspDEV\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -144,9 +153,6 @@
     <Compile Include="SellConditionsTypeEntity.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="sysdiagrams.cs">
-      <DependentUpon>BusinessDataModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="TaxesTypeEntity.cs">
       <DependentUpon>BusinessDataModel.tt</DependentUpon>
     </Compile>
@@ -155,7 +161,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <EntityDeploy Include="BusinessDataModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>BusinessDataModel.Designer.cs</LastGenOutput>

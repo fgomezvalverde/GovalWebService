@@ -46,7 +46,6 @@ namespace Goval.FacturaDigital.DataModel
         public virtual DbSet<ReferenceDocumentTypeEntity> ReferenceDocumentType { get; set; }
         public virtual DbSet<ReferencesCodeTypeEntity> ReferencesCodeType { get; set; }
         public virtual DbSet<SellConditionsTypeEntity> SellConditionsType { get; set; }
-        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<TaxesTypeEntity> TaxesType { get; set; }
         public virtual DbSet<UserEntity> User { get; set; }
         public virtual DbSet<cfg_barrio> cfg_barrio { get; set; }

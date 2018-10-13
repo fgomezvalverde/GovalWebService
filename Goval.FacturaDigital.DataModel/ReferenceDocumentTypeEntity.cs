@@ -17,13 +17,13 @@ namespace Goval.FacturaDigital.DataModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ReferenceDocumentTypeEntity()
         {
-            this.CreditOrDebitNote = new HashSet<CreditOrDebitNoteEntity>();
+            this.Bill = new HashSet<BillEntity>();
         }
     
         public string ReferenceDocumentTypeCode { get; set; }
         public string Name { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CreditOrDebitNoteEntity> CreditOrDebitNote { get; set; }
+        public virtual ICollection<BillEntity> Bill { get; set; }
     }
 }
