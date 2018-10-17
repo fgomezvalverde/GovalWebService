@@ -59,6 +59,7 @@
     <Compile Include="BusinessServiceModel\ClientResponse.cs" />
     <Compile Include="BusinessServiceModel\CodesDirectionListRequest.cs" />
     <Compile Include="BusinessServiceModel\CodesDirectionListResponse.cs" />
+    <Compile Include="BusinessServiceModel\DebitCreditNoteBillRequest.cs" />
     <Compile Include="BusinessServiceModel\LoginRequest.cs" />
     <Compile Include="BusinessServiceModel\LoginResponse.cs" />
     <Compile Include="BusinessServiceModel\ProductRequest.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="MobileModel\Client.cs" />
     <Compile Include="MobileModel\Exoneration.cs" />
     <Compile Include="MobileModel\Product.cs" />
+    <Compile Include="MobileModel\ReferenceDocument.cs" />
     <Compile Include="MobileModel\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\AttachmentMail.cs" />

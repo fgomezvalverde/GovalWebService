@@ -21,6 +21,7 @@ namespace Goval.FacturaDigital.DataModel
         public string EmailScheme { get; set; }
         public decimal Credits { get; set; }
         public bool IsPremiumAccount { get; set; }
+        public long StartDebitCreditNoteNumber { get; set; }
     
         public virtual UserEntity User { get; set; }
     }

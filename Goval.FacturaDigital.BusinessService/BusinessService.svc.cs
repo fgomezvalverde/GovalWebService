@@ -965,9 +965,9 @@ namespace Goval.FacturaDigital.BusinessService
             return vResponse;
         }
 
-        public BaseResponse CancellBill(BillRequest pBillRequest)
+        public BaseResponse CancellBill(DebitCreditNoteBillRequest pBillRequest)
         {
-            /*BillResponse vResponse = new BillResponse();
+            BillResponse vResponse = new BillResponse();
             try
             {
                 if (!ValidateToken(pBillRequest.SSOT))
@@ -980,44 +980,97 @@ namespace Goval.FacturaDigital.BusinessService
                 {
                     vContext.Database.Connection.Open();
                     var vBillList = vContext.Bill.AsQueryable();
+                    long vBillNumber = -1;
+                    UserEntity vUser = null;
+                    ClientEntity vClient = null;
                     if (vBillList != null)
                     {
-                        var vUserBill = vBillList.Where<BillEntity>(x => x.User.UserId.Equals(pBillRequest.User.UserId) &&
-                        x.BillId.Equals(pBillRequest.ClientBill.BillId)).FirstOrDefault();
-                        if (vUserBill != null)
+                        var vUserBillsList = vBillList.Where<BillEntity>(x => x.User.UserId.Equals(pBillRequest.User.UserId));
+                        if (vUserBillsList != null && vUserBillsList.Any())
                         {
-                            var vHaciendaResponse = BillingManager.TryToRefreshBillStatus(ref vUserBill);
-                            vResponse.IsSuccessful = vHaciendaResponse.IsSuccessful;
-                            vResponse.TechnicalMessage = vHaciendaResponse.TechnicalMessage;
-                            vResponse.UserMessage = vHaciendaResponse.UserMessage;
-                            vResponse.PdfInvoice = BillingManager.GenerateBillPDF(pBillRequest.ClientBill, pBillRequest.User);
-
-                            // Send Emails if the Bill was successfuly created
-                            if (vHaciendaResponse.IsSuccessful)
-                            {
-                                BillingManager.SendMailFromSuccessfulyBillTransaction(vUserBill, pBillRequest.User, vResponse.PdfInvoice);
-                            }
-
-                            vContext.Bill.Attach(vUserBill);
-                            vContext.Entry(vUserBill).State = System.Data.Entity.EntityState.Modified;
-                            vContext.SaveChanges();
-                            vContext.Database.Connection.Close();
+                            vBillNumber = vUserBillsList.Max(x => x.ConsecutiveNumber) + 1;
+                            vUser = vUserBillsList.First().User;
+                            vClient = vUserBillsList.First().Client;
                         }
                         else
                         {
-                            vResponse.IsSuccessful = false;
-                            vResponse.TechnicalMessage = "No se encontro Bill con el Id de Request ";
-                            vResponse.UserMessage = "Hay un conflicto con la Factura actual";
+                            var vUserConfigurationQuery = vContext.AppConfiguration.AsQueryable();
+                            var vUserConfiguration = vUserConfigurationQuery.Where<AppConfigurationEntity>(x => x.User.UserId.Equals(pBillRequest.User.UserId)).First();
+                            vBillNumber = vUserConfiguration.StartDebitCreditNoteNumber;
+                            vUser = vUserConfiguration.User;
+
+                            var vClientConfigurationQuery = vContext.Client.AsQueryable();
+                            var vClientConfiguration = vClientConfigurationQuery.Where<ClientEntity>(x => x.ClientId.Equals(pBillRequest.ClientBill.ClientId)).First();
+                            vClient = vClientConfiguration;
+
                         }
+
                     }
-                    else
+                    if (vBillNumber != -1)
                     {
-                        vResponse.IsSuccessful = false;
-                        vResponse.TechnicalMessage = "La conexion no ha sido exitosa";
-                        vResponse.UserMessage = "La conexion no ha sido exitosa";
+
+                        pBillRequest.ClientBill.EmissionDate = DateTime.Now;
+                        pBillRequest.ClientBill.LastSendDate = DateTime.Now;
+                        pBillRequest.ClientBill.Status = BillStatus.Processing.ToString();
+                        vResponse.BillNumber = vBillNumber;
+                        pBillRequest.ClientBill.ConsecutiveNumber = vBillNumber;
+                        pBillRequest.ClientBill.DocumentKey = Core.Utils.GenerateDocumentKey(pBillRequest.ClientBill, pBillRequest.User, HaciendaTransactionType.Nota_Credito);
+                        //vResponse.PdfInvoice = BillingManager.GenerateBillPDF(pBillRequest.ClientBill, pBillRequest.User);
+
+                        BillEntity vBillToCreate = new BillEntity
+                        {
+                            //BillId  AutoIncrement
+                            Status = pBillRequest.ClientBill.Status,
+                            UserId_FK = pBillRequest.User.UserId,
+                            PurchaseOrderCode = pBillRequest.ClientBill.PurchaseOrderCode,
+                            TotalAfterDiscount = pBillRequest.ClientBill.TotalAfterDiscount,
+                            TaxesToPay = pBillRequest.ClientBill.TaxesToPay,
+                            SubTotalProducts = pBillRequest.ClientBill.SubTotalProducts,
+                            DiscountAmount = pBillRequest.ClientBill.DiscountAmount,
+                            TotalToPay = pBillRequest.ClientBill.TotalToPay,
+                            ClientId_FK = pBillRequest.ClientBill.ClientId,
+                            XMLSendedToHacienda = string.Empty,
+                            XMLReceivedFromHacienda = string.Empty,
+                            SoldProductsJSON = JsonConvert.SerializeObject(pBillRequest.ClientBill.SoldProductsJSON),
+                            LastSendDate = pBillRequest.ClientBill.LastSendDate ?? DateTime.Now,
+                            HaciendaFailCounter = 0,
+                            ReferenceDocumentType = HaciendaTransactionType.Factura_Electronica,
+                            EmissionDate = pBillRequest.ClientBill.EmissionDate ?? DateTime.Now,
+                            DocumentKey = pBillRequest.ClientBill.DocumentKey,
+                            ConsecutiveNumber = vBillNumber,
+                            SellCondition = pBillRequest.ClientBill.SellCondition,
+                            CreditTerm = pBillRequest.ClientBill.CreditTerm,
+                            PaymentMethod = pBillRequest.ClientBill.PaymentMethod,
+                            DiscountNature = pBillRequest.ClientBill.DiscountNature,
+                            TaxCode = pBillRequest.ClientBill.TaxCode,
+                            HaveExoneration = false, // still no manage Exonerations
+                            ExonerationId_FK = null,
+                            ExonerationAmount = 0,
+                            Observation = pBillRequest.ClientBill.Observation
+                        };
+                        vBillToCreate.User = vUser;
+                        vBillToCreate.Client = vClient;
+
+                        //Try to process the bill
+                        var vHaciendaResponse = BillingManager.ProcessBill(ref vBillToCreate);
+                        vResponse.IsSuccessful = vHaciendaResponse.IsSuccessful;
+                        vResponse.TechnicalMessage = vHaciendaResponse.TechnicalMessage;
+                        vResponse.UserMessage = vHaciendaResponse.UserMessage;
+
+                        // Send Emails if the Bill was successfuly created
+                        if (vHaciendaResponse.IsSuccessful)
+                        {
+                            BillingManager.SendMailFromSuccessfulyBillTransaction(vBillToCreate, pBillRequest.User, vResponse.PdfInvoice);
+                        }
+
+
+                        vContext.Bill.Add(vBillToCreate);
+                        vContext.SaveChanges();
+                        vContext.Database.Connection.Close();
+
+
                     }
 
-                    vContext.Database.Connection.Close();
                 }
             }
             catch (Exception ex)
@@ -1026,7 +1079,7 @@ namespace Goval.FacturaDigital.BusinessService
                 vResponse.TechnicalMessage = ex.ToString();
                 vResponse.UserMessage = ex.Message;
             }
-            return vResponse;*/
+            return vResponse;
         }
         #endregion
 
