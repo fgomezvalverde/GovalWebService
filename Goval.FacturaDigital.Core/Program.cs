@@ -137,7 +137,7 @@ namespace Goval.FacturaDigital.Core
                                 BillEntity vActualBill = vBill;
                                 for (int cont = 0; cont < 2000; cont++)
                                 {
-                                    var result = BillingManager.ProcessBill(ref vActualBill);
+                                    var result = BillingManager.ProcessBill(ref vActualBill,null);
                                     if (result.IsSuccessful)
                                     {
                                         Console.WriteLine(vActualBill.XMLReceivedFromHacienda);

@@ -148,7 +148,7 @@ namespace Goval.FacturaDigital.Core.BIlling
             }
             return vResponse;
         }
-        public static BaseResponse ProcessBill(ref BillEntity pBill)
+        public static BaseResponse ProcessBill(ref BillEntity pBill, CreditOrDebitNoteEntity pDocumentReference)
         {
             BaseResponse vResponse = new BaseResponse {IsSuccessful= false };
             pBill.Status = BillStatus.Error.ToString();
@@ -255,6 +255,23 @@ namespace Goval.FacturaDigital.Core.BIlling
                         // El producto no tiene ninguna cantidad a facturar
                     }
                 }
+
+                //Se agrega referencia si es que existe
+                if (pDocumentReference != null)
+                {
+                    var vReferenceList = new List<DocumentoReferencia>();
+                    var vReferenceDoc = new DocumentoReferencia();
+
+                    vReferenceDoc.Codigo = pDocumentReference.ReferenceCode;
+                    vReferenceDoc.FechaEmision = pDocumentReference.EmissionDate;
+                    vReferenceDoc.Numero = pDocumentReference.DocuementKey;
+                    vReferenceDoc.Razon = pDocumentReference.ReasonDescription;
+                    vReferenceDoc.TipoDoc = HaciendaTransactionType.Factura_Electronica;
+
+                    vReferenceList.Add(vReferenceDoc);
+                    vDocumentoEncabezado.Referencia = vReferenceList;
+                }
+
                 // Se agrega el Segmento de todos los productos
                 vDocumentoEncabezado.DocumentoDetalle = vDetalleDocumento;
 

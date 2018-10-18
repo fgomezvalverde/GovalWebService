@@ -781,7 +781,7 @@ namespace Goval.FacturaDigital.BusinessService
                         vBillToCreate.Client = vClient;
 
                         //Try to process the bill
-                        var vHaciendaResponse = BillingManager.ProcessBill(ref vBillToCreate);
+                        var vHaciendaResponse = BillingManager.ProcessBill(ref vBillToCreate,null);
                         vResponse.IsSuccessful = vHaciendaResponse.IsSuccessful;
                         vResponse.TechnicalMessage = vHaciendaResponse.TechnicalMessage;
                         vResponse.UserMessage = vHaciendaResponse.UserMessage;
@@ -832,7 +832,7 @@ namespace Goval.FacturaDigital.BusinessService
                         x.BillId.Equals(pBillRequest.ClientBill.BillId)).FirstOrDefault();
                         if (vUserBill != null)
                         {
-                            var vHaciendaResponse = BillingManager.ProcessBill(ref vUserBill);
+                            var vHaciendaResponse = BillingManager.ProcessBill(ref vUserBill,null);
                             vResponse.IsSuccessful = vHaciendaResponse.IsSuccessful;
                             vResponse.TechnicalMessage = vHaciendaResponse.TechnicalMessage;
                             vResponse.UserMessage = vHaciendaResponse.UserMessage;
@@ -1008,6 +1008,14 @@ namespace Goval.FacturaDigital.BusinessService
                     }
                     if (vBillNumber != -1)
                     {
+                        CreditOrDebitNoteEntity vDebitCreditNoteReference = new CreditOrDebitNoteEntity
+                        {
+                            DocuementKey = pBillRequest.ClientBill.DocumentKey,
+                            BillId_FK = pBillRequest.ClientBill.BillId,
+                            EmissionDate = DateTime.Now,
+                            ReasonDescription = pBillRequest.ReferenceDocument.ReferenceDescription,
+                            ReferenceCode = pBillRequest.ReferenceDocument.ReferenceCode,
+                        };
 
                         pBillRequest.ClientBill.EmissionDate = DateTime.Now;
                         pBillRequest.ClientBill.LastSendDate = DateTime.Now;
@@ -1015,7 +1023,8 @@ namespace Goval.FacturaDigital.BusinessService
                         vResponse.BillNumber = vBillNumber;
                         pBillRequest.ClientBill.ConsecutiveNumber = vBillNumber;
                         pBillRequest.ClientBill.DocumentKey = Core.Utils.GenerateDocumentKey(pBillRequest.ClientBill, pBillRequest.User, HaciendaTransactionType.Nota_Credito);
-                        //vResponse.PdfInvoice = BillingManager.GenerateBillPDF(pBillRequest.ClientBill, pBillRequest.User);
+
+                        
 
                         BillEntity vBillToCreate = new BillEntity
                         {
@@ -1034,7 +1043,7 @@ namespace Goval.FacturaDigital.BusinessService
                             SoldProductsJSON = JsonConvert.SerializeObject(pBillRequest.ClientBill.SoldProductsJSON),
                             LastSendDate = pBillRequest.ClientBill.LastSendDate ?? DateTime.Now,
                             HaciendaFailCounter = 0,
-                            ReferenceDocumentType = HaciendaTransactionType.Factura_Electronica,
+                            ReferenceDocumentType = HaciendaTransactionType.Nota_Credito,
                             EmissionDate = pBillRequest.ClientBill.EmissionDate ?? DateTime.Now,
                             DocumentKey = pBillRequest.ClientBill.DocumentKey,
                             ConsecutiveNumber = vBillNumber,
@@ -1051,8 +1060,10 @@ namespace Goval.FacturaDigital.BusinessService
                         vBillToCreate.User = vUser;
                         vBillToCreate.Client = vClient;
 
+                        
+
                         //Try to process the bill
-                        var vHaciendaResponse = BillingManager.ProcessBill(ref vBillToCreate);
+                        var vHaciendaResponse = BillingManager.ProcessBill(ref vBillToCreate, vDebitCreditNoteReference);
                         vResponse.IsSuccessful = vHaciendaResponse.IsSuccessful;
                         vResponse.TechnicalMessage = vHaciendaResponse.TechnicalMessage;
                         vResponse.UserMessage = vHaciendaResponse.UserMessage;
@@ -1062,9 +1073,10 @@ namespace Goval.FacturaDigital.BusinessService
                         {
                             BillingManager.SendMailFromSuccessfulyBillTransaction(vBillToCreate, pBillRequest.User, vResponse.PdfInvoice);
                         }
-
+                        
 
                         vContext.Bill.Add(vBillToCreate);
+                        vContext.CreditOrDebitNote.Add(vDebitCreditNoteReference);
                         vContext.SaveChanges();
                         vContext.Database.Connection.Close();
 
