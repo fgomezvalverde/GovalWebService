@@ -8,6 +8,6 @@ namespace Goval.FacturaDigital.DataContracts.MobileModel
 {
     public enum BillStatus
     {
-        Processing, Error, Done, Rejected
+        Processing, Error, Done, Rejected,Invalidate
     }
 }

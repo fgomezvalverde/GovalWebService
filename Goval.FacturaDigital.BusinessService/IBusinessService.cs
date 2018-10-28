@@ -70,5 +70,8 @@ namespace Goval.FacturaDigital.BusinessService
 
         [OperationContract]
         BillResponse GetBillInvoice(BillRequest pBillRequest);
+
+        [OperationContract]
+        BaseResponse InvalidateBill(DebitCreditNoteBillRequest pBillRequest);
     }
 }

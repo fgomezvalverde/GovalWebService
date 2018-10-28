@@ -965,7 +965,7 @@ namespace Goval.FacturaDigital.BusinessService
             return vResponse;
         }
 
-        public BaseResponse CancellBill(DebitCreditNoteBillRequest pBillRequest)
+        public BaseResponse InvalidateBill(DebitCreditNoteBillRequest pBillRequest)
         {
             BillResponse vResponse = new BillResponse();
             try
@@ -982,6 +982,7 @@ namespace Goval.FacturaDigital.BusinessService
                     var vBillList = vContext.Bill.AsQueryable();
                     long vBillNumber = -1;
                     UserEntity vUser = null;
+                    BillEntity vActualBillEntity = null;
                     ClientEntity vClient = null;
                     if (vBillList != null)
                     {
@@ -1005,6 +1006,9 @@ namespace Goval.FacturaDigital.BusinessService
 
                         }
 
+                        //Get the actual Bill to Invalidate
+                        vActualBillEntity = vUserBillsList.Where(x => x.BillId.Equals(pBillRequest.ClientBill.BillId)).First();
+                        vActualBillEntity.Status = BillStatus.Invalidate.ToString();
                     }
                     if (vBillNumber != -1)
                     {
@@ -1073,7 +1077,11 @@ namespace Goval.FacturaDigital.BusinessService
                         {
                             BillingManager.SendMailFromSuccessfulyBillTransaction(vBillToCreate, pBillRequest.User, vResponse.PdfInvoice);
                         }
-                        
+
+
+                        vContext.Bill.Attach(vActualBillEntity);
+                        vContext.Entry(vActualBillEntity).State = System.Data.Entity.EntityState.Modified;
+                        vContext.SaveChanges();
 
                         vContext.Bill.Add(vBillToCreate);
                         vContext.CreditOrDebitNote.Add(vDebitCreditNoteReference);

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Goval.FacturaDigital.DataContracts.BusinessServiceModel
 {
+    [DataContract]
     public class DebitCreditNoteBillRequest : BaseModel.BaseRequest
     {
         [DataMember]
