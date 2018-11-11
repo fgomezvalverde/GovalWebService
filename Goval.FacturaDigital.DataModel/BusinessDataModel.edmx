@@ -175,11 +175,12 @@
           <Key>
             <PropertyRef Name="CreditOrDebitNoteId" />
           </Key>
-          <Property Name="CreditOrDebitNoteId" Type="bigint" Nullable="false" />
+          <Property Name="CreditOrDebitNoteId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="BillId_FK" Type="bigint" />
           <Property Name="DocuementKey" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="EmissionDate" Type="datetime" Nullable="false" />
           <Property Name="ReferenceCode" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="BillId_CreditDebitNote_FK" Type="bigint" />
           <Property Name="ReasonDescription" Type="varchar" MaxLength="180" Nullable="false" />
         </EntityType>
         <EntityType Name="CurrencyType">
@@ -515,6 +516,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_CreditOrDebitNote_BillCreditNote">
+          <End Role="Bill" Type="Self.Bill" Multiplicity="0..1" />
+          <End Role="CreditOrDebitNote" Type="Self.CreditOrDebitNote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bill">
+              <PropertyRef Name="BillId" />
+            </Principal>
+            <Dependent Role="CreditOrDebitNote">
+              <PropertyRef Name="BillId_CreditDebitNote_FK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_CreditOrDebitNote_ReferenceCode">
           <End Role="ReferencesCodeType" Type="Self.ReferencesCodeType" Multiplicity="1" />
           <End Role="CreditOrDebitNote" Type="Self.CreditOrDebitNote" Multiplicity="*" />
@@ -696,6 +709,10 @@
             <End Role="Bill" EntitySet="Bill" />
             <End Role="CreditOrDebitNote" EntitySet="CreditOrDebitNote" />
           </AssociationSet>
+          <AssociationSet Name="FK_CreditOrDebitNote_BillCreditNote" Association="Self.FK_CreditOrDebitNote_BillCreditNote">
+            <End Role="Bill" EntitySet="Bill" />
+            <End Role="CreditOrDebitNote" EntitySet="CreditOrDebitNote" />
+          </AssociationSet>
           <AssociationSet Name="FK_CreditOrDebitNote_ReferenceCode" Association="Self.FK_CreditOrDebitNote_ReferenceCode">
             <End Role="ReferencesCodeType" EntitySet="ReferencesCodeType" />
             <End Role="CreditOrDebitNote" EntitySet="CreditOrDebitNote" />
@@ -850,6 +867,10 @@
             <End Role="cfg_pais" EntitySet="cfg_pais" />
             <End Role="cfg_provincia" EntitySet="cfg_provincia" />
           </AssociationSet>
+          <AssociationSet Name="FK_CreditOrDebitNote_BillCreditNote" Association="Goval.FacturaGoval.Business.DevelopmentModel.FK_CreditOrDebitNote_BillCreditNote">
+            <End Role="BillEntity" EntitySet="Bill" />
+            <End Role="CreditOrDebitNoteEntity" EntitySet="CreditOrDebitNote" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="AppConfigurationEntity">
           <Key>
@@ -918,6 +939,7 @@
           <NavigationProperty Name="TaxesType" Relationship="Goval.FacturaGoval.Business.DevelopmentModel.FK_Bill_TaxType" FromRole="Bill" ToRole="TaxesType" />
           <NavigationProperty Name="User" Relationship="Goval.FacturaGoval.Business.DevelopmentModel.FK_Bill_User" FromRole="Bill" ToRole="User" />
           <NavigationProperty Name="CreditOrDebitNote" Relationship="Goval.FacturaGoval.Business.DevelopmentModel.FK_CreditOrDebitNote_Bill" FromRole="Bill" ToRole="CreditOrDebitNote" />
+          <NavigationProperty Name="CreditOrDebitNote1" Relationship="Goval.FacturaGoval.Business.DevelopmentModel.FK_CreditOrDebitNote_BillCreditNote" FromRole="BillEntity" ToRole="CreditOrDebitNoteEntity" />
         </EntityType>
         <EntityType Name="BillingHistoryEntity">
           <Key>
@@ -984,6 +1006,8 @@
           <Property Name="ReasonDescription" Type="String" Nullable="false" MaxLength="180" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Bill" Relationship="Goval.FacturaGoval.Business.DevelopmentModel.FK_CreditOrDebitNote_Bill" FromRole="CreditOrDebitNote" ToRole="Bill" />
           <NavigationProperty Name="ReferencesCodeType" Relationship="Goval.FacturaGoval.Business.DevelopmentModel.FK_CreditOrDebitNote_ReferenceCode" FromRole="CreditOrDebitNote" ToRole="ReferencesCodeType" />
+          <Property Name="BillId_CreditDebitNote_FK" Type="Int64" />
+          <NavigationProperty Name="Bill1" Relationship="Goval.FacturaGoval.Business.DevelopmentModel.FK_CreditOrDebitNote_BillCreditNote" FromRole="CreditOrDebitNoteEntity" ToRole="BillEntity" />
         </EntityType>
         <EntityType Name="CurrencyTypeEntity">
           <Key>
@@ -1501,6 +1525,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_CreditOrDebitNote_BillCreditNote">
+          <End Type="Goval.FacturaGoval.Business.DevelopmentModel.BillEntity" Role="BillEntity" Multiplicity="0..1" />
+          <End Type="Goval.FacturaGoval.Business.DevelopmentModel.CreditOrDebitNoteEntity" Role="CreditOrDebitNoteEntity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BillEntity">
+              <PropertyRef Name="BillId" />
+            </Principal>
+            <Dependent Role="CreditOrDebitNoteEntity">
+              <PropertyRef Name="BillId_CreditDebitNote_FK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1624,6 +1660,7 @@
           <EntitySetMapping Name="CreditOrDebitNote">
             <EntityTypeMapping TypeName="Goval.FacturaGoval.Business.DevelopmentModel.CreditOrDebitNoteEntity">
               <MappingFragment StoreEntitySet="CreditOrDebitNote">
+                <ScalarProperty Name="BillId_CreditDebitNote_FK" ColumnName="BillId_CreditDebitNote_FK" />
                 <ScalarProperty Name="ReasonDescription" ColumnName="ReasonDescription" />
                 <ScalarProperty Name="ReferenceCode" ColumnName="ReferenceCode" />
                 <ScalarProperty Name="EmissionDate" ColumnName="EmissionDate" />

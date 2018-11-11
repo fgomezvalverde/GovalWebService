@@ -99,16 +99,6 @@ namespace FirmaXadesNet.Crypto
         private void SetSigningKey(X509Certificate2 certificate)
         {
             RSACryptoServiceProvider key =  (RSACryptoServiceProvider)certificate.PrivateKey;
-            /*if (certificate.HasCngKey())
-            {
-                var privateKey = certificate.GetCngPrivateKey();
-                throw new Exception("EEROR: si tiene");
-            }
-            else
-            {
-                throw new Exception("EEROR: no tiene");
-            }*/
-            //throw Exception("ERROR: "+ rsa.ExportParameters.SigningKey)
             if (key.CspKeyContainerInfo.ProviderName == CryptoConst.MS_STRONG_PROV ||
                 key.CspKeyContainerInfo.ProviderName == CryptoConst.MS_ENHANCED_PROV ||
                 key.CspKeyContainerInfo.ProviderName == CryptoConst.MS_DEF_PROV ||

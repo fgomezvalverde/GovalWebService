@@ -20,8 +20,10 @@ namespace Goval.FacturaDigital.DataModel
         public System.DateTime EmissionDate { get; set; }
         public string ReferenceCode { get; set; }
         public string ReasonDescription { get; set; }
+        public Nullable<long> BillId_CreditDebitNote_FK { get; set; }
     
         public virtual BillEntity Bill { get; set; }
         public virtual ReferencesCodeTypeEntity ReferencesCodeType { get; set; }
+        public virtual BillEntity Bill1 { get; set; }
     }
 }

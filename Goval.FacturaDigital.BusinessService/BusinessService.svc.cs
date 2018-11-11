@@ -636,7 +636,7 @@ namespace Goval.FacturaDigital.BusinessService
                     var vBillList = vContext.Bill.AsQueryable();
                     if (vBillList != null)
                     {
-                        var vUserBillsList = vBillList.Where<BillEntity>(x => x.User.UserId.Equals(pBillRequest.User.UserId));
+                        var vUserBillsList = vBillList.Where<BillEntity>(x => x.User.UserId.Equals(pBillRequest.User.UserId) && x.ReferenceDocumentType.Equals(HaciendaTransactionType.Factura_Electronica));
                         if (vUserBillsList != null && vUserBillsList.Any())
                         {
                             foreach (var vUserBill in vUserBillsList)
@@ -1103,8 +1103,84 @@ namespace Goval.FacturaDigital.BusinessService
         }
         #endregion
 
-        
 
+        #region Notas de Credito y Debito
+        public BillResponse GetUserCreditNotes(BillRequest pBillRequest)
+        {
+            BillResponse vResponse = new BillResponse();
+            try
+            {
+                if (!ValidateToken(pBillRequest.SSOT))
+                {
+                    vResponse.UserMessage = "Sesión Caducada";
+                    vResponse.IsSuccessful = false;
+                    return vResponse;
+                }
+                using (BusinessDataModelEntities vContext = new BusinessDataModelEntities())
+                {
+                    vContext.Database.Connection.Open();
+                    var vBillList = vContext.Bill.AsQueryable();
+                    if (vBillList != null)
+                    {
+                        var vUserBillsList = vBillList.Where<BillEntity>(x => x.User.UserId.Equals(pBillRequest.User.UserId) && x.ReferenceDocumentType.Equals(HaciendaTransactionType.Nota_Credito));
+                        if (vUserBillsList != null && vUserBillsList.Any())
+                        {
+                            foreach (var vUserBill in vUserBillsList)
+                            {
+                                vResponse.UserBills.Add(
+                                    new Bill
+                                    {
+                                        BillId = vUserBill.BillId,
+                                        Status = vUserBill.Status,
+                                        PurchaseOrderCode = vUserBill.PurchaseOrderCode,
+                                        TotalAfterDiscount = vUserBill.TotalAfterDiscount,
+                                        TaxesToPay = vUserBill.TaxesToPay,
+                                        SubTotalProducts = vUserBill.SubTotalProducts,
+                                        DiscountAmount = vUserBill.DiscountAmount,
+                                        TotalToPay = vUserBill.TotalToPay,
+                                        XMLSendedToHacienda = vUserBill.XMLSendedToHacienda,
+                                        XMLReceivedFromHacienda = vUserBill.XMLReceivedFromHacienda,
+                                        SoldProductsJSON = string.IsNullOrEmpty(vUserBill.SoldProductsJSON) ?
+                                            null : JsonConvert.DeserializeObject<Client>(vUserBill.SoldProductsJSON),
+                                        LastSendDate = vUserBill.LastSendDate,
+                                        HaciendaFailCounter = vUserBill.HaciendaFailCounter,
+                                        EmissionDate = vUserBill.EmissionDate,
+                                        DocumentKey = vUserBill.DocumentKey,
+                                        ConsecutiveNumber = vUserBill.ConsecutiveNumber,
+                                        SellCondition = vUserBill.SellCondition,
+                                        CreditTerm = vUserBill.CreditTerm,
+                                        PaymentMethod = vUserBill.PaymentMethod,
+                                        DiscountNature = vUserBill.DiscountNature,
+                                        TaxCode = vUserBill.TaxCode,
+                                        HaveExoneration = vUserBill.HaveExoneration,
+                                        ExonerationAmount = vUserBill.ExonerationAmount,
+                                        Observation = vUserBill.Observation,
+                                        SystemMesagges = vUserBill.SystemMesagges
+                                    }
+                                    );
+                            }
+                        }
+                    }
+                    else
+                    {
+                        vResponse.IsSuccessful = true;
+                        vResponse.UserMessage = "No existen Productos en la base de datos";
+                    }
+
+                    vContext.Database.Connection.Close();
+                    vResponse.IsSuccessful = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                vResponse.IsSuccessful = false;
+                vResponse.TechnicalMessage = ex.ToString();
+                vResponse.UserMessage = ex.Message;
+            }
+            return vResponse;
+        }
+
+        #endregion
 
 
         public LoginResponse RegisterUser(SignupRequest pNewUser)

@@ -390,10 +390,6 @@ Public Class TributacionBLL
 
             vReply = New X509Certificate2(pUsuarioHacienda.Certificado, pUsuarioHacienda.Pin)
 
-            ' Test PrivateKey
-            Dim vTestPrivatekey As Security.Cryptography.AsymmetricAlgorithm
-            vTestPrivatekey = vReply.GetRSAPrivateKey()
-
         Catch ex As Exception
             Throw ex
             'vReply = Nothing

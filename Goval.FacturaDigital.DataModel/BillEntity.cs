@@ -18,6 +18,7 @@ namespace Goval.FacturaDigital.DataModel
         public BillEntity()
         {
             this.CreditOrDebitNote = new HashSet<CreditOrDebitNoteEntity>();
+            this.CreditOrDebitNote1 = new HashSet<CreditOrDebitNoteEntity>();
         }
     
         public long BillId { get; set; }
@@ -63,5 +64,7 @@ namespace Goval.FacturaDigital.DataModel
         public virtual UserEntity User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CreditOrDebitNoteEntity> CreditOrDebitNote { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CreditOrDebitNoteEntity> CreditOrDebitNote1 { get; set; }
     }
 }
